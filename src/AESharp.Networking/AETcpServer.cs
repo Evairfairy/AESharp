@@ -59,14 +59,14 @@ namespace AESharp.Networking
             {
                 NetworkEventArgs networkEventArgs = new NetworkEventArgs(aeClient, null, false);
 
-                OnClientConnecting?.Invoke(this, networkEventArgs);
+                ClientConnecting?.Invoke(this, networkEventArgs);
 
                 if (networkEventArgs.Cancel)
                 {
                     return;
                 }
 
-                OnClientConnected?.Invoke(this, networkEventArgs);
+                ClientConnected?.Invoke(this, networkEventArgs);
 
                 if (networkEventArgs.Cancel)
                 {
@@ -108,16 +108,16 @@ namespace AESharp.Networking
             finally
             {
                 Console.WriteLine("Disconnecting");
-                OnClientDisconnected?.Invoke(this, new NetworkEventArgs(aeClient, null, false));
+                ClientDisconnected?.Invoke(this, new NetworkEventArgs(aeClient, null, false));
                 aeClient.BaseClient.Dispose();
             }
         }
 
         public bool Running { get; set; }
 
-        public event EventHandler<NetworkEventArgs> OnClientConnecting;
-        public event EventHandler<NetworkEventArgs> OnClientConnected;
+        public event EventHandler<NetworkEventArgs> ClientConnecting;
+        public event EventHandler<NetworkEventArgs> ClientConnected;
         public event EventHandler<NetworkEventArgs> ReceiveData;
-        public event EventHandler<NetworkEventArgs> OnClientDisconnected;
+        public event EventHandler<NetworkEventArgs> ClientDisconnected;
     }
 }

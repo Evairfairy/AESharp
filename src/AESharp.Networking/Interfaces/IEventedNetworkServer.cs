@@ -5,9 +5,9 @@ namespace AESharp.Networking.Interfaces
 {
     public interface IEventedNetworkServer
     {
-        event EventHandler<NetworkEventArgs> OnClientConnecting;
-        event EventHandler<NetworkEventArgs> OnClientConnected;
+        event EventHandler<NetworkEventArgs> ClientConnecting;
+        event EventHandler<NetworkEventArgs> ClientConnected;
         event EventHandler<NetworkEventArgs> ReceiveData;
-        event EventHandler<NetworkEventArgs> OnClientDisconnected;
+        event EventHandler<NetworkEventArgs> ClientDisconnected;
     }
 }

@@ -5,6 +5,7 @@
   },
 
   "dependencies": {
+    "AESharp.Interop": "1.0.0-*",
     "AESharp.Networking": "1.0.0-*",
     "Microsoft.NETCore.App": {
         "type": "platform",
