@@ -7,7 +7,7 @@ namespace AESharp.Networking.Interfaces
     {
         event EventHandler<NetworkEventArgs> OnClientConnecting;
         event EventHandler<NetworkEventArgs> OnClientConnected;
-        event EventHandler<NetworkEventArgs> OnReceiveData;
+        event EventHandler<NetworkEventArgs> ReceiveData;
         event EventHandler<NetworkEventArgs> OnClientDisconnected;
     }
 }

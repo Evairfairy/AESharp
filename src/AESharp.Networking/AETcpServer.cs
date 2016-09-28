@@ -89,7 +89,7 @@ namespace AESharp.Networking
 
                     NetworkEventArgs receiveDataArgs = new NetworkEventArgs(aeClient, splicedBuffer, false);
 
-                    OnReceiveData?.Invoke(this, receiveDataArgs);
+                    ReceiveData?.Invoke(this, receiveDataArgs);
 
                     if (bytesRead == 0)
                     {
@@ -117,7 +117,7 @@ namespace AESharp.Networking
 
         public event EventHandler<NetworkEventArgs> OnClientConnecting;
         public event EventHandler<NetworkEventArgs> OnClientConnected;
-        public event EventHandler<NetworkEventArgs> OnReceiveData;
+        public event EventHandler<NetworkEventArgs> ReceiveData;
         public event EventHandler<NetworkEventArgs> OnClientDisconnected;
     }
 }
