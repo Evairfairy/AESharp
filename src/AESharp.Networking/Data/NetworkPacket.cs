@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace AESharp.Networking.Data
 {
@@ -66,12 +67,12 @@ namespace AESharp.Networking.Data
 
         public char ReadChar()
         {
-            return BitConverter.ToChar( this.ReadBytes( sizeof( char ) ), 0 );
+            return (char) this.ReadByte();
         }
 
         public void WriteChar( char val )
         {
-            this.WriteBytes( BitConverter.GetBytes( val ) );
+            this.WriteByte( (byte) val );
         }
 
         public bool ReadBool()
@@ -149,7 +150,12 @@ namespace AESharp.Networking.Data
             string s = string.Empty;
 
             for ( int i = 0; i < len; ++i )
-                s += this.ReadChar();
+            {
+                char c = this.ReadChar();
+                if ( c == '\0' )
+                    continue;
+                s += c;
+            }
 
             return s;
         }
