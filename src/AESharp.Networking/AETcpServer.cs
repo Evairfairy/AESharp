@@ -51,7 +51,7 @@ namespace AESharp.Networking
             }
         }
 
-        public async Task AcceptClientTask(TcpClient rawClient)
+        public void AcceptClientTask(TcpClient rawClient)
         {
             AENetworkClient aeClient = new AENetworkClient(rawClient);
 
@@ -76,26 +76,26 @@ namespace AESharp.Networking
                 // If we're here, we've accepted the client without issue
 
                 NetworkStream ns = aeClient.BaseClient.GetStream();
-                byte[] buffer = new byte[2048];
+                //byte[] buffer = new byte[2048];
 
                 while (aeClient.BaseClient.Connected)
                 {
-                    int bytesRead = await ns.ReadAsync(buffer, 0, 2048);
-                    byte[] splicedBuffer = new byte[bytesRead];
+                    //int bytesRead = await ns.ReadAsync(buffer, 0, 2048);
+                    //byte[] splicedBuffer = new byte[bytesRead];
 
-                    Array.Copy(buffer, 0, splicedBuffer, 0, bytesRead);
+                    //Array.Copy(buffer, 0, splicedBuffer, 0, bytesRead);
 
-                    Console.WriteLine($"Read {bytesRead} bytes from client");
+                    //Console.WriteLine($"Read {bytesRead} bytes from client");
 
-                    NetworkEventArgs receiveDataArgs = new NetworkEventArgs(aeClient, splicedBuffer, false);
+                    NetworkEventArgs receiveDataArgs = new NetworkEventArgs(aeClient, ns, false);
 
                     ReceiveData?.Invoke(this, receiveDataArgs);
 
-                    if (bytesRead == 0)
-                    {
-                        Console.WriteLine($"Client has closed the remote connection");
-                        break;
-                    }
+                    //if (bytesRead == 0)
+                    //{
+                    //    Console.WriteLine($"Client has closed the remote connection");
+                    //    break;
+                    //}
 
                     if (receiveDataArgs.Cancel)
                     {
