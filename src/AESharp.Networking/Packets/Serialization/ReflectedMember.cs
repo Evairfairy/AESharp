@@ -27,7 +27,7 @@ namespace AESharp.Networking.Packets.Serialization
 
         public ValueSetterDelegate SetValue { get; }
         public ValueGetterDelegate GetValue { get; }
-        public ReadOnlyCollection<ValueTransformerDelegate> Transformers { get; }
+        public ReadOnlyCollection<TransformerAttribute> Transformers { get; }
 
         public ReflectedMember( MemberInfo member )
         {
@@ -36,11 +36,12 @@ namespace AESharp.Networking.Packets.Serialization
             var converter = member.GetCustomAttribute<BinaryConverterAttribute>();
             this.Converter = converter ?? new BinaryConverterAttribute( typeof( DefaultBinaryConverter ) );
 
-            var transformerType = typeof( TransformAttribute );
+            var transformerType = typeof( TransformerAttribute );
             this.Transformers = member.GetCustomAttributes()
-                                      .Select( a => a.GetType() )
-                                      .Where( t => t.Inherits( transformerType ) )
-                                      .Select( MakeTransformerDelegate )
+                                      .Select( a => new { Attribute = a, Type = a.GetType() } )
+                                      .Where( a => a.Type.Inherits( transformerType ) )
+                                      .Select( a => a.Attribute )
+                                      .Cast<TransformerAttribute>()
                                       .ToList()
                                       .AsReadOnly();
 
@@ -65,14 +66,6 @@ namespace AESharp.Networking.Packets.Serialization
                 this.Type = property.PropertyType;
                 this.Name = property.Name;
             }
-        }
-
-        private static ValueTransformerDelegate MakeTransformerDelegate( Type type )
-        {
-            var instance = Activator.CreateInstance( type, true );
-            var method = type.GetTypeInfo().GetMethod( "Transform", TransformSignature );
-
-            return method.CreateDelegate( typeof( ValueTransformerDelegate ), instance ) as ValueTransformerDelegate;
         }
     }
 }

@@ -158,10 +158,11 @@ namespace AESharp.Networking.Packets.Serialization
                 {
                     foreach( var member in members )
                     {
+                        var readTransformers = member.Transformers.Where( t => t.SerializationMode.HasFlag( SerializationMode.Read ) );
                         var currentValue = member.GetValue( instance );
                         var value = member.Converter.Read( reader, instance, member.Type, currentValue, member.Length );
-                        foreach( var transform in member.Transformers )
-                            value = transform( value );
+                        foreach( var transformer in readTransformers )
+                            value = transformer.Transform( value, member.Length );
 
                         member.SetValue( value, instance);
                     }
@@ -179,9 +180,10 @@ namespace AESharp.Networking.Packets.Serialization
                 {
                     foreach( var member in members )
                     {
+                        var writeTransformers = member.Transformers.Where( t => t.SerializationMode.HasFlag( SerializationMode.Write ) );
                         var value = member.GetValue( instance );
-                        foreach( var transform in member.Transformers )
-                            value = transform( value );
+                        foreach( var transformer in writeTransformers )
+                            value = transformer.Transform( value, member.Length );
 
                         member.Converter.Write( writer, instance, type, value, member.Length );
                     }

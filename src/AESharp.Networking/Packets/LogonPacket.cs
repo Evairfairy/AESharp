@@ -15,18 +15,31 @@ namespace AESharp.Networking.Packets
 
         public short Length { get; private set; }
 
-        [FixedLength( 4 ), Reverse]
+        [FixedLength( 4 )]
+        // These transformers are executed in lexicographical order
+        [Reverse]
+        [Trim( mode: SerializationMode.Read )]
+        [Pad( StringSide.End, '\0' )]
         public string Game { get; private set; }
 
         public Version Build { get; private set; }
 
-        [FixedLength( 4 ), Reverse]
+        [FixedLength( 4 )]
+        [Reverse]
+        [Trim( mode: SerializationMode.Read )]
+        [Pad( StringSide.End, '\0' )]
         public string Platform { get; private set; }
 
-        [FixedLength( 4 ), Reverse]
+        [FixedLength( 4 )]
+        [Reverse]
+        [Trim( mode: SerializationMode.Read )]
+        [Pad( StringSide.End, '\0' )]
         public string OS { get; private set; }
 
-        [FixedLength( 4 ), Reverse]
+        [FixedLength( 4 )]
+        [Reverse]
+        [Trim( mode: SerializationMode.Read )]
+        [Pad( StringSide.End, '\0' )]
         public string Country { get; private set; }
 
         public uint TimezoneBias { get; private set; }
