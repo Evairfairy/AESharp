@@ -20,7 +20,7 @@ namespace AESharp.Networking.Packets.Serialization
             TransformSignature = new[] { typeof( object ) };
         }
 
-        public BinaryConverterAttribute Converter { get; }
+        public BinaryConverter Converter { get; }
         public int? Length { get; }
         public Type Type { get; }
         public string Name { get; }
@@ -33,8 +33,10 @@ namespace AESharp.Networking.Packets.Serialization
         {
             this.Length = member.GetCustomAttribute<FixedLengthAttribute>()?.Length;
 
-            var converter = member.GetCustomAttribute<BinaryConverterAttribute>();
-            this.Converter = converter ?? new BinaryConverterAttribute( typeof( DefaultBinaryConverter ) );
+            var converterAttr = member.GetCustomAttribute<BinaryConverterAttribute>()
+                             ?? new BinaryConverterAttribute( typeof( DefaultBinaryConverter ) );
+            this.Converter = (BinaryConverter)Activator.CreateInstance( converterAttr.ConverterType ); ;
+   
 
             var transformerType = typeof( TransformerAttribute );
             this.Transformers = member.GetCustomAttributes()
@@ -61,7 +63,7 @@ namespace AESharp.Networking.Packets.Serialization
                 var getter = property.GetGetMethod( true );
                 var setter = property.GetSetMethod( true );
 
-                this.SetValue = ( value, instance ) => setter.Invoke( instance, new[] { value } );
+                this.SetValue = ( instance, value ) => setter.Invoke( instance, new[] { value } );
                 this.GetValue = ( instance ) => getter.Invoke( instance, null );
                 this.Type = property.PropertyType;
                 this.Name = property.Name;

@@ -164,7 +164,7 @@ namespace AESharp.Networking.Packets.Serialization
                         foreach( var transformer in readTransformers )
                             value = transformer.Transform( value, member.Length );
 
-                        member.SetValue( value, instance);
+                        member.SetValue( instance, value );
                     }
                 }
 

@@ -10,11 +10,14 @@ namespace AESharp.Networking.Packets.Serialization
 {
     public sealed class DefaultBinaryConverter : BinaryConverter
     {
+        internal delegate object ReaderDelegate( BinaryReader reader, object structure, Type type, object currentValue, int? length );
+        internal delegate void WriterDelegate( BinaryWriter writer, object structure, Type type, object value, int? length );
+
         private static readonly TypeInfo ReaderType;
         private static readonly TypeInfo WriterType;
         private static readonly Type StringType;
-        private static readonly Dictionary<Type, BinaryConverterAttribute.ConversionReader> TypeReaders;
-        private static readonly Dictionary<Type, BinaryConverterAttribute.ConversionWriter> TypeWriters;
+        private static readonly Dictionary<Type, ReaderDelegate> TypeReaders;
+        private static readonly Dictionary<Type, WriterDelegate> TypeWriters;
 
         static DefaultBinaryConverter()
         {
@@ -22,7 +25,7 @@ namespace AESharp.Networking.Packets.Serialization
             WriterType = typeof( BinaryWriter ).GetTypeInfo();
             StringType = typeof( string );
 
-            TypeReaders = new Dictionary<Type, BinaryConverterAttribute.ConversionReader>();
+            TypeReaders = new Dictionary<Type, ReaderDelegate>();
             RegisterReaderForPrimitiveType<sbyte>();
             RegisterReaderForPrimitiveType<byte>();
             RegisterReaderForPrimitiveType<short>();
@@ -49,7 +52,7 @@ namespace AESharp.Networking.Packets.Serialization
                 return new Version( bytes[0], bytes[1], bytes[2], build );
             } );
 
-            TypeWriters = new Dictionary<Type, BinaryConverterAttribute.ConversionWriter>();
+            TypeWriters = new Dictionary<Type, WriterDelegate>();
             RegisterWriterForPrimitiveType<sbyte>();
             RegisterWriterForPrimitiveType<byte>();
             RegisterWriterForPrimitiveType<short>();
@@ -96,7 +99,7 @@ namespace AESharp.Networking.Packets.Serialization
                 return new String( chars );
             }
 
-            BinaryConverterAttribute.ConversionReader read;
+            ReaderDelegate read;
             if( TypeReaders.TryGetValue( type, out read ) )
                 return read( reader, structure, type, currentValue, length );
 
@@ -128,7 +131,7 @@ namespace AESharp.Networking.Packets.Serialization
                 writer.Write( str.ToCharArray() );
             }
 
-            BinaryConverterAttribute.ConversionWriter write;
+            WriterDelegate write;
             if( TypeWriters.TryGetValue( type, out write ) )
             {
                 write( writer, structure, type, value, length );
@@ -163,10 +166,10 @@ namespace AESharp.Networking.Packets.Serialization
             TypeWriters[type] = ( w, s, t, v, l ) => method.Invoke( w, new object[] { v } );
         }
 
-        private static void RegisterReaderForType<T>( BinaryConverterAttribute.ConversionReader reader )
+        private static void RegisterReaderForType<T>( ReaderDelegate reader )
             => TypeReaders[typeof( T )] = reader;
 
-        private static void RegisterWriterForType<T>( BinaryConverterAttribute.ConversionWriter writer )
+        private static void RegisterWriterForType<T>( WriterDelegate writer )
             => TypeWriters[typeof( T )] = writer;
     }
 }
