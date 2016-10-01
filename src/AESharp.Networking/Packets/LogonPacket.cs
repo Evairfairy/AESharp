@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
 using AESharp.Networking.Packets.Serialization;
 using AESharp.Networking.Packets.Serialization.Converters;
 using AESharp.Networking.Packets.Serialization.Transformers;
+
+// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace AESharp.Networking.Packets
 {

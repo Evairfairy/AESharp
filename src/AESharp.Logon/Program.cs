@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.IO;
 using System.Collections.Generic;
-using AESharp.Core.Extensions;
+using System.Net;
 using AESharp.Networking;
-using AESharp.Networking.Data;
 using AESharp.Networking.Events;
-using AESharp.Networking.Packets.Serialization;
 using AESharp.Networking.Packets;
+using AESharp.Networking.Packets.Serialization;
 
 namespace AESharp.Logon
 {
@@ -21,7 +16,7 @@ namespace AESharp.Logon
         {
             PacketTypes = new Dictionary<PacketId, Type>
             {
-                [PacketId.Logon] = typeof( LogonPacket ),
+                [PacketId.Logon] = typeof( LogonPacket )
             };
         }
 
@@ -41,16 +36,16 @@ namespace AESharp.Logon
 
         private static void ServerOnReceiveData( object sender, NetworkEventArgs networkEventArgs )
         {
-            var packetId = (PacketId)networkEventArgs.Stream.ReadByte();
+            PacketId packetId = (PacketId) networkEventArgs.Stream.ReadByte();
             Type type;
-            if( !PacketTypes.TryGetValue( packetId, out type ) )
+            if ( !PacketTypes.TryGetValue( packetId, out type ) )
             {
-                Console.Error.WriteLine( "Unknown packet 0x{0:X2}", (int)packetId );
+                Console.Error.WriteLine( "Unknown packet 0x{0:X2}", (int) packetId );
                 networkEventArgs.Cancel = true;
                 return;
             }
 
-            var packet = (LogonPacket)PacketSerialization.DeserializeObject( type, networkEventArgs.Stream );
+            LogonPacket packet = (LogonPacket) PacketSerialization.DeserializeObject( type, networkEventArgs.Stream );
 
             Console.WriteLine( "Received logon packet:" );
             Console.WriteLine( $"\tOpcode:\t\t\t{packetId}" );
@@ -98,7 +93,6 @@ namespace AESharp.Logon
             //Console.WriteLine( $"\tIP:\t\t\t{ip}" );
             //Console.WriteLine( $"\tAccount Name Length:\t{accountNameLength}" );
             //Console.WriteLine( $"\tAccount Name:\t\t{accountName}" );
-
         }
     }
 }

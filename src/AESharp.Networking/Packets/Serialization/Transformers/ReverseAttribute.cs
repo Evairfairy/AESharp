@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AESharp.Networking.Packets.Serialization.Transformers
 {
@@ -13,8 +11,8 @@ namespace AESharp.Networking.Packets.Serialization.Transformers
         
         protected override object TransformValue( object value, int? _ )
         {
-            var str = value as string;
-            return new String( str.Reverse().ToArray() );
+            string str = value as string;
+            return new string( str.Reverse().ToArray() );
         }
     }
 }
