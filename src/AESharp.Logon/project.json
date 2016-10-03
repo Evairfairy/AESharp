@@ -11,7 +11,8 @@
     "Microsoft.NETCore.App": {
         "type": "platform",
         "version": "1.0.0"
-    }
+    },
+    "SimpleInjector": "3.2.2"
   },
 
   "frameworks": {

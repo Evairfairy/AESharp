@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using AESharp.Core.Interfaces;
 using AESharp.Networking.Packets.Serialization;
 using AESharp.Networking.Packets.Serialization.Converters;
 using AESharp.Networking.Packets.Serialization.Transformers;
@@ -9,7 +10,7 @@ using AESharp.Networking.Packets.Serialization.Transformers;
 
 namespace AESharp.Networking.Packets
 {
-    public sealed class LogonPacket
+    public sealed class LogonPacket : IPacket
     {
         public byte Error { get; private set; }
 

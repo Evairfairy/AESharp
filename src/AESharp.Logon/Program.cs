@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
+using AESharp.Core.Interfaces;
 using AESharp.Networking;
 using AESharp.Networking.Events;
 using AESharp.Networking.Packets;
 using AESharp.Networking.Packets.Serialization;
+using SimpleInjector;
 
 namespace AESharp.Logon
 {
     public static class Program
     {
         private static readonly Dictionary<PacketId, Type> PacketTypes;
+        static Container _container;
 
         static Program()
         {
@@ -22,10 +26,17 @@ namespace AESharp.Logon
 
         public static void Main( string[] args )
         {
-            // Build (de)serializers before they're needed to speed up packet reads/writes
-            PacketSerialization.CacheObjects( typeof( LogonPacket ) );
+            _container = new Container();
 
-            AETcpServer server = new AETcpServer( IPAddress.Any, 3724 );
+            // Build (de)serializers before they're needed to speed up packet reads/writes
+            PacketSerialization packetSerializer = new PacketSerialization();
+            packetSerializer.CacheObjects( typeof( LogonPacket) );
+
+            _container.RegisterSingleton( typeof(IPacketSerializer), packetSerializer );
+
+            _container.Verify();
+
+            AETcpServer server = new AETcpServer( IPAddress.Any, 3726 );
             server.StartListening();
 
             server.ReceiveData += ServerOnReceiveData;
@@ -36,6 +47,8 @@ namespace AESharp.Logon
 
         private static void ServerOnReceiveData( object sender, NetworkEventArgs networkEventArgs )
         {
+            IPacketSerializer serializer = _container.GetInstance<IPacketSerializer>();
+
             PacketId packetId = (PacketId) networkEventArgs.Stream.ReadByte();
             Type type;
             if ( !PacketTypes.TryGetValue( packetId, out type ) )
@@ -45,7 +58,7 @@ namespace AESharp.Logon
                 return;
             }
 
-            LogonPacket packet = (LogonPacket) PacketSerialization.DeserializeObject( type, networkEventArgs.Stream );
+            LogonPacket packet = serializer.DeserializePacket<LogonPacket>( networkEventArgs.Stream, null );
 
             Console.WriteLine( "Received logon packet:" );
             Console.WriteLine( $"\tOpcode:\t\t\t{packetId}" );
