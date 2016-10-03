@@ -1,14 +1,15 @@
 ﻿using System.Net.Sockets;
+using AESharp.Core.Interfaces.Networking;
 
 namespace AESharp.Networking
 {
-    public class AENetworkClient
+    public class AENetworkClient : INetworkClient
     {
-        public TcpClient BaseClient { get; private set; }
-
-        public AENetworkClient(TcpClient baseClient)
+        public AENetworkClient( TcpClient baseClient )
         {
-            BaseClient = baseClient;
+            this.BaseClient = baseClient;
         }
+
+        public TcpClient BaseClient { get; private set; }
     }
 }

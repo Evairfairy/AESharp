@@ -66,7 +66,7 @@
 //                    "Critical Error: Client passed to us in networkEventArgs is not our AENetworkClient" );
 //            }
 
-//            byte[] decryptedData = this.DecryptEngine.Process(networkEventArgs.Data);
+//            byte[] decryptedData = this.DecryptEngine.Process(networkEventArgs.DataStream);
 //            NetworkPacket packet = new NetworkPacket(decryptedData);
 
 //            ushort opcode = packet.ReadUShort();

@@ -1,19 +1,20 @@
 ﻿using System;
 using System.IO;
+using AESharp.Core.Interfaces.Networking;
 
 namespace AESharp.Networking.Events
 {
-    public class NetworkEventArgs : EventArgs
+    public class NetworkEventArgs : EventArgs, INetworkEventArgs
     {
-        public AENetworkClient Client { get; private set; }
-        public Stream Stream { get; private set; }
-        public bool Cancel { get; set; }
-
-        public NetworkEventArgs(AENetworkClient client, Stream stream, bool cancel)
+        public NetworkEventArgs( INetworkClient client, MemoryStream dataStream )
         {
-            Client = client;
-            Stream = stream;
-            Cancel = cancel;
+            this.Client = client;
+            this.DataStream = dataStream;
+            this.DisconnectClient = false;
         }
+
+        public INetworkClient Client { get; }
+        public MemoryStream DataStream { get; }
+        public bool DisconnectClient { get; set; }
     }
 }

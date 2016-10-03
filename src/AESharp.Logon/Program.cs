@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using AESharp.Core.Interfaces;
+using AESharp.Core.Interfaces.Networking;
+using AESharp.Logon.Networking;
 using AESharp.Networking;
 using AESharp.Networking.Events;
 using AESharp.Networking.Packets;
@@ -33,11 +34,12 @@ namespace AESharp.Logon
             packetSerializer.CacheObjects( typeof( LogonPacket) );
 
             _container.RegisterSingleton( typeof(IPacketSerializer), packetSerializer );
+            _container.RegisterSingleton<INetworkEngine, LogonNetworkEngine>();
 
             _container.Verify();
 
-            AETcpServer server = new AETcpServer( IPAddress.Any, 3726 );
-            server.StartListening();
+            AETcpServer server = _container.GetInstance<AETcpServer>();
+            server.StartListening( IPAddress.Any, 3724 );
 
             server.ReceiveData += ServerOnReceiveData;
 
@@ -49,16 +51,16 @@ namespace AESharp.Logon
         {
             IPacketSerializer serializer = _container.GetInstance<IPacketSerializer>();
 
-            PacketId packetId = (PacketId) networkEventArgs.Stream.ReadByte();
+            PacketId packetId = (PacketId) networkEventArgs.DataStream.ReadByte();
             Type type;
             if ( !PacketTypes.TryGetValue( packetId, out type ) )
             {
                 Console.Error.WriteLine( "Unknown packet 0x{0:X2}", (int) packetId );
-                networkEventArgs.Cancel = true;
+                networkEventArgs.DisconnectClient = true;
                 return;
             }
 
-            LogonPacket packet = serializer.DeserializePacket<LogonPacket>( networkEventArgs.Stream, null );
+            LogonPacket packet = serializer.DeserializePacket<LogonPacket>( networkEventArgs.DataStream, null );
 
             Console.WriteLine( "Received logon packet:" );
             Console.WriteLine( $"\tOpcode:\t\t\t{packetId}" );
@@ -74,9 +76,9 @@ namespace AESharp.Logon
             Console.WriteLine( $"\tAccount Name:\t\t{packet.AccountName}" );
 
             // Nothing else to do at this stage in development
-            networkEventArgs.Cancel = true;
+            networkEventArgs.DisconnectClient = true;
 
-            //NetworkPacket packet = new NetworkPacket(networkEventArgs.Data);
+            //NetworkPacket packet = new NetworkPacket(networkEventArgs.DataStream);
 
             //Console.WriteLine($"Reading 4 byte header");
 
