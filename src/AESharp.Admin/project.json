@@ -1,14 +1,17 @@
-﻿{
+{
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true
   },
 
   "dependencies": {
+    "AESharp.Core": "1.0.0-*",
+    "AESharp.Logging": "1.0.0-*",
     "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.0"
-    }
+        "type": "platform",
+        "version": "1.0.0"
+    },
+    "SimpleInjector": "3.2.2"
   },
 
   "frameworks": {

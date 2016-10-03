@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AESharp.Core.Interfaces;
+using AESharp.Logging;
+using SimpleInjector;
 
 namespace AESharp.Admin
 {
@@ -9,6 +9,13 @@ namespace AESharp.Admin
     {
         public static void Main(string[] args)
         {
+            Container container = new Container();
+
+            container.Register<ILogger, ConsoleLogger>(Lifestyle.Singleton);
+
+            container.Verify();
+
+            Console.ReadLine();
         }
     }
 }
