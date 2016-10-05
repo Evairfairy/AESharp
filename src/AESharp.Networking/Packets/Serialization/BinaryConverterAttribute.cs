@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
+using AESharp.Core.Extensions;
 
 namespace AESharp.Networking.Packets.Serialization
 {
