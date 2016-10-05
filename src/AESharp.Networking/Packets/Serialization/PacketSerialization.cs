@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using AESharp.Core.Interfaces;
+using AESharp.Core.Extensions;
 
 namespace AESharp.Networking.Packets.Serialization
 {
@@ -40,6 +41,9 @@ namespace AESharp.Networking.Packets.Serialization
 
         // Allow objects to be caches ahead of time
         public void CacheObjects( params Type[] types )
+            => this.CacheObjects( types as IEnumerable<Type> );
+
+        public void CacheObjects( IEnumerable<Type> types )
         {
             foreach ( Type type in types )
             {
@@ -209,14 +213,26 @@ namespace AESharp.Networking.Packets.Serialization
 
         private delegate void ObjectSerializer( Type type, object instance, Stream output, Encoding encoding );
 
-        public void SerializePacket( IPacket packet, Stream output, Encoding encoding )
+        public void SerializePacket( object packet, Stream output, Encoding encoding )
         {
+            if( !packet.GetType().Implements<IPacket>() )
+                throw new ArgumentException( "Packet object must implement IPacket", nameof( packet ) );
+
             this.SerializeObject( packet, output, encoding );
         }
 
-        public T DeserializePacket< T >( Stream input, Encoding encoding ) where T : IPacket
+        public void SerializePacket( IPacket packet, Stream output, Encoding encoding )
+            => this.SerializeObject( packet, output, encoding );
+
+        public object DeserializePacket( Type type, Stream input, Encoding encoding )
         {
-            return this.DeserializeObject<T>( input, encoding );
+            if( !type.Implements<IPacket>() )
+                throw new ArgumentException( "Packet object must implement IPacket", nameof( type ) );
+
+            return this.DeserializeObject( type, input, encoding );
         }
+
+        public T DeserializePacket<T>( Stream input, Encoding encoding ) where T : IPacket
+            => this.DeserializeObject<T>( input, encoding );
     }
 }

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace AESharp.Logon
 {
-    internal enum PacketId
+    public enum PacketId : byte
     {
-        Logon = 0,
+        Challenge = 0
     }
 }
