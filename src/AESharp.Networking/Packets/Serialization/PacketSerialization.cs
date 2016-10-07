@@ -205,6 +205,8 @@ namespace AESharp.Networking.Packets.Serialization
 
                         member.Converter.Write( writer, instance, type, value, member.Length );
                     }
+
+                    writer.Flush();
                 }
             };
         }
