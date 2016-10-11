@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.World
 {
-    public sealed class Auctionhouse
+    public sealed class AuctionHouse
     {
             [Key, Column( "creature_entry" )]
             public ushort CreatureEntry { get; set; }

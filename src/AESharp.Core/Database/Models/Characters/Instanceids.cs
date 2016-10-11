@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.Characters
 {
-    public sealed class Instanceids
+    public sealed class InstanceIds
     {
             [Column( "playerguid" )]
             public uint Playerguid { get; set; }

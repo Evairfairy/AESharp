@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.World
 {
-    public sealed class ItemRandomsuffixGroups
+    public sealed class ItemRandomSuffixGroups
     {
             [Column( "entry_id" )]
             public ushort EntryId { get; set; }

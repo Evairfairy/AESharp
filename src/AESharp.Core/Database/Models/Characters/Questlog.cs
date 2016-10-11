@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.Characters
 {
-    public sealed class Questlog
+    public sealed class QuestLog
     {
             [Column( "player_guid" )]
             public ulong PlayerGuid { get; set; }

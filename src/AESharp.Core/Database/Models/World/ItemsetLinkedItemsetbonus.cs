@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.World
 {
-    public sealed class ItemsetLinkedItemsetbonus
+    public sealed class ItemSetLinkedItemSetBonus
     {
             [Key, Column( "itemset" )]
             public int Itemset { get; set; }

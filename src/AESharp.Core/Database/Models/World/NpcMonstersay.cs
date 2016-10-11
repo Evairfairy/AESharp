@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.World
 {
-    public sealed class NpcMonstersay
+    public sealed class NpcMonsterSay
     {
             [Column( "entry" )]
             public uint Entry { get; set; }

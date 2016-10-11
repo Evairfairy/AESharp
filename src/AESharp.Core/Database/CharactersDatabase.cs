@@ -15,7 +15,7 @@ namespace AESharp.Core.Database
 
         public DbSet<AccountData> AccountData { get; set; }
         public DbSet<AccountForcedPermissions> AccountForcedPermissions { get; set; }
-        public DbSet<Arenateams> Arenateams { get; set; }
+        public DbSet<ArenaTeams> Arenateams { get; set; }
         public DbSet<Auctions> Auctions { get; set; }
         public DbSet<BannedNames> BannedNames { get; set; }
         public DbSet<CalendarEvents> CalendarEvents { get; set; }
@@ -26,41 +26,41 @@ namespace AESharp.Core.Database
         public DbSet<Characters> Characters { get; set; }
         public DbSet<CharactersInsertQueue> CharactersInsertQueue { get; set; }
         public DbSet<Charters> Charters { get; set; }
-        public DbSet<Clientaddons> Clientaddons { get; set; }
+        public DbSet<ClientAddons> Clientaddons { get; set; }
         public DbSet<CommandOverrides> CommandOverrides { get; set; }
         public DbSet<Corpses> Corpses { get; set; }
-        public DbSet<Equipmentsets> Equipmentsets { get; set; }
+        public DbSet<EquipmentSets> Equipmentsets { get; set; }
         public DbSet<EventSave> EventSave { get; set; }
         public DbSet<GmSurvey> GmSurvey { get; set; }
         public DbSet<GmSurveyAnswers> GmSurveyAnswers { get; set; }
         public DbSet<GmTickets> GmTickets { get; set; }
         public DbSet<Groups> Groups { get; set; }
-        public DbSet<GuildBankitems> GuildBankitems { get; set; }
-        public DbSet<GuildBanklogs> GuildBanklogs { get; set; }
-        public DbSet<GuildBanktabs> GuildBanktabs { get; set; }
+        public DbSet<GuildBankItems> GuildBankitems { get; set; }
+        public DbSet<GuildBankLogs> GuildBanklogs { get; set; }
+        public DbSet<GuildBankTabs> GuildBanktabs { get; set; }
         public DbSet<GuildData> GuildData { get; set; }
         public DbSet<GuildLogs> GuildLogs { get; set; }
         public DbSet<GuildRanks> GuildRanks { get; set; }
         public DbSet<Guilds> Guilds { get; set; }
-        public DbSet<Instanceids> Instanceids { get; set; }
+        public DbSet<InstanceIds> Instanceids { get; set; }
         public DbSet<Instances> Instances { get; set; }
         public DbSet<LagReports> LagReports { get; set; }
         public DbSet<LfgData> LfgData { get; set; }
         public DbSet<Mailbox> Mailbox { get; set; }
         public DbSet<MailboxInsertQueue> MailboxInsertQueue { get; set; }
-        public DbSet<Playerbugreports> Playerbugreports { get; set; }
-        public DbSet<Playercooldowns> Playercooldowns { get; set; }
-        public DbSet<Playerdeletedspells> Playerdeletedspells { get; set; }
-        public DbSet<Playeritems> Playeritems { get; set; }
-        public DbSet<PlayeritemsInsertQueue> PlayeritemsInsertQueue { get; set; }
-        public DbSet<Playerpets> Playerpets { get; set; }
-        public DbSet<Playerpetspells> Playerpetspells { get; set; }
-        public DbSet<Playerreputations> Playerreputations { get; set; }
-        public DbSet<Playerskills> Playerskills { get; set; }
-        public DbSet<Playerspells> Playerspells { get; set; }
-        public DbSet<Playersummons> Playersummons { get; set; }
-        public DbSet<Playersummonspells> Playersummonspells { get; set; }
-        public DbSet<Questlog> Questlog { get; set; }
+        public DbSet<PlayerBugReports> Playerbugreports { get; set; }
+        public DbSet<PlayerCooldowns> Playercooldowns { get; set; }
+        public DbSet<PlayerDeletedSpells> Playerdeletedspells { get; set; }
+        public DbSet<PlayerItems> Playeritems { get; set; }
+        public DbSet<PlayerItemsInsertQueue> PlayeritemsInsertQueue { get; set; }
+        public DbSet<PlayerPets> Playerpets { get; set; }
+        public DbSet<PlayerPetSpells> Playerpetspells { get; set; }
+        public DbSet<PlayerReputations> Playerreputations { get; set; }
+        public DbSet<PlayerSkills> Playerskills { get; set; }
+        public DbSet<PlayerSpells> Playerspells { get; set; }
+        public DbSet<PlayerSummons> Playersummons { get; set; }
+        public DbSet<PlayerSummonSpells> Playersummonspells { get; set; }
+        public DbSet<QuestLog> Questlog { get; set; }
         public DbSet<ServerSettings> ServerSettings { get; set; }
         public DbSet<SocialFriends> SocialFriends { get; set; }
         public DbSet<SocialIgnores> SocialIgnores { get; set; }
@@ -116,29 +116,29 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<AccountForcedPermissions>().Property( p => p.Login ).HasColumnName( "login" );
             modelBuilder.Entity<AccountForcedPermissions>().Property( p => p.Permissions ).HasColumnName( "permissions" );
 
-            modelBuilder.Entity<Arenateams>().ToTable( "arenateams" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Id ).HasColumnName( "id" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Type ).HasColumnName( "type" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Leader ).HasColumnName( "leader" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Name ).HasColumnName( "name" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Emblemstyle ).HasColumnName( "emblemstyle" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Emblemcolour ).HasColumnName( "emblemcolour" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Borderstyle ).HasColumnName( "borderstyle" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Bordercolour ).HasColumnName( "bordercolour" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Backgroundcolour ).HasColumnName( "backgroundcolour" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Rating ).HasColumnName( "rating" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Data ).HasColumnName( "data" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.Ranking ).HasColumnName( "ranking" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData1 ).HasColumnName( "player_data1" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData2 ).HasColumnName( "player_data2" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData3 ).HasColumnName( "player_data3" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData4 ).HasColumnName( "player_data4" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData5 ).HasColumnName( "player_data5" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData6 ).HasColumnName( "player_data6" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData7 ).HasColumnName( "player_data7" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData8 ).HasColumnName( "player_data8" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData9 ).HasColumnName( "player_data9" );
-            modelBuilder.Entity<Arenateams>().Property( p => p.PlayerData10 ).HasColumnName( "player_data10" );
+            modelBuilder.Entity<ArenaTeams>().ToTable( "arenateams" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Id ).HasColumnName( "id" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Type ).HasColumnName( "type" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Leader ).HasColumnName( "leader" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Name ).HasColumnName( "name" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Emblemstyle ).HasColumnName( "emblemstyle" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Emblemcolour ).HasColumnName( "emblemcolour" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Borderstyle ).HasColumnName( "borderstyle" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Bordercolour ).HasColumnName( "bordercolour" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Backgroundcolour ).HasColumnName( "backgroundcolour" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Rating ).HasColumnName( "rating" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Data ).HasColumnName( "data" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.Ranking ).HasColumnName( "ranking" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData1 ).HasColumnName( "player_data1" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData2 ).HasColumnName( "player_data2" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData3 ).HasColumnName( "player_data3" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData4 ).HasColumnName( "player_data4" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData5 ).HasColumnName( "player_data5" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData6 ).HasColumnName( "player_data6" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData7 ).HasColumnName( "player_data7" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData8 ).HasColumnName( "player_data8" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData9 ).HasColumnName( "player_data9" );
+            modelBuilder.Entity<ArenaTeams>().Property( p => p.PlayerData10 ).HasColumnName( "player_data10" );
 
             modelBuilder.Entity<Auctions>().ToTable( "auctions" );
             modelBuilder.Entity<Auctions>().HasKey( e => new { e.Auctionid } );
@@ -400,14 +400,14 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<Charters>().Property( p => p.Signer8 ).HasColumnName( "signer8" );
             modelBuilder.Entity<Charters>().Property( p => p.Signer9 ).HasColumnName( "signer9" );
 
-            modelBuilder.Entity<Clientaddons>().ToTable( "clientaddons" );
-            modelBuilder.Entity<Clientaddons>().HasKey( e => new { e.Id } );
-            modelBuilder.Entity<Clientaddons>().Property( p => p.Id ).HasColumnName( "id" );
-            modelBuilder.Entity<Clientaddons>().Property( p => p.Name ).HasColumnName( "name" );
-            modelBuilder.Entity<Clientaddons>().HasIndex( e => e.Name );
-            modelBuilder.Entity<Clientaddons>().Property( p => p.Crc ).HasColumnName( "crc" );
-            modelBuilder.Entity<Clientaddons>().Property( p => p.Banned ).HasColumnName( "banned" );
-            modelBuilder.Entity<Clientaddons>().Property( p => p.Showinlist ).HasColumnName( "showinlist" );
+            modelBuilder.Entity<ClientAddons>().ToTable( "clientaddons" );
+            modelBuilder.Entity<ClientAddons>().HasKey( e => new { e.Id } );
+            modelBuilder.Entity<ClientAddons>().Property( p => p.Id ).HasColumnName( "id" );
+            modelBuilder.Entity<ClientAddons>().Property( p => p.Name ).HasColumnName( "name" );
+            modelBuilder.Entity<ClientAddons>().HasIndex( e => e.Name );
+            modelBuilder.Entity<ClientAddons>().Property( p => p.Crc ).HasColumnName( "crc" );
+            modelBuilder.Entity<ClientAddons>().Property( p => p.Banned ).HasColumnName( "banned" );
+            modelBuilder.Entity<ClientAddons>().Property( p => p.Showinlist ).HasColumnName( "showinlist" );
 
             modelBuilder.Entity<CommandOverrides>().ToTable( "command_overrides" );
             modelBuilder.Entity<CommandOverrides>().Property( p => p.CommandName ).HasColumnName( "command_name" );
@@ -426,32 +426,32 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<Corpses>().HasIndex( e => e.Instanceid );
             modelBuilder.Entity<Corpses>().Property( p => p.Data ).HasColumnName( "data" );
 
-            modelBuilder.Entity<Equipmentsets>().ToTable( "equipmentsets" );
-            modelBuilder.Entity<Equipmentsets>().HasKey( e => new { e.Ownerguid, e.Setguid, e.Setid } );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Setguid ).HasColumnName( "setGUID" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Setid ).HasColumnName( "setid" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Setname ).HasColumnName( "setname" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Iconname ).HasColumnName( "iconname" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Head ).HasColumnName( "head" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Neck ).HasColumnName( "neck" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Shoulders ).HasColumnName( "shoulders" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Body ).HasColumnName( "body" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Chest ).HasColumnName( "chest" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Waist ).HasColumnName( "waist" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Legs ).HasColumnName( "legs" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Feet ).HasColumnName( "feet" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Wrists ).HasColumnName( "wrists" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Hands ).HasColumnName( "hands" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Finger1 ).HasColumnName( "finger1" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Finger2 ).HasColumnName( "finger2" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Trinket1 ).HasColumnName( "trinket1" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Trinket2 ).HasColumnName( "trinket2" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Back ).HasColumnName( "back" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Mainhand ).HasColumnName( "mainhand" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Offhand ).HasColumnName( "offhand" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Ranged ).HasColumnName( "ranged" );
-            modelBuilder.Entity<Equipmentsets>().Property( p => p.Tabard ).HasColumnName( "tabard" );
+            modelBuilder.Entity<EquipmentSets>().ToTable( "equipmentsets" );
+            modelBuilder.Entity<EquipmentSets>().HasKey( e => new { e.Ownerguid, e.Setguid, e.Setid } );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Setguid ).HasColumnName( "setGUID" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Setid ).HasColumnName( "setid" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Setname ).HasColumnName( "setname" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Iconname ).HasColumnName( "iconname" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Head ).HasColumnName( "head" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Neck ).HasColumnName( "neck" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Shoulders ).HasColumnName( "shoulders" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Body ).HasColumnName( "body" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Chest ).HasColumnName( "chest" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Waist ).HasColumnName( "waist" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Legs ).HasColumnName( "legs" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Feet ).HasColumnName( "feet" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Wrists ).HasColumnName( "wrists" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Hands ).HasColumnName( "hands" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Finger1 ).HasColumnName( "finger1" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Finger2 ).HasColumnName( "finger2" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Trinket1 ).HasColumnName( "trinket1" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Trinket2 ).HasColumnName( "trinket2" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Back ).HasColumnName( "back" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Mainhand ).HasColumnName( "mainhand" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Offhand ).HasColumnName( "offhand" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Ranged ).HasColumnName( "ranged" );
+            modelBuilder.Entity<EquipmentSets>().Property( p => p.Tabard ).HasColumnName( "tabard" );
 
             modelBuilder.Entity<EventSave>().ToTable( "event_save" );
             modelBuilder.Entity<EventSave>().Property( p => p.EventEntry ).HasColumnName( "event_entry" );
@@ -540,32 +540,32 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<Groups>().Property( p => p.Timestamp ).HasColumnName( "timestamp" );
             modelBuilder.Entity<Groups>().Property( p => p.Instanceids ).HasColumnName( "instanceids" );
 
-            modelBuilder.Entity<GuildBankitems>().ToTable( "guild_bankitems" );
-            modelBuilder.Entity<GuildBankitems>().HasKey( e => new { e.Guildid, e.Tabid, e.Slotid } );
-            modelBuilder.Entity<GuildBankitems>().Property( p => p.Guildid ).HasColumnName( "guildId" );
-            modelBuilder.Entity<GuildBankitems>().Property( p => p.Tabid ).HasColumnName( "tabId" );
-            modelBuilder.Entity<GuildBankitems>().Property( p => p.Slotid ).HasColumnName( "slotId" );
-            modelBuilder.Entity<GuildBankitems>().Property( p => p.Itemguid ).HasColumnName( "itemGuid" );
+            modelBuilder.Entity<GuildBankItems>().ToTable( "guild_bankitems" );
+            modelBuilder.Entity<GuildBankItems>().HasKey( e => new { e.Guildid, e.Tabid, e.Slotid } );
+            modelBuilder.Entity<GuildBankItems>().Property( p => p.Guildid ).HasColumnName( "guildId" );
+            modelBuilder.Entity<GuildBankItems>().Property( p => p.Tabid ).HasColumnName( "tabId" );
+            modelBuilder.Entity<GuildBankItems>().Property( p => p.Slotid ).HasColumnName( "slotId" );
+            modelBuilder.Entity<GuildBankItems>().Property( p => p.Itemguid ).HasColumnName( "itemGuid" );
 
-            modelBuilder.Entity<GuildBanklogs>().ToTable( "guild_banklogs" );
-            modelBuilder.Entity<GuildBanklogs>().HasKey( e => new { e.LogId, e.Guildid } );
-            modelBuilder.Entity<GuildBanklogs>().Property( p => p.LogId ).HasColumnName( "log_id" );
-            modelBuilder.Entity<GuildBanklogs>().Property( p => p.Guildid ).HasColumnName( "guildid" );
-            modelBuilder.Entity<GuildBanklogs>().Property( p => p.Tabid ).HasColumnName( "tabid" );
-            modelBuilder.Entity<GuildBanklogs>().HasIndex( e => e.Tabid );
-            modelBuilder.Entity<GuildBanklogs>().Property( p => p.Action ).HasColumnName( "action" );
-            modelBuilder.Entity<GuildBanklogs>().Property( p => p.PlayerGuid ).HasColumnName( "player_guid" );
-            modelBuilder.Entity<GuildBanklogs>().Property( p => p.ItemEntry ).HasColumnName( "item_entry" );
-            modelBuilder.Entity<GuildBanklogs>().Property( p => p.StackCount ).HasColumnName( "stack_count" );
-            modelBuilder.Entity<GuildBanklogs>().Property( p => p.Timestamp ).HasColumnName( "timestamp" );
+            modelBuilder.Entity<GuildBankLogs>().ToTable( "guild_banklogs" );
+            modelBuilder.Entity<GuildBankLogs>().HasKey( e => new { e.LogId, e.Guildid } );
+            modelBuilder.Entity<GuildBankLogs>().Property( p => p.LogId ).HasColumnName( "log_id" );
+            modelBuilder.Entity<GuildBankLogs>().Property( p => p.Guildid ).HasColumnName( "guildid" );
+            modelBuilder.Entity<GuildBankLogs>().Property( p => p.Tabid ).HasColumnName( "tabid" );
+            modelBuilder.Entity<GuildBankLogs>().HasIndex( e => e.Tabid );
+            modelBuilder.Entity<GuildBankLogs>().Property( p => p.Action ).HasColumnName( "action" );
+            modelBuilder.Entity<GuildBankLogs>().Property( p => p.PlayerGuid ).HasColumnName( "player_guid" );
+            modelBuilder.Entity<GuildBankLogs>().Property( p => p.ItemEntry ).HasColumnName( "item_entry" );
+            modelBuilder.Entity<GuildBankLogs>().Property( p => p.StackCount ).HasColumnName( "stack_count" );
+            modelBuilder.Entity<GuildBankLogs>().Property( p => p.Timestamp ).HasColumnName( "timestamp" );
 
-            modelBuilder.Entity<GuildBanktabs>().ToTable( "guild_banktabs" );
-            modelBuilder.Entity<GuildBanktabs>().HasKey( e => new { e.Guildid, e.Tabid } );
-            modelBuilder.Entity<GuildBanktabs>().Property( p => p.Guildid ).HasColumnName( "guildId" );
-            modelBuilder.Entity<GuildBanktabs>().Property( p => p.Tabid ).HasColumnName( "tabId" );
-            modelBuilder.Entity<GuildBanktabs>().Property( p => p.Tabname ).HasColumnName( "tabName" );
-            modelBuilder.Entity<GuildBanktabs>().Property( p => p.Tabicon ).HasColumnName( "tabIcon" );
-            modelBuilder.Entity<GuildBanktabs>().Property( p => p.Tabinfo ).HasColumnName( "tabInfo" );
+            modelBuilder.Entity<GuildBankTabs>().ToTable( "guild_banktabs" );
+            modelBuilder.Entity<GuildBankTabs>().HasKey( e => new { e.Guildid, e.Tabid } );
+            modelBuilder.Entity<GuildBankTabs>().Property( p => p.Guildid ).HasColumnName( "guildId" );
+            modelBuilder.Entity<GuildBankTabs>().Property( p => p.Tabid ).HasColumnName( "tabId" );
+            modelBuilder.Entity<GuildBankTabs>().Property( p => p.Tabname ).HasColumnName( "tabName" );
+            modelBuilder.Entity<GuildBankTabs>().Property( p => p.Tabicon ).HasColumnName( "tabIcon" );
+            modelBuilder.Entity<GuildBankTabs>().Property( p => p.Tabinfo ).HasColumnName( "tabInfo" );
 
             modelBuilder.Entity<GuildData>().ToTable( "guild_data" );
             modelBuilder.Entity<GuildData>().HasKey( e => new {  } );
@@ -635,12 +635,12 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<Guilds>().Property( p => p.Createdate ).HasColumnName( "createdate" );
             modelBuilder.Entity<Guilds>().Property( p => p.Bankbalance ).HasColumnName( "bankBalance" );
 
-            modelBuilder.Entity<Instanceids>().ToTable( "instanceids" );
-            modelBuilder.Entity<Instanceids>().HasKey( e => new { e.Playerguid, e.Mapid, e.Mode } );
-            modelBuilder.Entity<Instanceids>().Property( p => p.Playerguid ).HasColumnName( "playerguid" );
-            modelBuilder.Entity<Instanceids>().Property( p => p.Mapid ).HasColumnName( "mapid" );
-            modelBuilder.Entity<Instanceids>().Property( p => p.Mode ).HasColumnName( "mode" );
-            modelBuilder.Entity<Instanceids>().Property( p => p.Instanceid ).HasColumnName( "instanceid" );
+            modelBuilder.Entity<InstanceIds>().ToTable( "instanceids" );
+            modelBuilder.Entity<InstanceIds>().HasKey( e => new { e.Playerguid, e.Mapid, e.Mode } );
+            modelBuilder.Entity<InstanceIds>().Property( p => p.Playerguid ).HasColumnName( "playerguid" );
+            modelBuilder.Entity<InstanceIds>().Property( p => p.Mapid ).HasColumnName( "mapid" );
+            modelBuilder.Entity<InstanceIds>().Property( p => p.Mode ).HasColumnName( "mode" );
+            modelBuilder.Entity<InstanceIds>().Property( p => p.Instanceid ).HasColumnName( "instanceid" );
 
             modelBuilder.Entity<Instances>().ToTable( "instances" );
             modelBuilder.Entity<Instances>().HasKey( e => new { e.Id } );
@@ -721,149 +721,149 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<MailboxInsertQueue>().Property( p => p.ItemId12 ).HasColumnName( "item_id12" );
             modelBuilder.Entity<MailboxInsertQueue>().Property( p => p.ItemStack12 ).HasColumnName( "item_stack12" );
 
-            modelBuilder.Entity<Playerbugreports>().ToTable( "playerbugreports" );
-            modelBuilder.Entity<Playerbugreports>().Property( p => p.Uid ).HasColumnName( "UID" );
-            modelBuilder.Entity<Playerbugreports>().Property( p => p.Accountid ).HasColumnName( "AccountID" );
-            modelBuilder.Entity<Playerbugreports>().Property( p => p.Timestamp ).HasColumnName( "TimeStamp" );
-            modelBuilder.Entity<Playerbugreports>().Property( p => p.Suggestion ).HasColumnName( "Suggestion" );
-            modelBuilder.Entity<Playerbugreports>().Property( p => p.Type ).HasColumnName( "Type" );
-            modelBuilder.Entity<Playerbugreports>().Property( p => p.Content ).HasColumnName( "Content" );
+            modelBuilder.Entity<PlayerBugReports>().ToTable( "playerbugreports" );
+            modelBuilder.Entity<PlayerBugReports>().Property( p => p.Uid ).HasColumnName( "UID" );
+            modelBuilder.Entity<PlayerBugReports>().Property( p => p.Accountid ).HasColumnName( "AccountID" );
+            modelBuilder.Entity<PlayerBugReports>().Property( p => p.Timestamp ).HasColumnName( "TimeStamp" );
+            modelBuilder.Entity<PlayerBugReports>().Property( p => p.Suggestion ).HasColumnName( "Suggestion" );
+            modelBuilder.Entity<PlayerBugReports>().Property( p => p.Type ).HasColumnName( "Type" );
+            modelBuilder.Entity<PlayerBugReports>().Property( p => p.Content ).HasColumnName( "Content" );
 
-            modelBuilder.Entity<Playercooldowns>().ToTable( "playercooldowns" );
-            modelBuilder.Entity<Playercooldowns>().Property( p => p.PlayerGuid ).HasColumnName( "player_guid" );
-            modelBuilder.Entity<Playercooldowns>().Property( p => p.CooldownType ).HasColumnName( "cooldown_type" );
-            modelBuilder.Entity<Playercooldowns>().Property( p => p.CooldownMisc ).HasColumnName( "cooldown_misc" );
-            modelBuilder.Entity<Playercooldowns>().Property( p => p.CooldownExpireTime ).HasColumnName( "cooldown_expire_time" );
-            modelBuilder.Entity<Playercooldowns>().Property( p => p.CooldownSpellid ).HasColumnName( "cooldown_spellid" );
-            modelBuilder.Entity<Playercooldowns>().Property( p => p.CooldownItemid ).HasColumnName( "cooldown_itemid" );
+            modelBuilder.Entity<PlayerCooldowns>().ToTable( "playercooldowns" );
+            modelBuilder.Entity<PlayerCooldowns>().Property( p => p.PlayerGuid ).HasColumnName( "player_guid" );
+            modelBuilder.Entity<PlayerCooldowns>().Property( p => p.CooldownType ).HasColumnName( "cooldown_type" );
+            modelBuilder.Entity<PlayerCooldowns>().Property( p => p.CooldownMisc ).HasColumnName( "cooldown_misc" );
+            modelBuilder.Entity<PlayerCooldowns>().Property( p => p.CooldownExpireTime ).HasColumnName( "cooldown_expire_time" );
+            modelBuilder.Entity<PlayerCooldowns>().Property( p => p.CooldownSpellid ).HasColumnName( "cooldown_spellid" );
+            modelBuilder.Entity<PlayerCooldowns>().Property( p => p.CooldownItemid ).HasColumnName( "cooldown_itemid" );
 
-            modelBuilder.Entity<Playerdeletedspells>().ToTable( "playerdeletedspells" );
-            modelBuilder.Entity<Playerdeletedspells>().HasKey( e => new { e.Guid, e.Spellid } );
-            modelBuilder.Entity<Playerdeletedspells>().Property( p => p.Guid ).HasColumnName( "GUID" );
-            modelBuilder.Entity<Playerdeletedspells>().Property( p => p.Spellid ).HasColumnName( "SpellID" );
+            modelBuilder.Entity<PlayerDeletedSpells>().ToTable( "playerdeletedspells" );
+            modelBuilder.Entity<PlayerDeletedSpells>().HasKey( e => new { e.Guid, e.Spellid } );
+            modelBuilder.Entity<PlayerDeletedSpells>().Property( p => p.Guid ).HasColumnName( "GUID" );
+            modelBuilder.Entity<PlayerDeletedSpells>().Property( p => p.Spellid ).HasColumnName( "SpellID" );
 
-            modelBuilder.Entity<Playeritems>().ToTable( "playeritems" );
-            modelBuilder.Entity<Playeritems>().HasKey( e => new { e.Guid } );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
-            modelBuilder.Entity<Playeritems>().HasIndex( e => e.Ownerguid );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Guid ).HasColumnName( "guid" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.WrappedItemId ).HasColumnName( "wrapped_item_id" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.WrappedCreator ).HasColumnName( "wrapped_creator" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Creator ).HasColumnName( "creator" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Count ).HasColumnName( "count" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Charges ).HasColumnName( "charges" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Flags ).HasColumnName( "flags" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Randomprop ).HasColumnName( "randomprop" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Randomsuffix ).HasColumnName( "randomsuffix" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Itemtext ).HasColumnName( "itemtext" );
-            modelBuilder.Entity<Playeritems>().HasIndex( e => e.Itemtext );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Durability ).HasColumnName( "durability" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Containerslot ).HasColumnName( "containerslot" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Slot ).HasColumnName( "slot" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Enchantments ).HasColumnName( "enchantments" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.DurationExpireson ).HasColumnName( "duration_expireson" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.RefundPurchasedon ).HasColumnName( "refund_purchasedon" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.RefundCostid ).HasColumnName( "refund_costid" );
-            modelBuilder.Entity<Playeritems>().Property( p => p.Text ).HasColumnName( "text" );
+            modelBuilder.Entity<PlayerItems>().ToTable( "playeritems" );
+            modelBuilder.Entity<PlayerItems>().HasKey( e => new { e.Guid } );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
+            modelBuilder.Entity<PlayerItems>().HasIndex( e => e.Ownerguid );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Guid ).HasColumnName( "guid" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.WrappedItemId ).HasColumnName( "wrapped_item_id" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.WrappedCreator ).HasColumnName( "wrapped_creator" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Creator ).HasColumnName( "creator" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Count ).HasColumnName( "count" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Charges ).HasColumnName( "charges" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Flags ).HasColumnName( "flags" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Randomprop ).HasColumnName( "randomprop" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Randomsuffix ).HasColumnName( "randomsuffix" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Itemtext ).HasColumnName( "itemtext" );
+            modelBuilder.Entity<PlayerItems>().HasIndex( e => e.Itemtext );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Durability ).HasColumnName( "durability" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Containerslot ).HasColumnName( "containerslot" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Slot ).HasColumnName( "slot" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Enchantments ).HasColumnName( "enchantments" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.DurationExpireson ).HasColumnName( "duration_expireson" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.RefundPurchasedon ).HasColumnName( "refund_purchasedon" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.RefundCostid ).HasColumnName( "refund_costid" );
+            modelBuilder.Entity<PlayerItems>().Property( p => p.Text ).HasColumnName( "text" );
 
-            modelBuilder.Entity<PlayeritemsInsertQueue>().ToTable( "playeritems_insert_queue" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().HasIndex( e => e.Ownerguid );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.WrappedItemId ).HasColumnName( "wrapped_item_id" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.WrappedCreator ).HasColumnName( "wrapped_creator" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Creator ).HasColumnName( "creator" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Count ).HasColumnName( "count" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Charges ).HasColumnName( "charges" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Flags ).HasColumnName( "flags" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Randomprop ).HasColumnName( "randomprop" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Randomsuffix ).HasColumnName( "randomsuffix" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Itemtext ).HasColumnName( "itemtext" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Durability ).HasColumnName( "durability" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Containerslot ).HasColumnName( "containerslot" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Slot ).HasColumnName( "slot" );
-            modelBuilder.Entity<PlayeritemsInsertQueue>().Property( p => p.Enchantments ).HasColumnName( "enchantments" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().ToTable( "playeritems_insert_queue" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().HasIndex( e => e.Ownerguid );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.WrappedItemId ).HasColumnName( "wrapped_item_id" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.WrappedCreator ).HasColumnName( "wrapped_creator" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Creator ).HasColumnName( "creator" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Count ).HasColumnName( "count" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Charges ).HasColumnName( "charges" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Flags ).HasColumnName( "flags" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Randomprop ).HasColumnName( "randomprop" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Randomsuffix ).HasColumnName( "randomsuffix" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Itemtext ).HasColumnName( "itemtext" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Durability ).HasColumnName( "durability" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Containerslot ).HasColumnName( "containerslot" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Slot ).HasColumnName( "slot" );
+            modelBuilder.Entity<PlayerItemsInsertQueue>().Property( p => p.Enchantments ).HasColumnName( "enchantments" );
 
-            modelBuilder.Entity<Playerpets>().ToTable( "playerpets" );
-            modelBuilder.Entity<Playerpets>().HasKey( e => new { e.Ownerguid, e.Petnumber } );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Petnumber ).HasColumnName( "petnumber" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Name ).HasColumnName( "name" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Xp ).HasColumnName( "xp" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Active ).HasColumnName( "active" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Level ).HasColumnName( "level" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Actionbar ).HasColumnName( "actionbar" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Happinessupdate ).HasColumnName( "happinessupdate" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.ResetTime ).HasColumnName( "reset_time" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.ResetCost ).HasColumnName( "reset_cost" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Spellid ).HasColumnName( "spellid" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Petstate ).HasColumnName( "petstate" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Alive ).HasColumnName( "alive" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Talentpoints ).HasColumnName( "talentpoints" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.CurrentPower ).HasColumnName( "current_power" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.CurrentHp ).HasColumnName( "current_hp" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.CurrentHappiness ).HasColumnName( "current_happiness" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Renamable ).HasColumnName( "renamable" );
-            modelBuilder.Entity<Playerpets>().Property( p => p.Type ).HasColumnName( "type" );
+            modelBuilder.Entity<PlayerPets>().ToTable( "playerpets" );
+            modelBuilder.Entity<PlayerPets>().HasKey( e => new { e.Ownerguid, e.Petnumber } );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Petnumber ).HasColumnName( "petnumber" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Name ).HasColumnName( "name" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Xp ).HasColumnName( "xp" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Active ).HasColumnName( "active" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Level ).HasColumnName( "level" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Actionbar ).HasColumnName( "actionbar" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Happinessupdate ).HasColumnName( "happinessupdate" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.ResetTime ).HasColumnName( "reset_time" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.ResetCost ).HasColumnName( "reset_cost" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Spellid ).HasColumnName( "spellid" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Petstate ).HasColumnName( "petstate" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Alive ).HasColumnName( "alive" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Talentpoints ).HasColumnName( "talentpoints" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.CurrentPower ).HasColumnName( "current_power" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.CurrentHp ).HasColumnName( "current_hp" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.CurrentHappiness ).HasColumnName( "current_happiness" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Renamable ).HasColumnName( "renamable" );
+            modelBuilder.Entity<PlayerPets>().Property( p => p.Type ).HasColumnName( "type" );
 
-            modelBuilder.Entity<Playerpetspells>().ToTable( "playerpetspells" );
-            modelBuilder.Entity<Playerpetspells>().HasKey( e => new {  } );
-            modelBuilder.Entity<Playerpetspells>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
-            modelBuilder.Entity<Playerpetspells>().HasIndex( e => e.Ownerguid );
-            modelBuilder.Entity<Playerpetspells>().Property( p => p.Petnumber ).HasColumnName( "petnumber" );
-            modelBuilder.Entity<Playerpetspells>().HasIndex( e => e.Petnumber );
-            modelBuilder.Entity<Playerpetspells>().Property( p => p.Spellid ).HasColumnName( "spellid" );
-            modelBuilder.Entity<Playerpetspells>().Property( p => p.Flags ).HasColumnName( "flags" );
+            modelBuilder.Entity<PlayerPetSpells>().ToTable( "playerpetspells" );
+            modelBuilder.Entity<PlayerPetSpells>().HasKey( e => new {  } );
+            modelBuilder.Entity<PlayerPetSpells>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
+            modelBuilder.Entity<PlayerPetSpells>().HasIndex( e => e.Ownerguid );
+            modelBuilder.Entity<PlayerPetSpells>().Property( p => p.Petnumber ).HasColumnName( "petnumber" );
+            modelBuilder.Entity<PlayerPetSpells>().HasIndex( e => e.Petnumber );
+            modelBuilder.Entity<PlayerPetSpells>().Property( p => p.Spellid ).HasColumnName( "spellid" );
+            modelBuilder.Entity<PlayerPetSpells>().Property( p => p.Flags ).HasColumnName( "flags" );
 
-            modelBuilder.Entity<Playerreputations>().ToTable( "playerreputations" );
-            modelBuilder.Entity<Playerreputations>().HasKey( e => new { e.Guid, e.Faction } );
-            modelBuilder.Entity<Playerreputations>().Property( p => p.Guid ).HasColumnName( "guid" );
-            modelBuilder.Entity<Playerreputations>().Property( p => p.Faction ).HasColumnName( "faction" );
-            modelBuilder.Entity<Playerreputations>().Property( p => p.Flag ).HasColumnName( "flag" );
-            modelBuilder.Entity<Playerreputations>().Property( p => p.Basestanding ).HasColumnName( "basestanding" );
-            modelBuilder.Entity<Playerreputations>().Property( p => p.Standing ).HasColumnName( "standing" );
+            modelBuilder.Entity<PlayerReputations>().ToTable( "playerreputations" );
+            modelBuilder.Entity<PlayerReputations>().HasKey( e => new { e.Guid, e.Faction } );
+            modelBuilder.Entity<PlayerReputations>().Property( p => p.Guid ).HasColumnName( "guid" );
+            modelBuilder.Entity<PlayerReputations>().Property( p => p.Faction ).HasColumnName( "faction" );
+            modelBuilder.Entity<PlayerReputations>().Property( p => p.Flag ).HasColumnName( "flag" );
+            modelBuilder.Entity<PlayerReputations>().Property( p => p.Basestanding ).HasColumnName( "basestanding" );
+            modelBuilder.Entity<PlayerReputations>().Property( p => p.Standing ).HasColumnName( "standing" );
 
-            modelBuilder.Entity<Playerskills>().ToTable( "playerskills" );
-            modelBuilder.Entity<Playerskills>().HasKey( e => new { e.Guid, e.Skillid } );
-            modelBuilder.Entity<Playerskills>().Property( p => p.Guid ).HasColumnName( "GUID" );
-            modelBuilder.Entity<Playerskills>().Property( p => p.Skillid ).HasColumnName( "SkillID" );
-            modelBuilder.Entity<Playerskills>().Property( p => p.Currentvalue ).HasColumnName( "CurrentValue" );
-            modelBuilder.Entity<Playerskills>().Property( p => p.Maximumvalue ).HasColumnName( "MaximumValue" );
+            modelBuilder.Entity<PlayerSkills>().ToTable( "playerskills" );
+            modelBuilder.Entity<PlayerSkills>().HasKey( e => new { e.Guid, e.Skillid } );
+            modelBuilder.Entity<PlayerSkills>().Property( p => p.Guid ).HasColumnName( "GUID" );
+            modelBuilder.Entity<PlayerSkills>().Property( p => p.Skillid ).HasColumnName( "SkillID" );
+            modelBuilder.Entity<PlayerSkills>().Property( p => p.Currentvalue ).HasColumnName( "CurrentValue" );
+            modelBuilder.Entity<PlayerSkills>().Property( p => p.Maximumvalue ).HasColumnName( "MaximumValue" );
 
-            modelBuilder.Entity<Playerspells>().ToTable( "playerspells" );
-            modelBuilder.Entity<Playerspells>().HasKey( e => new { e.Guid, e.Spellid } );
-            modelBuilder.Entity<Playerspells>().Property( p => p.Guid ).HasColumnName( "GUID" );
-            modelBuilder.Entity<Playerspells>().Property( p => p.Spellid ).HasColumnName( "SpellID" );
+            modelBuilder.Entity<PlayerSpells>().ToTable( "playerspells" );
+            modelBuilder.Entity<PlayerSpells>().HasKey( e => new { e.Guid, e.Spellid } );
+            modelBuilder.Entity<PlayerSpells>().Property( p => p.Guid ).HasColumnName( "GUID" );
+            modelBuilder.Entity<PlayerSpells>().Property( p => p.Spellid ).HasColumnName( "SpellID" );
 
-            modelBuilder.Entity<Playersummons>().ToTable( "playersummons" );
-            modelBuilder.Entity<Playersummons>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
-            modelBuilder.Entity<Playersummons>().HasIndex( e => e.Ownerguid );
-            modelBuilder.Entity<Playersummons>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<Playersummons>().Property( p => p.Name ).HasColumnName( "name" );
+            modelBuilder.Entity<PlayerSummons>().ToTable( "playersummons" );
+            modelBuilder.Entity<PlayerSummons>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
+            modelBuilder.Entity<PlayerSummons>().HasIndex( e => e.Ownerguid );
+            modelBuilder.Entity<PlayerSummons>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<PlayerSummons>().Property( p => p.Name ).HasColumnName( "name" );
 
-            modelBuilder.Entity<Playersummonspells>().ToTable( "playersummonspells" );
-            modelBuilder.Entity<Playersummonspells>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
-            modelBuilder.Entity<Playersummonspells>().HasIndex( e => e.Ownerguid );
-            modelBuilder.Entity<Playersummonspells>().Property( p => p.Entryid ).HasColumnName( "entryid" );
-            modelBuilder.Entity<Playersummonspells>().Property( p => p.Spellid ).HasColumnName( "spellid" );
+            modelBuilder.Entity<PlayerSummonSpells>().ToTable( "playersummonspells" );
+            modelBuilder.Entity<PlayerSummonSpells>().Property( p => p.Ownerguid ).HasColumnName( "ownerguid" );
+            modelBuilder.Entity<PlayerSummonSpells>().HasIndex( e => e.Ownerguid );
+            modelBuilder.Entity<PlayerSummonSpells>().Property( p => p.Entryid ).HasColumnName( "entryid" );
+            modelBuilder.Entity<PlayerSummonSpells>().Property( p => p.Spellid ).HasColumnName( "spellid" );
 
-            modelBuilder.Entity<Questlog>().ToTable( "questlog" );
-            modelBuilder.Entity<Questlog>().HasKey( e => new { e.PlayerGuid, e.QuestId } );
-            modelBuilder.Entity<Questlog>().Property( p => p.PlayerGuid ).HasColumnName( "player_guid" );
-            modelBuilder.Entity<Questlog>().Property( p => p.QuestId ).HasColumnName( "quest_id" );
-            modelBuilder.Entity<Questlog>().Property( p => p.Slot ).HasColumnName( "slot" );
-            modelBuilder.Entity<Questlog>().Property( p => p.Expirytime ).HasColumnName( "expirytime" );
-            modelBuilder.Entity<Questlog>().Property( p => p.ExploredArea1 ).HasColumnName( "explored_area1" );
-            modelBuilder.Entity<Questlog>().Property( p => p.ExploredArea2 ).HasColumnName( "explored_area2" );
-            modelBuilder.Entity<Questlog>().Property( p => p.ExploredArea3 ).HasColumnName( "explored_area3" );
-            modelBuilder.Entity<Questlog>().Property( p => p.ExploredArea4 ).HasColumnName( "explored_area4" );
-            modelBuilder.Entity<Questlog>().Property( p => p.MobKill1 ).HasColumnName( "mob_kill1" );
-            modelBuilder.Entity<Questlog>().Property( p => p.MobKill2 ).HasColumnName( "mob_kill2" );
-            modelBuilder.Entity<Questlog>().Property( p => p.MobKill3 ).HasColumnName( "mob_kill3" );
-            modelBuilder.Entity<Questlog>().Property( p => p.MobKill4 ).HasColumnName( "mob_kill4" );
-            modelBuilder.Entity<Questlog>().Property( p => p.Completed ).HasColumnName( "completed" );
+            modelBuilder.Entity<QuestLog>().ToTable( "questlog" );
+            modelBuilder.Entity<QuestLog>().HasKey( e => new { e.PlayerGuid, e.QuestId } );
+            modelBuilder.Entity<QuestLog>().Property( p => p.PlayerGuid ).HasColumnName( "player_guid" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.QuestId ).HasColumnName( "quest_id" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.Slot ).HasColumnName( "slot" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.Expirytime ).HasColumnName( "expirytime" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.ExploredArea1 ).HasColumnName( "explored_area1" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.ExploredArea2 ).HasColumnName( "explored_area2" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.ExploredArea3 ).HasColumnName( "explored_area3" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.ExploredArea4 ).HasColumnName( "explored_area4" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.MobKill1 ).HasColumnName( "mob_kill1" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.MobKill2 ).HasColumnName( "mob_kill2" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.MobKill3 ).HasColumnName( "mob_kill3" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.MobKill4 ).HasColumnName( "mob_kill4" );
+            modelBuilder.Entity<QuestLog>().Property( p => p.Completed ).HasColumnName( "completed" );
 
             modelBuilder.Entity<ServerSettings>().ToTable( "server_settings" );
             modelBuilder.Entity<ServerSettings>().Property( p => p.SettingId ).HasColumnName( "setting_id" );

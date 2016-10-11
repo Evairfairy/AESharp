@@ -15,11 +15,11 @@ namespace AESharp.Core.Database
 
         public DbSet<AchievementReward> AchievementReward { get; set; }
         public DbSet<AiAgents> AiAgents { get; set; }
-        public DbSet<AiThreattospellid> AiThreattospellid { get; set; }
-        public DbSet<Areatriggers> Areatriggers { get; set; }
-        public DbSet<Auctionhouse> Auctionhouse { get; set; }
+        public DbSet<AiThreatToSpellId> AiThreattospellid { get; set; }
+        public DbSet<AreaTriggers> Areatriggers { get; set; }
+        public DbSet<AuctionHouse> Auctionhouse { get; set; }
         public DbSet<BannedPhrases> BannedPhrases { get; set; }
-        public DbSet<Battlemasters> Battlemasters { get; set; }
+        public DbSet<BattleMasters> Battlemasters { get; set; }
         public DbSet<CreatureDifficulty> CreatureDifficulty { get; set; }
         public DbSet<CreatureFormations> CreatureFormations { get; set; }
         public DbSet<CreatureInitialEquip> CreatureInitialEquip { get; set; }
@@ -48,13 +48,12 @@ namespace AESharp.Core.Database
         public DbSet<GossipMenuOption> GossipMenuOption { get; set; }
         public DbSet<Graveyards> Graveyards { get; set; }
         public DbSet<InstanceBosses> InstanceBosses { get; set; }
-        public DbSet<Ipbans> Ipbans { get; set; }
         public DbSet<ItemPages> ItemPages { get; set; }
         public DbSet<ItemProperties> ItemProperties { get; set; }
         public DbSet<ItemQuestAssociation> ItemQuestAssociation { get; set; }
-        public DbSet<ItemRandompropGroups> ItemRandompropGroups { get; set; }
-        public DbSet<ItemRandomsuffixGroups> ItemRandomsuffixGroups { get; set; }
-        public DbSet<ItemsetLinkedItemsetbonus> ItemsetLinkedItemsetbonus { get; set; }
+        public DbSet<ItemRandomPropGroups> ItemRandompropGroups { get; set; }
+        public DbSet<ItemRandomSuffixGroups> ItemRandomsuffixGroups { get; set; }
+        public DbSet<ItemSetLinkedItemSetBonus> ItemsetLinkedItemsetbonus { get; set; }
         public DbSet<LfgDungeonRewards> LfgDungeonRewards { get; set; }
         public DbSet<LocalesCreature> LocalesCreature { get; set; }
         public DbSet<LocalesGameobject> LocalesGameobject { get; set; }
@@ -65,18 +64,18 @@ namespace AESharp.Core.Database
         public DbSet<LocalesNpcScriptText> LocalesNpcScriptText { get; set; }
         public DbSet<LocalesNpcText> LocalesNpcText { get; set; }
         public DbSet<LocalesQuest> LocalesQuest { get; set; }
-        public DbSet<LocalesWorldbroadcast> LocalesWorldbroadcast { get; set; }
-        public DbSet<LocalesWorldmapInfo> LocalesWorldmapInfo { get; set; }
-        public DbSet<LocalesWorldstringTable> LocalesWorldstringTable { get; set; }
+        public DbSet<LocalesWorldBroadcast> LocalesWorldbroadcast { get; set; }
+        public DbSet<LocalesWorldMapInfo> LocalesWorldmapInfo { get; set; }
+        public DbSet<LocalesWorldStringTable> LocalesWorldstringTable { get; set; }
         public DbSet<LootCreatures> LootCreatures { get; set; }
         public DbSet<LootFishing> LootFishing { get; set; }
-        public DbSet<LootGameobjects> LootGameobjects { get; set; }
+        public DbSet<LootGameObjects> LootGameobjects { get; set; }
         public DbSet<LootItems> LootItems { get; set; }
         public DbSet<LootPickpocketing> LootPickpocketing { get; set; }
         public DbSet<LootSkinning> LootSkinning { get; set; }
         public DbSet<MapCheckpoint> MapCheckpoint { get; set; }
-        public DbSet<NpcGossipTextid> NpcGossipTextid { get; set; }
-        public DbSet<NpcMonstersay> NpcMonstersay { get; set; }
+        public DbSet<NpcGossipTextId> NpcGossipTextid { get; set; }
+        public DbSet<NpcMonsterSay> NpcMonstersay { get; set; }
         public DbSet<NpcScriptText> NpcScriptText { get; set; }
         public DbSet<NpcText> NpcText { get; set; }
 
@@ -140,34 +139,34 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<AiAgents>().Property( p => p.Floatmisc1 ).HasColumnName( "floatMisc1" );
             modelBuilder.Entity<AiAgents>().Property( p => p.Misc2 ).HasColumnName( "Misc2" );
 
-            modelBuilder.Entity<AiThreattospellid>().ToTable( "ai_threattospellid" );
-            modelBuilder.Entity<AiThreattospellid>().Property( p => p.Spell ).HasColumnName( "spell" );
-            modelBuilder.Entity<AiThreattospellid>().Property( p => p.Mod ).HasColumnName( "mod" );
-            modelBuilder.Entity<AiThreattospellid>().Property( p => p.Modcoef ).HasColumnName( "modcoef" );
+            modelBuilder.Entity<AiThreatToSpellId>().ToTable( "ai_threattospellid" );
+            modelBuilder.Entity<AiThreatToSpellId>().Property( p => p.Spell ).HasColumnName( "spell" );
+            modelBuilder.Entity<AiThreatToSpellId>().Property( p => p.Mod ).HasColumnName( "mod" );
+            modelBuilder.Entity<AiThreatToSpellId>().Property( p => p.Modcoef ).HasColumnName( "modcoef" );
 
-            modelBuilder.Entity<Areatriggers>().ToTable( "areatriggers" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.Type ).HasColumnName( "type" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.Map ).HasColumnName( "map" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.Screen ).HasColumnName( "screen" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.Name ).HasColumnName( "name" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.PositionX ).HasColumnName( "position_x" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.PositionY ).HasColumnName( "position_y" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.PositionZ ).HasColumnName( "position_z" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.Orientation ).HasColumnName( "orientation" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.RequiredHonorRank ).HasColumnName( "required_honor_rank" );
-            modelBuilder.Entity<Areatriggers>().Property( p => p.RequiredLevel ).HasColumnName( "required_level" );
+            modelBuilder.Entity<AreaTriggers>().ToTable( "areatriggers" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.Type ).HasColumnName( "type" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.Map ).HasColumnName( "map" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.Screen ).HasColumnName( "screen" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.Name ).HasColumnName( "name" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.PositionX ).HasColumnName( "position_x" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.PositionY ).HasColumnName( "position_y" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.PositionZ ).HasColumnName( "position_z" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.Orientation ).HasColumnName( "orientation" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.RequiredHonorRank ).HasColumnName( "required_honor_rank" );
+            modelBuilder.Entity<AreaTriggers>().Property( p => p.RequiredLevel ).HasColumnName( "required_level" );
 
-            modelBuilder.Entity<Auctionhouse>().ToTable( "auctionhouse" );
-            modelBuilder.Entity<Auctionhouse>().Property( p => p.CreatureEntry ).HasColumnName( "creature_entry" );
-            modelBuilder.Entity<Auctionhouse>().Property( p => p.Ahgroup ).HasColumnName( "ahgroup" );
+            modelBuilder.Entity<AuctionHouse>().ToTable( "auctionhouse" );
+            modelBuilder.Entity<AuctionHouse>().Property( p => p.CreatureEntry ).HasColumnName( "creature_entry" );
+            modelBuilder.Entity<AuctionHouse>().Property( p => p.Ahgroup ).HasColumnName( "ahgroup" );
 
             modelBuilder.Entity<BannedPhrases>().ToTable( "banned_phrases" );
             modelBuilder.Entity<BannedPhrases>().Property( p => p.Phrase ).HasColumnName( "phrase" );
 
-            modelBuilder.Entity<Battlemasters>().ToTable( "battlemasters" );
-            modelBuilder.Entity<Battlemasters>().Property( p => p.CreatureEntry ).HasColumnName( "creature_entry" );
-            modelBuilder.Entity<Battlemasters>().Property( p => p.BattlegroundId ).HasColumnName( "battleground_id" );
+            modelBuilder.Entity<BattleMasters>().ToTable( "battlemasters" );
+            modelBuilder.Entity<BattleMasters>().Property( p => p.CreatureEntry ).HasColumnName( "creature_entry" );
+            modelBuilder.Entity<BattleMasters>().Property( p => p.BattlegroundId ).HasColumnName( "battleground_id" );
 
             modelBuilder.Entity<CreatureDifficulty>().ToTable( "creature_difficulty" );
             modelBuilder.Entity<CreatureDifficulty>().Property( p => p.Entry ).HasColumnName( "entry" );
@@ -618,11 +617,6 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<InstanceBosses>().Property( p => p.Trash ).HasColumnName( "trash" );
             modelBuilder.Entity<InstanceBosses>().Property( p => p.TrashRespawnOverride ).HasColumnName( "trash_respawn_override" );
 
-            modelBuilder.Entity<Ipbans>().ToTable( "ipbans" );
-            modelBuilder.Entity<Ipbans>().Property( p => p.Ip ).HasColumnName( "ip" );
-            modelBuilder.Entity<Ipbans>().Property( p => p.Expire ).HasColumnName( "expire" );
-            modelBuilder.Entity<Ipbans>().Property( p => p.Banreason ).HasColumnName( "banreason" );
-
             modelBuilder.Entity<ItemPages>().ToTable( "item_pages" );
             modelBuilder.Entity<ItemPages>().Property( p => p.Entry ).HasColumnName( "entry" );
             modelBuilder.Entity<ItemPages>().Property( p => p.Text ).HasColumnName( "text" );
@@ -763,21 +757,21 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<ItemQuestAssociation>().Property( p => p.Quest ).HasColumnName( "quest" );
             modelBuilder.Entity<ItemQuestAssociation>().Property( p => p.ItemCount ).HasColumnName( "item_count" );
 
-            modelBuilder.Entity<ItemRandompropGroups>().ToTable( "item_randomprop_groups" );
-            modelBuilder.Entity<ItemRandompropGroups>().HasKey( e => new { e.EntryId, e.RandompropsEntryid } );
-            modelBuilder.Entity<ItemRandompropGroups>().Property( p => p.EntryId ).HasColumnName( "entry_id" );
-            modelBuilder.Entity<ItemRandompropGroups>().Property( p => p.RandompropsEntryid ).HasColumnName( "randomprops_entryid" );
-            modelBuilder.Entity<ItemRandompropGroups>().Property( p => p.Chance ).HasColumnName( "chance" );
+            modelBuilder.Entity<ItemRandomPropGroups>().ToTable( "item_randomprop_groups" );
+            modelBuilder.Entity<ItemRandomPropGroups>().HasKey( e => new { e.EntryId, e.RandompropsEntryid } );
+            modelBuilder.Entity<ItemRandomPropGroups>().Property( p => p.EntryId ).HasColumnName( "entry_id" );
+            modelBuilder.Entity<ItemRandomPropGroups>().Property( p => p.RandompropsEntryid ).HasColumnName( "randomprops_entryid" );
+            modelBuilder.Entity<ItemRandomPropGroups>().Property( p => p.Chance ).HasColumnName( "chance" );
 
-            modelBuilder.Entity<ItemRandomsuffixGroups>().ToTable( "item_randomsuffix_groups" );
-            modelBuilder.Entity<ItemRandomsuffixGroups>().HasKey( e => new { e.EntryId, e.RandomsuffixEntryid } );
-            modelBuilder.Entity<ItemRandomsuffixGroups>().Property( p => p.EntryId ).HasColumnName( "entry_id" );
-            modelBuilder.Entity<ItemRandomsuffixGroups>().Property( p => p.RandomsuffixEntryid ).HasColumnName( "randomsuffix_entryid" );
-            modelBuilder.Entity<ItemRandomsuffixGroups>().Property( p => p.Chance ).HasColumnName( "chance" );
+            modelBuilder.Entity<ItemRandomSuffixGroups>().ToTable( "item_randomsuffix_groups" );
+            modelBuilder.Entity<ItemRandomSuffixGroups>().HasKey( e => new { e.EntryId, e.RandomsuffixEntryid } );
+            modelBuilder.Entity<ItemRandomSuffixGroups>().Property( p => p.EntryId ).HasColumnName( "entry_id" );
+            modelBuilder.Entity<ItemRandomSuffixGroups>().Property( p => p.RandomsuffixEntryid ).HasColumnName( "randomsuffix_entryid" );
+            modelBuilder.Entity<ItemRandomSuffixGroups>().Property( p => p.Chance ).HasColumnName( "chance" );
 
-            modelBuilder.Entity<ItemsetLinkedItemsetbonus>().ToTable( "itemset_linked_itemsetbonus" );
-            modelBuilder.Entity<ItemsetLinkedItemsetbonus>().Property( p => p.Itemset ).HasColumnName( "itemset" );
-            modelBuilder.Entity<ItemsetLinkedItemsetbonus>().Property( p => p.ItemsetBonus ).HasColumnName( "itemset_bonus" );
+            modelBuilder.Entity<ItemSetLinkedItemSetBonus>().ToTable( "itemset_linked_itemsetbonus" );
+            modelBuilder.Entity<ItemSetLinkedItemSetBonus>().Property( p => p.Itemset ).HasColumnName( "itemset" );
+            modelBuilder.Entity<ItemSetLinkedItemSetBonus>().Property( p => p.ItemsetBonus ).HasColumnName( "itemset_bonus" );
 
             modelBuilder.Entity<LfgDungeonRewards>().ToTable( "lfg_dungeon_rewards" );
             modelBuilder.Entity<LfgDungeonRewards>().HasKey( e => new { e.DungeonId, e.MaxLevel } );
@@ -875,23 +869,23 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<LocalesQuest>().Property( p => p.Objectivetext3 ).HasColumnName( "ObjectiveText3" );
             modelBuilder.Entity<LocalesQuest>().Property( p => p.Objectivetext4 ).HasColumnName( "ObjectiveText4" );
 
-            modelBuilder.Entity<LocalesWorldbroadcast>().ToTable( "locales_worldbroadcast" );
-            modelBuilder.Entity<LocalesWorldbroadcast>().HasKey( e => new { e.Entry, e.LanguageCode } );
-            modelBuilder.Entity<LocalesWorldbroadcast>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<LocalesWorldbroadcast>().Property( p => p.LanguageCode ).HasColumnName( "language_code" );
-            modelBuilder.Entity<LocalesWorldbroadcast>().Property( p => p.Text ).HasColumnName( "text" );
+            modelBuilder.Entity<LocalesWorldBroadcast>().ToTable( "locales_worldbroadcast" );
+            modelBuilder.Entity<LocalesWorldBroadcast>().HasKey( e => new { e.Entry, e.LanguageCode } );
+            modelBuilder.Entity<LocalesWorldBroadcast>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<LocalesWorldBroadcast>().Property( p => p.LanguageCode ).HasColumnName( "language_code" );
+            modelBuilder.Entity<LocalesWorldBroadcast>().Property( p => p.Text ).HasColumnName( "text" );
 
-            modelBuilder.Entity<LocalesWorldmapInfo>().ToTable( "locales_worldmap_info" );
-            modelBuilder.Entity<LocalesWorldmapInfo>().HasKey( e => new { e.Entry, e.LanguageCode } );
-            modelBuilder.Entity<LocalesWorldmapInfo>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<LocalesWorldmapInfo>().Property( p => p.LanguageCode ).HasColumnName( "language_code" );
-            modelBuilder.Entity<LocalesWorldmapInfo>().Property( p => p.Text ).HasColumnName( "text" );
+            modelBuilder.Entity<LocalesWorldMapInfo>().ToTable( "locales_worldmap_info" );
+            modelBuilder.Entity<LocalesWorldMapInfo>().HasKey( e => new { e.Entry, e.LanguageCode } );
+            modelBuilder.Entity<LocalesWorldMapInfo>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<LocalesWorldMapInfo>().Property( p => p.LanguageCode ).HasColumnName( "language_code" );
+            modelBuilder.Entity<LocalesWorldMapInfo>().Property( p => p.Text ).HasColumnName( "text" );
 
-            modelBuilder.Entity<LocalesWorldstringTable>().ToTable( "locales_worldstring_table" );
-            modelBuilder.Entity<LocalesWorldstringTable>().HasKey( e => new { e.Entry, e.LanguageCode } );
-            modelBuilder.Entity<LocalesWorldstringTable>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<LocalesWorldstringTable>().Property( p => p.LanguageCode ).HasColumnName( "language_code" );
-            modelBuilder.Entity<LocalesWorldstringTable>().Property( p => p.Text ).HasColumnName( "text" );
+            modelBuilder.Entity<LocalesWorldStringTable>().ToTable( "locales_worldstring_table" );
+            modelBuilder.Entity<LocalesWorldStringTable>().HasKey( e => new { e.Entry, e.LanguageCode } );
+            modelBuilder.Entity<LocalesWorldStringTable>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<LocalesWorldStringTable>().Property( p => p.LanguageCode ).HasColumnName( "language_code" );
+            modelBuilder.Entity<LocalesWorldStringTable>().Property( p => p.Text ).HasColumnName( "text" );
 
             modelBuilder.Entity<LootCreatures>().ToTable( "loot_creatures" );
             modelBuilder.Entity<LootCreatures>().HasKey( e => new { e.Entryid, e.Itemid } );
@@ -915,16 +909,16 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<LootFishing>().Property( p => p.Mincount ).HasColumnName( "mincount" );
             modelBuilder.Entity<LootFishing>().Property( p => p.Maxcount ).HasColumnName( "maxcount" );
 
-            modelBuilder.Entity<LootGameobjects>().ToTable( "loot_gameobjects" );
-            modelBuilder.Entity<LootGameobjects>().HasKey( e => new { e.Entryid, e.Itemid } );
-            modelBuilder.Entity<LootGameobjects>().Property( p => p.Entryid ).HasColumnName( "entryid" );
-            modelBuilder.Entity<LootGameobjects>().Property( p => p.Itemid ).HasColumnName( "itemid" );
-            modelBuilder.Entity<LootGameobjects>().Property( p => p.Normal10percentchance ).HasColumnName( "normal10percentchance" );
-            modelBuilder.Entity<LootGameobjects>().Property( p => p.Normal25percentchance ).HasColumnName( "normal25percentchance" );
-            modelBuilder.Entity<LootGameobjects>().Property( p => p.Heroic10percentchance ).HasColumnName( "heroic10percentchance" );
-            modelBuilder.Entity<LootGameobjects>().Property( p => p.Heroic25percentchance ).HasColumnName( "heroic25percentchance" );
-            modelBuilder.Entity<LootGameobjects>().Property( p => p.Mincount ).HasColumnName( "mincount" );
-            modelBuilder.Entity<LootGameobjects>().Property( p => p.Maxcount ).HasColumnName( "maxcount" );
+            modelBuilder.Entity<LootGameObjects>().ToTable( "loot_gameobjects" );
+            modelBuilder.Entity<LootGameObjects>().HasKey( e => new { e.Entryid, e.Itemid } );
+            modelBuilder.Entity<LootGameObjects>().Property( p => p.Entryid ).HasColumnName( "entryid" );
+            modelBuilder.Entity<LootGameObjects>().Property( p => p.Itemid ).HasColumnName( "itemid" );
+            modelBuilder.Entity<LootGameObjects>().Property( p => p.Normal10percentchance ).HasColumnName( "normal10percentchance" );
+            modelBuilder.Entity<LootGameObjects>().Property( p => p.Normal25percentchance ).HasColumnName( "normal25percentchance" );
+            modelBuilder.Entity<LootGameObjects>().Property( p => p.Heroic10percentchance ).HasColumnName( "heroic10percentchance" );
+            modelBuilder.Entity<LootGameObjects>().Property( p => p.Heroic25percentchance ).HasColumnName( "heroic25percentchance" );
+            modelBuilder.Entity<LootGameObjects>().Property( p => p.Mincount ).HasColumnName( "mincount" );
+            modelBuilder.Entity<LootGameObjects>().Property( p => p.Maxcount ).HasColumnName( "maxcount" );
 
             modelBuilder.Entity<LootItems>().ToTable( "loot_items" );
             modelBuilder.Entity<LootItems>().HasKey( e => new { e.Entryid, e.Itemid } );
@@ -965,23 +959,23 @@ namespace AESharp.Core.Database
             modelBuilder.Entity<MapCheckpoint>().Property( p => p.CreatureId ).HasColumnName( "creature_id" );
             modelBuilder.Entity<MapCheckpoint>().Property( p => p.Name ).HasColumnName( "name" );
 
-            modelBuilder.Entity<NpcGossipTextid>().ToTable( "npc_gossip_textid" );
-            modelBuilder.Entity<NpcGossipTextid>().Property( p => p.Creatureid ).HasColumnName( "creatureid" );
-            modelBuilder.Entity<NpcGossipTextid>().Property( p => p.Textid ).HasColumnName( "textid" );
+            modelBuilder.Entity<NpcGossipTextId>().ToTable( "npc_gossip_textid" );
+            modelBuilder.Entity<NpcGossipTextId>().Property( p => p.Creatureid ).HasColumnName( "creatureid" );
+            modelBuilder.Entity<NpcGossipTextId>().Property( p => p.Textid ).HasColumnName( "textid" );
 
-            modelBuilder.Entity<NpcMonstersay>().ToTable( "npc_monstersay" );
-            modelBuilder.Entity<NpcMonstersay>().HasKey( e => new { e.Entry, e.Event } );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Entry ).HasColumnName( "entry" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Event ).HasColumnName( "event" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Chance ).HasColumnName( "chance" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Language ).HasColumnName( "language" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Type ).HasColumnName( "type" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Monstername ).HasColumnName( "monstername" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Text0 ).HasColumnName( "text0" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Text1 ).HasColumnName( "text1" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Text2 ).HasColumnName( "text2" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Text3 ).HasColumnName( "text3" );
-            modelBuilder.Entity<NpcMonstersay>().Property( p => p.Text4 ).HasColumnName( "text4" );
+            modelBuilder.Entity<NpcMonsterSay>().ToTable( "npc_monstersay" );
+            modelBuilder.Entity<NpcMonsterSay>().HasKey( e => new { e.Entry, e.Event } );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Entry ).HasColumnName( "entry" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Event ).HasColumnName( "event" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Chance ).HasColumnName( "chance" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Language ).HasColumnName( "language" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Type ).HasColumnName( "type" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Monstername ).HasColumnName( "monstername" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Text0 ).HasColumnName( "text0" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Text1 ).HasColumnName( "text1" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Text2 ).HasColumnName( "text2" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Text3 ).HasColumnName( "text3" );
+            modelBuilder.Entity<NpcMonsterSay>().Property( p => p.Text4 ).HasColumnName( "text4" );
 
             modelBuilder.Entity<NpcScriptText>().ToTable( "npc_script_text" );
             modelBuilder.Entity<NpcScriptText>().Property( p => p.Entry ).HasColumnName( "entry" );

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.Logon
 {
-    public sealed class IPBans
+    public sealed class IpBans
     {
         [Key, Column( "ip" ), MaxLength( 20 )]
         public string IPAddress { get; set; }

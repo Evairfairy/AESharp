@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.World
 {
-    public sealed class LocalesWorldbroadcast
+    public sealed class LocalesWorldBroadcast
     {
             [Column( "entry" )]
             public int Entry { get; set; }

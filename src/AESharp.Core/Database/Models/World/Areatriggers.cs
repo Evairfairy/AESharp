@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.World
 {
-    public sealed class Areatriggers
+    public sealed class AreaTriggers
     {
             [Key, Column( "entry" )]
             public ushort Entry { get; set; }

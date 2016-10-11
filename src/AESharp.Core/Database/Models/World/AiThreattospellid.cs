@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AESharp.Core.Database.Models.World
 {
-    public sealed class AiThreattospellid
+    public sealed class AiThreatToSpellId
     {
             [Key, Column( "spell" )]
             public uint Spell { get; set; }

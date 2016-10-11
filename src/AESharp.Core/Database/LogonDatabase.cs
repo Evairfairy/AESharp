@@ -12,7 +12,7 @@ namespace AESharp.Core.Database
         private readonly DatabaseSettings Settings;
 
         public DbSet<Accounts> Accounts { get; set; }
-        public DbSet<IPBans> IPBans { get; set; }
+        public DbSet<IpBans> IPBans { get; set; }
 
         public LogonDatabase( DatabaseSettings settings )
         {
@@ -67,7 +67,7 @@ namespace AESharp.Core.Database
             accounts.Property( a => a.BanReason ).HasColumnName( "banreason" );
             accounts.Property( a => a.JoinDate ).HasColumnName( "joindate" );
 
-            var ipBans = modelBuilder.Entity<IPBans>();
+            var ipBans = modelBuilder.Entity<IpBans>();
 
             ipBans.HasIndex( i => i.IPAddress ).IsUnique();
 
