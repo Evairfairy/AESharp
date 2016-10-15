@@ -22,7 +22,7 @@ namespace AESharp.Networking.Packets.Serialization.Transformers
             if( length == null )
                 throw new InvalidOperationException( "Padded strings must have a fixed length attribute" );
 
-            var str = value as string;
+            string str = value as string;
             switch( this.StringSide )
             {
                 case StringSide.Start:
@@ -31,9 +31,9 @@ namespace AESharp.Networking.Packets.Serialization.Transformers
                     return str.PadLeft( length.Value, this.PadChar );
                 case StringSide.Both:
                     {
-                        var len = length.Value;
-                        var left = (int)Math.Ceiling( len / 2d );
-                        var right = (int)Math.Floor( len / 2d );
+                        int len = length.Value;
+                        int left = (int)Math.Ceiling( len / 2d );
+                        int right = (int)Math.Floor( len / 2d );
 
                         return str.PadLeft( left, this.PadChar ).PadRight( right, this.PadChar );
                     }

@@ -29,7 +29,7 @@ namespace AESharp.Networking.Packets.Serialization
 
         internal object Transform( object value, int? length )
         {
-            var type = value.GetType();
+            Type type = value.GetType();
             if( !this.CanTransform( type ) )
                 throw new NotSupportedException( $"Cannot transform {type.FullName}" );
 

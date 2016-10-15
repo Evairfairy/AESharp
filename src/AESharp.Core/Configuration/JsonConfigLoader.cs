@@ -12,9 +12,9 @@ namespace AESharp.Core.Configuration
     {
         public override T Load<T>( string fileName, Encoding encoding = null )
         {
-            var name = fileName.EndsWith( ".json", StringComparison.OrdinalIgnoreCase ) ? "" : $"{fileName}.json";
-            var path = Path.Combine( this.RootDirectory, name );
-            var json = File.ReadAllText( path, encoding ?? Encoding.UTF8 );
+            string name = fileName.EndsWith( ".json", StringComparison.OrdinalIgnoreCase ) ? "" : $"{fileName}.json";
+            string path = Path.Combine( this.RootDirectory, name );
+            string json = File.ReadAllText( path, encoding ?? Encoding.UTF8 );
 
             return JsonConvert.DeserializeObject<T>( json );
         }

@@ -34,12 +34,12 @@ namespace AESharp.Networking.Packets.Serialization
         {
             this.Length = member.GetCustomAttribute<FixedLengthAttribute>()?.Length;
 
-            var converterAttr = member.GetCustomAttribute<BinaryConverterAttribute>()
+            BinaryConverterAttribute converterAttr = member.GetCustomAttribute<BinaryConverterAttribute>()
                              ?? new BinaryConverterAttribute( typeof( DefaultBinaryConverter ) );
             this.Converter = (BinaryConverter)Activator.CreateInstance( converterAttr.ConverterType ); ;
    
 
-            var transformerType = typeof( TransformerAttribute );
+            Type transformerType = typeof( TransformerAttribute );
             this.Transformers = member.GetCustomAttributes()
                                       .Select( a => new { Attribute = a, Type = a.GetType() } )
                                       .Where( a => a.Type.Inherits( transformerType ) )
@@ -50,7 +50,7 @@ namespace AESharp.Networking.Packets.Serialization
 
             if( member is FieldInfo )
             {
-                var field = member as FieldInfo;
+                FieldInfo field = member as FieldInfo;
 
                 this.SetValue = field.SetValue;
                 this.GetValue = field.GetValue;
@@ -59,10 +59,10 @@ namespace AESharp.Networking.Packets.Serialization
             }
             else if( member is PropertyInfo )
             {
-                var property = member as PropertyInfo;
+                PropertyInfo property = member as PropertyInfo;
 
-                var getter = property.GetGetMethod( true );
-                var setter = property.GetSetMethod( true );
+                MethodInfo getter = property.GetGetMethod( true );
+                MethodInfo setter = property.GetSetMethod( true );
 
                 this.SetValue = ( instance, value ) => setter.Invoke( instance, new[] { value } );
                 this.GetValue = ( instance ) => getter.Invoke( instance, null );

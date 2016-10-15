@@ -10,7 +10,7 @@ namespace AESharp.Networking.Packets.Serialization.Converters
     {
         public override string Read( BinaryReader reader, object structure, Type type, string currentValue, int? length )
         {
-            var len = reader.ReadByte();
+            byte len = reader.ReadByte();
             return new String( reader.ReadChars( len ) );
         }
 

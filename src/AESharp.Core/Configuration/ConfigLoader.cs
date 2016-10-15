@@ -14,7 +14,7 @@ namespace AESharp.Core.Configuration
 
         protected ConfigLoader( string rootDirectory = "configs" )
         {
-            var current = Directory.GetCurrentDirectory();
+            string current = Directory.GetCurrentDirectory();
             this.RootDirectory = Path.Combine( current, rootDirectory );
         }
 

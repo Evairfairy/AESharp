@@ -93,7 +93,7 @@ namespace AESharp.Core.Database
             {
                 case DatabaseDriver.MySql:
                 {
-                    var builder = new MySqlConnectionStringBuilder
+                    MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
                     {
                         Server = this.Settings.Hostname,
                         Database = this.Settings.Database,

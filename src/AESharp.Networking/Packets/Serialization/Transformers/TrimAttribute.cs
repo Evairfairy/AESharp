@@ -25,7 +25,7 @@ namespace AESharp.Networking.Packets.Serialization.Transformers
 
         protected override object TransformValue( object value, int? _ )
         {
-            var str = value as string;
+            string str = value as string;
 
             switch( this.StringSide )
             {

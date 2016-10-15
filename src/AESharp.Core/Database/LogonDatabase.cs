@@ -2,6 +2,7 @@
 using AESharp.Core.Configuration;
 using AESharp.Core.Database.Models.Logon;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MySql.Data.MySqlClient;
 using MySQL.Data.EntityFrameworkCore.Extensions;
 
@@ -28,7 +29,7 @@ namespace AESharp.Core.Database
             {
                 case DatabaseDriver.MySql:
                 {
-                    var builder = new MySqlConnectionStringBuilder
+                    MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
                     {
                         Server = this.Settings.Hostname,
                         Database = this.Settings.Database,
@@ -48,7 +49,7 @@ namespace AESharp.Core.Database
 
         protected override void OnModelCreating( ModelBuilder modelBuilder )
         {
-            var accounts = modelBuilder.Entity<Accounts>();
+            EntityTypeBuilder<Accounts> accounts = modelBuilder.Entity<Accounts>();
 
             accounts.HasIndex( a => a.Login ).IsUnique();
 
@@ -67,7 +68,7 @@ namespace AESharp.Core.Database
             accounts.Property( a => a.BanReason ).HasColumnName( "banreason" );
             accounts.Property( a => a.JoinDate ).HasColumnName( "joindate" );
 
-            var ipBans = modelBuilder.Entity<IpBans>();
+            EntityTypeBuilder<IpBans> ipBans = modelBuilder.Entity<IpBans>();
 
             ipBans.HasIndex( i => i.IPAddress ).IsUnique();
 

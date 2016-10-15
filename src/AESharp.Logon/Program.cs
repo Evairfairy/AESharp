@@ -46,7 +46,7 @@ namespace AESharp.Logon
 
             // Build (de)serializers before they're needed to speed up packet reads/writes
             PacketSerialization packetSerializer = new PacketSerialization();
-            var packetTypes = PacketTypes.Values.Select( t => t.PacketType );
+            IEnumerable<Type> packetTypes = PacketTypes.Values.Select( t => t.PacketType );
             packetSerializer.CacheObjects( packetTypes );
 
             _container.RegisterSingleton( typeof( IPacketSerializer ), packetSerializer );

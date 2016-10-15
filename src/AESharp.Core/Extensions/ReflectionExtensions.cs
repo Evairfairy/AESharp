@@ -7,7 +7,7 @@ namespace AESharp.Core.Extensions
     {
         public static bool Inherits( this Type self, Type type )
         {
-            var baseType = self.GetTypeInfo().BaseType;
+            Type baseType = self.GetTypeInfo().BaseType;
             while( baseType != null )
             {
                 if( baseType == type )

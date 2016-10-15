@@ -41,14 +41,14 @@ namespace AESharp.Networking.Packets.Serialization
 
             RegisterReaderForType<IPAddress>( ( reader, s, t, v, l ) =>
             {
-                var bytes = reader.ReadBytes( 4 );
+                byte[] bytes = reader.ReadBytes( 4 );
                 return new IPAddress( bytes );
             } );
 
             RegisterReaderForType<Version>( ( reader, s, t, v, l ) =>
             {
-                var bytes = reader.ReadBytes( 3 );
-                var build = reader.ReadInt16();
+                byte[] bytes = reader.ReadBytes( 3 );
+                short build = reader.ReadInt16();
                 return new Version( bytes[0], bytes[1], bytes[2], build );
             } );
 
@@ -68,13 +68,13 @@ namespace AESharp.Networking.Packets.Serialization
 
             RegisterWriterForType<IPAddress>( ( writer, s, t, value, l ) =>
             {
-                var ip = value as IPAddress;
+                IPAddress ip = value as IPAddress;
                 writer.Write( ip.GetAddressBytes() );
             } );
 
             RegisterWriterForType<Version>( ( writer, s, t, value, l ) =>
             {
-                var version = value as Version;
+                Version version = value as Version;
                 writer.Write( (byte)version.Major );
                 writer.Write( (byte)version.Minor );
                 writer.Write( (byte)version.Build );
@@ -95,7 +95,7 @@ namespace AESharp.Networking.Packets.Serialization
                 if( length == null )
                     throw new NotSupportedException( "Strings without a custom converter must have a length attribute" );
 
-                var chars = reader.ReadChars( length.Value );
+                char[] chars = reader.ReadChars( length.Value );
                 return new String( chars );
             }
 
@@ -106,14 +106,14 @@ namespace AESharp.Networking.Packets.Serialization
             if( length == null )
                 throw new InvalidOperationException( "Arrays must have a length attribute." );
 
-            var element = type.GetElementType();
+            Type element = type.GetElementType();
             if( !this.CanRead( element ) )
                 throw new NotSupportedException( $"Array element type {type.FullName} is not supported." );
 
-            var array = Array.CreateInstance( element, length.Value );
-            for( var i = 0; i < length.Value; ++i )
+            Array array = Array.CreateInstance( element, length.Value );
+            for( int i = 0; i < length.Value; ++i )
             {
-                var value = this.Read( reader, structure, element, null, null );
+                object value = this.Read( reader, structure, element, null, null );
                 array.SetValue( value, i );
             }
 
@@ -127,7 +127,7 @@ namespace AESharp.Networking.Packets.Serialization
                 if( length == null )
                     throw new NotSupportedException( "Strings without a custom converter must have a length attribute" );
 
-                var str = value as string;
+                string str = value as string;
                 writer.Write( str.ToCharArray() );
             }
 
@@ -138,30 +138,30 @@ namespace AESharp.Networking.Packets.Serialization
                 return;
             }
 
-            var element = type.GetElementType();
+            Type element = type.GetElementType();
             if( !this.CanWrite( element ) )
                 throw new NotSupportedException( $"Array element type {type.FullName} is not supported." );
 
-            var array = (Array)value;
-            for( var i = 0; i < array.Length; ++i )
+            Array array = (Array)value;
+            for( int i = 0; i < array.Length; ++i )
             {
-                var arrayValue = array.GetValue( i );
+                object arrayValue = array.GetValue( i );
                 this.Write( writer, structure, element, arrayValue, null );
             }
         }
 
         private static void RegisterReaderForPrimitiveType<T>()
         {
-            var type = typeof( T );
-            var method = ReaderType.GetMethod( $"Read{type.Name}", BindingFlags.Public | BindingFlags.Instance );
+            Type type = typeof( T );
+            MethodInfo method = ReaderType.GetMethod( $"Read{type.Name}", BindingFlags.Public | BindingFlags.Instance );
             
             TypeReaders[type] = ( r, s, t, c, l ) => method.Invoke( r, null );
         }
 
         private static void RegisterWriterForPrimitiveType<T>()
         {
-            var type = typeof( T );
-            var method = WriterType.GetMethod( "Write", new[] { type } );
+            Type type = typeof( T );
+            MethodInfo method = WriterType.GetMethod( "Write", new[] { type } );
 
             TypeWriters[type] = ( w, s, t, v, l ) => method.Invoke( w, new object[] { v } );
         }
