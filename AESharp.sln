@@ -20,13 +20,13 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AESharp.Logging", "src\AESh
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AESharp.Interop", "src\AESharp.Interop\AESharp.Interop.xproj", "{C036368A-2117-4176-904B-631885683EE3}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AESharp.Router", "AESharp.Router\AESharp.Router.xproj", "{FA020EDD-556F-404F-9A91-92D028341FBB}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AESharp.Router", "src\AESharp.Router\AESharp.Router.xproj", "{FA020EDD-556F-404F-9A91-92D028341FBB}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AESharp.World", "AESharp.World\AESharp.World.xproj", "{699770B8-AAE6-4F6B-BB1D-CFA2869265E5}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AESharp.World", "src\AESharp.World\AESharp.World.xproj", "{699770B8-AAE6-4F6B-BB1D-CFA2869265E5}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AESharp.Admin", "src\AESharp.Admin\AESharp.Admin.xproj", "{DD39D477-9058-4246-89A1-A997CB5C985D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Testing.Logon", "AESharp.Testing.Logon\AESharp.Testing.Logon.csproj", "{F4FF56F5-DF9F-4F19-8590-01692CDAB235}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Testing.Logon", "src\AESharp.Testing.Logon\AESharp.Testing.Logon.csproj", "{F4FF56F5-DF9F-4F19-8590-01692CDAB235}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,7 +10,7 @@ namespace AESharp.Networking.Packets.Serialization
 {
     internal sealed class ReflectedMember
     {
-        public delegate void ValueSetterDelegate( object value, object instance );
+        public delegate void ValueSetterDelegate( object instance, object value );
         public delegate object ValueGetterDelegate( object instance );
         public delegate object ValueTransformerDelegate( object value );
 
@@ -37,7 +37,7 @@ namespace AESharp.Networking.Packets.Serialization
             BinaryConverterAttribute converterAttr = member.GetCustomAttribute<BinaryConverterAttribute>()
                              ?? new BinaryConverterAttribute( typeof( DefaultBinaryConverter ) );
             this.Converter = (BinaryConverter)Activator.CreateInstance( converterAttr.ConverterType ); ;
-   
+
 
             Type transformerType = typeof( TransformerAttribute );
             this.Transformers = member.GetCustomAttributes()
