@@ -39,18 +39,9 @@ namespace AESharp.Networking.Packets.Serialization
             RegisterReaderForPrimitiveType<char>();
             RegisterReaderForPrimitiveType<bool>();
 
-            RegisterReaderForType<IPAddress>( ( reader, s, t, v, l ) =>
-            {
-                byte[] bytes = reader.ReadBytes( 4 );
-                return new IPAddress( bytes );
-            } );
-
-            RegisterReaderForType<Version>( ( reader, s, t, v, l ) =>
-            {
-                byte[] bytes = reader.ReadBytes( 3 );
-                short build = reader.ReadInt16();
-                return new Version( bytes[0], bytes[1], bytes[2], build );
-            } );
+            RegisterReaderForType<IPAddress>( IPAddressReader );
+            RegisterReaderForType<Version>( VersionReader );
+            RegisterReaderForType<Guid>( GuidReader );
 
             TypeWriters = new Dictionary<Type, WriterDelegate>();
             RegisterWriterForPrimitiveType<sbyte>();
@@ -66,20 +57,50 @@ namespace AESharp.Networking.Packets.Serialization
             RegisterWriterForPrimitiveType<char>();
             RegisterWriterForPrimitiveType<bool>();
 
-            RegisterWriterForType<IPAddress>( ( writer, s, t, value, l ) =>
-            {
-                IPAddress ip = value as IPAddress;
-                writer.Write( ip.GetAddressBytes() );
-            } );
+            RegisterWriterForType<IPAddress>( IPAddressWriter );
+            RegisterWriterForType<Version>( VersionWriter );
+            RegisterWriterForType<Guid>( GuidWriter );
+        }
 
-            RegisterWriterForType<Version>( ( writer, s, t, value, l ) =>
-            {
-                Version version = value as Version;
-                writer.Write( (byte)version.Major );
-                writer.Write( (byte)version.Minor );
-                writer.Write( (byte)version.Build );
-                writer.Write( (short)version.Revision );
-            } );
+        private static object GuidReader( BinaryReader reader, object s, Type t, object value, int? l )
+        {
+            byte[] buffer = reader.ReadBytes( 16 );
+            return new Guid( buffer );
+        }
+
+        private static void GuidWriter( BinaryWriter writer, object s, Type t, object value, int? l )
+        {
+            Guid guid = (Guid)value;
+            writer.Write( guid.ToByteArray() );
+        }
+
+        private static void VersionWriter( BinaryWriter writer, object s, Type t, object value, int? l )
+        {
+            Version version = value as Version ?? new Version( 0, 0, 0, 0 );
+
+            writer.Write( (byte)version.Major );
+            writer.Write( (byte)version.Minor );
+            writer.Write( (byte)version.Build );
+            writer.Write( (short)version.Revision );
+        }
+
+        private static void IPAddressWriter( BinaryWriter writer, object s, Type t, object value, int? l )
+        {
+            IPAddress ip = value as IPAddress ?? IPAddress.Loopback;
+            writer.Write( ip.GetAddressBytes() );
+        }
+
+        private static object IPAddressReader( BinaryReader reader, object s, Type t, object v, int? l )
+        {
+            byte[] bytes = reader.ReadBytes( 4 );
+            return new IPAddress( bytes );
+        }
+
+        private static object VersionReader( BinaryReader reader, object s, Type t, object v, int? l )
+        {
+            byte[] bytes = reader.ReadBytes( 3 );
+            short build = reader.ReadInt16();
+            return new Version( bytes[0], bytes[1], bytes[2], build );
         }
 
         public override bool CanRead( Type type )

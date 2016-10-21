@@ -4,17 +4,17 @@ using AESharp.Core.Interfaces.Networking;
 
 namespace AESharp.Networking.Events
 {
-    public class NetworkEventArgs : EventArgs, INetworkEventArgs
+    public class NetworkEventArgs : EventArgs
     {
-        public NetworkEventArgs( INetworkClient client, MemoryStream dataStream )
+        public NetworkEventArgs( NetworkClient client, Stream dataStream )
         {
             this.Client = client;
             this.DataStream = dataStream;
             this.DisconnectClient = false;
         }
 
-        public INetworkClient Client { get; }
-        public MemoryStream DataStream { get; }
+        public NetworkClient Client { get; }
+        public Stream DataStream { get; }
         public bool DisconnectClient { get; set; }
     }
 }

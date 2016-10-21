@@ -151,6 +151,7 @@ namespace AESharp.Networking.Packets.Serialization
             return members.Where( compilerGeneratedFilter )
                 .Where( hasSetterFilter )
                 .Where( serializationModeFilter )
+                .Where( m => m.GetCustomAttribute<SerializeIgnore>() == null )
                 .Select( m => new ReflectedMember( m ) );
         }
 
