@@ -3,7 +3,5 @@
     public class BigNumber
     {
         public byte[] Data { get; set; }
-
-
     }
 }

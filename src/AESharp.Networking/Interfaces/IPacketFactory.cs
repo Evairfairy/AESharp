@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace AESharp.Core.Interfaces
+﻿namespace AESharp.Core.Interfaces
 {
     public interface IPacketFactory
     {

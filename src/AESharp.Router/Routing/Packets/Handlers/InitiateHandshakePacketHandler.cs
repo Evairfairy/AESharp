@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AESharp.Networking.Packets;
+﻿using AESharp.Networking.Packets;
 
 namespace AESharp.Router.Routing.Packets.Handlers
 {
@@ -10,18 +6,18 @@ namespace AESharp.Router.Routing.Packets.Handlers
     {
         public override PacketHandlerResult HandlePacket( InitiateHandshakePacket packet )
         {
-            if( packet.ProtocolVersion != MasterRouter.ProtocolVersion )
+            if ( packet.ProtocolVersion != MasterRouter.ProtocolVersion )
             {
-                var disconnectPacket = new DisconnectPacket
+                DisconnectPacket disconnectPacket = new DisconnectPacket
                 {
                     Reason =
-                            $"Required protocol version is {MasterRouter.ProtocolVersion}, received {packet.ProtocolVersion}"
+                        $"Required protocol version is {MasterRouter.ProtocolVersion}, received {packet.ProtocolVersion}"
                 };
 
                 return new PacketHandlerResult( true, disconnectPacket );
             }
 
-            var acceptPacket = new AcceptHandshakePacket();
+            AcceptHandshakePacket acceptPacket = new AcceptHandshakePacket();
             return new PacketHandlerResult( false, acceptPacket );
         }
     }

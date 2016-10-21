@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using AESharp.Core.Interfaces.Networking;
 
 namespace AESharp.Router.Routing

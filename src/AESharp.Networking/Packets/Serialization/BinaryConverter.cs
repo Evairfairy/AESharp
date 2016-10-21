@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace AESharp.Networking.Packets.Serialization
@@ -16,24 +13,30 @@ namespace AESharp.Networking.Packets.Serialization
 
         internal object ReadImpl( BinaryReader reader, object structure, Type type, object currentvalue, int? length )
         {
-            if( !this.CanRead( type ) )
+            if ( !this.CanRead( type ) )
+            {
                 throw new NotSupportedException( $"Deserializer cannot read type {type.FullName}" );
+            }
 
             return this.Read( reader, structure, type, currentvalue, length );
         }
 
-        internal void WriteImpl( BinaryWriter writer, object structure, Type type, object value, int? length)
+        internal void WriteImpl( BinaryWriter writer, object structure, Type type, object value, int? length )
         {
-            if( !this.CanWrite( type ) )
+            if ( !this.CanWrite( type ) )
+            {
                 throw new NotSupportedException( $"Serializer cannot write type {type.FullName}" );
+            }
 
             this.Write( writer, structure, type, value, length );
         }
     }
 
-    public abstract class BinaryConverter<V> : BinaryConverter<V, object> { }
+    public abstract class BinaryConverter< V > : BinaryConverter<V, object>
+    {
+    }
 
-    public abstract class BinaryConverter<V, S> : BinaryConverter
+    public abstract class BinaryConverter< V, S > : BinaryConverter
     {
         public override bool CanRead( Type type )
             => type == typeof( V );
@@ -45,9 +48,9 @@ namespace AESharp.Networking.Packets.Serialization
         public abstract void Write( BinaryWriter writer, S structure, Type type, V value, int? length );
 
         public override object Read( BinaryReader reader, object structure, Type type, object currentValue, int? length )
-            => this.Read( reader, (S)structure, type, (V)currentValue, length );
+            => this.Read( reader, (S) structure, type, (V) currentValue, length );
 
         public override void Write( BinaryWriter writer, object structure, Type type, object value, int? length )
-            => this.Write( writer, (S)structure, type, (V)value, length );
+            => this.Write( writer, (S) structure, type, (V) value, length );
     }
 }

@@ -58,7 +58,7 @@ namespace AESharp.Networking
             {
                 TcpClient rawClient = await this._listener.AcceptTcpClientAsync();
                 NetworkClient aeClient = new NetworkClient( rawClient, this._networkEngine, this._serializer );
-                
+
                 this.ClientLoop( aeClient ).RunAsync();
             }
         }

@@ -1,9 +1,8 @@
 ﻿using AESharp.Core.Interfaces;
-using AESharp.Core.Interfaces.Networking;
 
 namespace AESharp.Networking.Packets
 {
-    public class PacketFactory// : IPacketFactory
+    public class PacketFactory // : IPacketFactory
     {
         private readonly ILogger _logger;
         private readonly IPacketSerializer _serializer;

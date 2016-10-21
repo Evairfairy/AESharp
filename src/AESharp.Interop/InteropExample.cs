@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace AESharp.Interop
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout( LayoutKind.Sequential, CharSet = CharSet.Ansi )]
     public struct Person
     {
         public string firstname;
@@ -20,15 +20,15 @@ namespace AESharp.Interop
 
     public static class InteropExample
     {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate int numberfn_t(int n);
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl )]
+        public delegate int numberfn_t( int n );
 
-        [DllImport("InteropTest.dll")]
-        [return: MarshalAs(UnmanagedType.FunctionPtr)]
+        [DllImport( "InteropTest.dll" )]
+        [return: MarshalAs( UnmanagedType.FunctionPtr )]
         public static extern numberfn_t get_number_func();
 
-        [DllImport("InteropTest.dll")]
-        public static extern int operate_on(int n, [MarshalAs(UnmanagedType.FunctionPtr)] numberfn_t fn);
+        [DllImport( "InteropTest.dll" )]
+        public static extern int operate_on( int n, [MarshalAs( UnmanagedType.FunctionPtr )] numberfn_t fn );
 
         [DllImport( "InteropTest.dll" )]
         public static extern IntPtr get_person();

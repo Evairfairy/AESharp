@@ -5,30 +5,18 @@ using System.Net;
 using AESharp.Core.Interfaces;
 using AESharp.Core.Interfaces.Networking;
 using AESharp.Logon.Networking;
+using AESharp.Logon.Networking.PacketHandlers;
 using AESharp.Networking;
 using AESharp.Networking.Events;
+using AESharp.Networking.Interfaces;
 using AESharp.Networking.Packets;
 using AESharp.Networking.Packets.Serialization;
-using AESharp.Logon.Networking.PacketHandlers;
-using AESharp.Networking.Interfaces;
 using SimpleInjector;
 
 namespace AESharp.Logon
 {
     public static class Program
     {
-        private sealed class PacketDefinition
-        {
-            public Type PacketType { get; }
-            public IPacketHandler Handler { get; }
-
-            public PacketDefinition( Type packetType, IPacketHandler handler )
-            {
-                this.PacketType = packetType;
-                this.Handler = handler;
-            }
-        }
-
         private static readonly Dictionary<PacketId, PacketDefinition> PacketTypes;
         private static Container _container;
 
@@ -37,7 +25,7 @@ namespace AESharp.Logon
             PacketTypes = new Dictionary<PacketId, PacketDefinition>
             {
                 [PacketId.Challenge] =
-                new PacketDefinition( typeof( LogonChallengePacket ), new ChallengePacketHandler() ),
+                new PacketDefinition( typeof( LogonChallengePacket ), new ChallengePacketHandler() )
             };
         }
 
@@ -59,7 +47,7 @@ namespace AESharp.Logon
             //server.StartListening( IPAddress.Any, 3724 );
 
             TcpServer server = new TcpServer( IPAddress.Any, 3724, _container.GetInstance<INetworkEngine>(),
-                                              packetSerializer );
+                packetSerializer );
             server.Start();
             server.ReceiveData += ServerOnReceiveData;
 
@@ -79,13 +67,25 @@ namespace AESharp.Logon
                 networkEventArgs.DisconnectClient = true;
                 return;
             }
-            
+
             object packet = serializer.DeserializePacket( definition.PacketType, networkEventArgs.DataStream, null );
             PacketHandlerResult result = definition.Handler.HandlePacket( packet );
             networkEventArgs.DisconnectClient = result.DisconnectClient;
 
             // Nothing else to do at this stage in development
             //networkEventArgs.DisconnectClient = true;
+        }
+
+        private sealed class PacketDefinition
+        {
+            public PacketDefinition( Type packetType, IPacketHandler handler )
+            {
+                this.PacketType = packetType;
+                this.Handler = handler;
+            }
+
+            public Type PacketType { get; }
+            public IPacketHandler Handler { get; }
         }
     }
 }

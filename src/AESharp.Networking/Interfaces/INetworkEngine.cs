@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using AESharp.Networking.Events;
 
 namespace AESharp.Core.Interfaces.Networking
 {

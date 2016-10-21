@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -7,6 +8,7 @@ using AESharp.Core.Interfaces;
 using AESharp.Networking;
 using AESharp.Networking.Events;
 using AESharp.Networking.Interfaces;
+using AESharp.Networking.Packets;
 using AESharp.Networking.Packets.Serialization;
 using AESharp.Router.Routing.Packets.Handlers;
 
@@ -20,19 +22,17 @@ namespace AESharp.Router.Routing
         private static readonly ReadOnlyDictionary<RoutingPacketId, IPacketHandler> _packets;
         private static MasterRouter _instance;
 
-        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
+        private readonly IPacketSerializer _serializer;
 
         static MasterRouter()
         {
-            var packets = new Dictionary<RoutingPacketId, IPacketHandler>
+            Dictionary<RoutingPacketId, IPacketHandler> packets = new Dictionary<RoutingPacketId, IPacketHandler>
             {
                 [RoutingPacketId.InitiateHandshake] = new InitiateHandshakePacketHandler()
             };
 
             _packets = new ReadOnlyDictionary<RoutingPacketId, IPacketHandler>( packets );
         }
-
-        private readonly IPacketSerializer _serializer;
 
         private MasterRouter()
         {
@@ -42,17 +42,19 @@ namespace AESharp.Router.Routing
         // Server-mode constructor
         internal MasterRouter( IPAddress address )
         {
-            var serializer = new PacketSerialization();
-            var types = _packets.Select( p => p.Value.Type );
+            PacketSerialization serializer = new PacketSerialization();
+            IEnumerable<Type> types = _packets.Select( p => p.Value.Type );
             serializer.CacheObjects( types );
 
             this._serializer = serializer;
         }
 
+        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
+
         internal void StartServer()
         {
-            var networkEngine = new RoutingNetworkEngine();
-            var server = new TcpServer( IPAddress.Any, ListenPort, networkEngine, this._serializer );
+            RoutingNetworkEngine networkEngine = new RoutingNetworkEngine();
+            TcpServer server = new TcpServer( IPAddress.Any, ListenPort, networkEngine, this._serializer );
 
             server.ReceiveData += this.Server_ReceiveData;
             server.Start();
@@ -60,25 +62,31 @@ namespace AESharp.Router.Routing
 
         private void Server_ReceiveData( object sender, NetworkEventArgs e )
         {
-            var id = (RoutingPacketId)e.DataStream.ReadByte();
+            RoutingPacketId id = (RoutingPacketId) e.DataStream.ReadByte();
 
             IPacketHandler handler;
-            if( !_packets.TryGetValue( id, out handler ) )
+            if ( !_packets.TryGetValue( id, out handler ) )
             {
                 e.DisconnectClient = true;
                 return;
             }
 
-            var packet = this._serializer.DeserializePacket( handler.Type, e.DataStream, Encoding.UTF8 );
-            var result = handler.HandlePacket( packet );
+            object packet = this._serializer.DeserializePacket( handler.Type, e.DataStream, Encoding.UTF8 );
+            PacketHandlerResult result = handler.HandlePacket( packet );
 
-            if( result.ResponsePacket != null )
+            if ( result.ResponsePacket != null )
+            {
                 e.Client.SendPacket( result.ResponsePacket );
+            }
 
-            if( result.DisconnectClient )
+            if ( result.DisconnectClient )
+            {
                 e.DisconnectClient = result.DisconnectClient;
+            }
             else
+            {
                 e.Client.HandleIncomingPackets();
+            }
         }
     }
 }

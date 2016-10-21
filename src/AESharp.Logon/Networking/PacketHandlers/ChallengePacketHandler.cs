@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AESharp.Networking.Packets;
 
 namespace AESharp.Logon.Networking.PacketHandlers
@@ -24,7 +21,7 @@ namespace AESharp.Logon.Networking.PacketHandlers
             Console.WriteLine( $"\tTimezone Bias:\t\t{packet.TimezoneBias}" );
             Console.WriteLine( $"\tIP:\t\t\t{packet.IPAddress}" );
             Console.WriteLine( $"\tAccount Name:\t\t{packet.AccountName}" );
-            
+
             return new PacketHandlerResult( false, null /* TODO */ );
         }
     }

@@ -18,7 +18,9 @@
         {
             this._permutation = new byte[256];
             for ( int i = 0; i < this._permutation.Length; ++i )
+            {
                 this._permutation[i] = (byte) i;
+            }
 
             this._indexOne = 0;
             this._indexTwo = 0;

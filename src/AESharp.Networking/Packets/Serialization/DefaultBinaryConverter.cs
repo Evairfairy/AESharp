@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Reflection;
 
 namespace AESharp.Networking.Packets.Serialization
 {
     public sealed class DefaultBinaryConverter : BinaryConverter
     {
-        internal delegate object ReaderDelegate( BinaryReader reader, object structure, Type type, object currentValue, int? length );
-        internal delegate void WriterDelegate( BinaryWriter writer, object structure, Type type, object value, int? length );
-
         private static readonly TypeInfo ReaderType;
         private static readonly TypeInfo WriterType;
         private static readonly Type StringType;
@@ -70,7 +65,7 @@ namespace AESharp.Networking.Packets.Serialization
 
         private static void GuidWriter( BinaryWriter writer, object s, Type t, object value, int? l )
         {
-            Guid guid = (Guid)value;
+            Guid guid = (Guid) value;
             writer.Write( guid.ToByteArray() );
         }
 
@@ -78,10 +73,10 @@ namespace AESharp.Networking.Packets.Serialization
         {
             Version version = value as Version ?? new Version( 0, 0, 0, 0 );
 
-            writer.Write( (byte)version.Major );
-            writer.Write( (byte)version.Minor );
-            writer.Write( (byte)version.Build );
-            writer.Write( (short)version.Revision );
+            writer.Write( (byte) version.Major );
+            writer.Write( (byte) version.Minor );
+            writer.Write( (byte) version.Build );
+            writer.Write( (short) version.Revision );
         }
 
         private static void IPAddressWriter( BinaryWriter writer, object s, Type t, object value, int? l )
@@ -104,35 +99,43 @@ namespace AESharp.Networking.Packets.Serialization
         }
 
         public override bool CanRead( Type type )
-            => TypeReaders.ContainsKey( type ) || type.IsArray || type == StringType;
+            => TypeReaders.ContainsKey( type ) || type.IsArray || ( type == StringType );
 
         public override bool CanWrite( Type type )
-            => TypeWriters.ContainsKey( type ) || type.IsArray || type == StringType;
+            => TypeWriters.ContainsKey( type ) || type.IsArray || ( type == StringType );
 
         public override object Read( BinaryReader reader, object structure, Type type, object currentValue, int? length )
         {
-            if( type == StringType )
+            if ( type == StringType )
             {
-                if( length == null )
+                if ( length == null )
+                {
                     throw new NotSupportedException( "Strings without a custom converter must have a length attribute" );
+                }
 
                 char[] chars = reader.ReadChars( length.Value );
-                return new String( chars );
+                return new string( chars );
             }
 
             ReaderDelegate read;
-            if( TypeReaders.TryGetValue( type, out read ) )
+            if ( TypeReaders.TryGetValue( type, out read ) )
+            {
                 return read( reader, structure, type, currentValue, length );
+            }
 
-            if( length == null )
+            if ( length == null )
+            {
                 throw new InvalidOperationException( "Arrays must have a length attribute." );
+            }
 
             Type element = type.GetElementType();
-            if( !this.CanRead( element ) )
+            if ( !this.CanRead( element ) )
+            {
                 throw new NotSupportedException( $"Array element type {type.FullName} is not supported." );
+            }
 
             Array array = Array.CreateInstance( element, length.Value );
-            for( int i = 0; i < length.Value; ++i )
+            for ( int i = 0; i < length.Value; ++i )
             {
                 object value = this.Read( reader, structure, element, null, null );
                 array.SetValue( value, i );
@@ -143,54 +146,64 @@ namespace AESharp.Networking.Packets.Serialization
 
         public override void Write( BinaryWriter writer, object structure, Type type, object value, int? length )
         {
-            if( type == StringType )
+            if ( type == StringType )
             {
-                if( length == null )
+                if ( length == null )
+                {
                     throw new NotSupportedException( "Strings without a custom converter must have a length attribute" );
+                }
 
                 string str = value as string;
                 writer.Write( str.ToCharArray() );
             }
 
             WriterDelegate write;
-            if( TypeWriters.TryGetValue( type, out write ) )
+            if ( TypeWriters.TryGetValue( type, out write ) )
             {
                 write( writer, structure, type, value, length );
                 return;
             }
 
             Type element = type.GetElementType();
-            if( !this.CanWrite( element ) )
+            if ( !this.CanWrite( element ) )
+            {
                 throw new NotSupportedException( $"Array element type {type.FullName} is not supported." );
+            }
 
-            Array array = (Array)value;
-            for( int i = 0; i < array.Length; ++i )
+            Array array = (Array) value;
+            for ( int i = 0; i < array.Length; ++i )
             {
                 object arrayValue = array.GetValue( i );
                 this.Write( writer, structure, element, arrayValue, null );
             }
         }
 
-        private static void RegisterReaderForPrimitiveType<T>()
+        private static void RegisterReaderForPrimitiveType< T >()
         {
             Type type = typeof( T );
             MethodInfo method = ReaderType.GetMethod( $"Read{type.Name}", BindingFlags.Public | BindingFlags.Instance );
-            
+
             TypeReaders[type] = ( r, s, t, c, l ) => method.Invoke( r, null );
         }
 
-        private static void RegisterWriterForPrimitiveType<T>()
+        private static void RegisterWriterForPrimitiveType< T >()
         {
             Type type = typeof( T );
-            MethodInfo method = WriterType.GetMethod( "Write", new[] { type } );
+            MethodInfo method = WriterType.GetMethod( "Write", new[] {type} );
 
-            TypeWriters[type] = ( w, s, t, v, l ) => method.Invoke( w, new object[] { v } );
+            TypeWriters[type] = ( w, s, t, v, l ) => method.Invoke( w, new[] {v} );
         }
 
-        private static void RegisterReaderForType<T>( ReaderDelegate reader )
+        private static void RegisterReaderForType< T >( ReaderDelegate reader )
             => TypeReaders[typeof( T )] = reader;
 
-        private static void RegisterWriterForType<T>( WriterDelegate writer )
+        private static void RegisterWriterForType< T >( WriterDelegate writer )
             => TypeWriters[typeof( T )] = writer;
+
+        internal delegate object ReaderDelegate(
+            BinaryReader reader, object structure, Type type, object currentValue, int? length );
+
+        internal delegate void WriterDelegate(
+            BinaryWriter writer, object structure, Type type, object value, int? length );
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AESharp.Core.Interfaces;
+﻿using AESharp.Core.Interfaces;
 
 namespace AESharp.Networking.Packets
 {

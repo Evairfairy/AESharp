@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using AESharp.Core.Interfaces.Networking;
-using AESharp.Networking.Events;
 using SimpleInjector;
 
 namespace AESharp.Logon.Networking

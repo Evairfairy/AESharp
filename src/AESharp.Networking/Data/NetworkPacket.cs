@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace AESharp.Networking.Data
 {
@@ -48,7 +47,9 @@ namespace AESharp.Networking.Data
             int lengthDifference = requiredLength - currentLength;
 
             if ( lengthDifference > 0 )
+            {
                 Array.Resize( ref this._data, this._data.Length + lengthDifference );
+            }
 
             Array.Copy( val, 0, this._data, this.BytesWritten, val.Length );
 
@@ -57,7 +58,7 @@ namespace AESharp.Networking.Data
 
         public byte ReadByte()
         {
-            return this.ReadBytes( sizeof( byte ) )[ 0 ];
+            return this.ReadBytes( sizeof( byte ) )[0];
         }
 
         public void WriteByte( byte val )
@@ -153,7 +154,9 @@ namespace AESharp.Networking.Data
             {
                 char c = this.ReadChar();
                 if ( c == '\0' )
+                {
                     continue;
+                }
                 s += c;
             }
 
@@ -168,7 +171,9 @@ namespace AESharp.Networking.Data
             {
                 char c = this.ReadChar();
                 if ( c == '\0' )
+                {
                     break;
+                }
 
                 s += c;
             }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AESharp.Networking.Packets.Serialization.Transformers
 {
@@ -12,10 +9,8 @@ namespace AESharp.Networking.Packets.Serialization.Transformers
 
         static TrimAttribute()
         {
-            TrimChars = new[] {  ' ', '\0' };
+            TrimChars = new[] {' ', '\0'};
         }
-
-        public StringSide StringSide { get; }
 
         public TrimAttribute( StringSide side = StringSide.Both, SerializationMode mode = SerializationMode.Read )
             : base( mode )
@@ -23,11 +18,13 @@ namespace AESharp.Networking.Packets.Serialization.Transformers
             this.StringSide = side;
         }
 
+        public StringSide StringSide { get; }
+
         protected override object TransformValue( object value, int? _ )
         {
             string str = value as string;
 
-            switch( this.StringSide )
+            switch ( this.StringSide )
             {
                 case StringSide.Start:
                     return str.TrimStart( TrimChars );

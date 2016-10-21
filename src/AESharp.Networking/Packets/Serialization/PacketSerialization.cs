@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using AESharp.Core.Interfaces;
 using AESharp.Core.Extensions;
+using AESharp.Core.Interfaces;
 
 namespace AESharp.Networking.Packets.Serialization
 {
@@ -22,6 +22,32 @@ namespace AESharp.Networking.Packets.Serialization
             this._deserializerCache = new Dictionary<Type, ObjectDeserializer>();
             this._serializerCache = new Dictionary<Type, ObjectSerializer>();
         }
+
+        public void SerializePacket( object packet, Stream output, Encoding encoding )
+        {
+            if ( !packet.GetType().Implements<IPacket>() )
+            {
+                throw new ArgumentException( "Packet object must implement IPacket", nameof( packet ) );
+            }
+
+            this.SerializeObject( packet, output, encoding );
+        }
+
+        public void SerializePacket( IPacket packet, Stream output, Encoding encoding )
+            => this.SerializeObject( packet, output, encoding );
+
+        public object DeserializePacket( Type type, Stream input, Encoding encoding )
+        {
+            if ( !type.Implements<IPacket>() )
+            {
+                throw new ArgumentException( "Packet object must implement IPacket", nameof( type ) );
+            }
+
+            return this.DeserializeObject( type, input, encoding );
+        }
+
+        public T DeserializePacket< T >( Stream input, Encoding encoding ) where T : IPacket
+        => this.DeserializeObject<T>( input, encoding );
 
         private void SerializeObject( object instance, Stream output, Encoding encoding = null )
         {
@@ -215,27 +241,5 @@ namespace AESharp.Networking.Packets.Serialization
         private delegate object ObjectDeserializer( Type type, Stream input, Encoding encoding );
 
         private delegate void ObjectSerializer( Type type, object instance, Stream output, Encoding encoding );
-
-        public void SerializePacket( object packet, Stream output, Encoding encoding )
-        {
-            if( !packet.GetType().Implements<IPacket>() )
-                throw new ArgumentException( "Packet object must implement IPacket", nameof( packet ) );
-
-            this.SerializeObject( packet, output, encoding );
-        }
-
-        public void SerializePacket( IPacket packet, Stream output, Encoding encoding )
-            => this.SerializeObject( packet, output, encoding );
-
-        public object DeserializePacket( Type type, Stream input, Encoding encoding )
-        {
-            if( !type.Implements<IPacket>() )
-                throw new ArgumentException( "Packet object must implement IPacket", nameof( type ) );
-
-            return this.DeserializeObject( type, input, encoding );
-        }
-
-        public T DeserializePacket<T>( Stream input, Encoding encoding ) where T : IPacket
-            => this.DeserializeObject<T>( input, encoding );
     }
 }

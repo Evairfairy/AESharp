@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace AESharp.Router.Routing
+﻿namespace AESharp.Router.Routing
 {
     internal enum RoutingPacketId : byte
     {
@@ -14,8 +9,6 @@ namespace AESharp.Router.Routing
         RegisterRouter = 3,
         RegisterComponent = 4,
         Disconnect = 5,
-        KeepAlive = 6,
-
-
+        KeepAlive = 6
     }
 }

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.IO;
-using System.Reflection;
 using AESharp.Core.Extensions;
 
 namespace AESharp.Networking.Packets.Serialization
 {
-    [AttributeUsage( AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false )]
+    [AttributeUsage( AttributeTargets.Property | AttributeTargets.Field )]
     public sealed class BinaryConverterAttribute : Attribute
     {
         private static readonly Type ConverterBaseType;
@@ -18,14 +13,16 @@ namespace AESharp.Networking.Packets.Serialization
             ConverterBaseType = typeof( BinaryConverter );
         }
 
-        public Type ConverterType { get; }
-
         public BinaryConverterAttribute( Type type )
         {
-            if( !type.Inherits( ConverterBaseType ) )
+            if ( !type.Inherits( ConverterBaseType ) )
+            {
                 throw new ArgumentException( "Converter type must inherit from BinaryConverter", nameof( type ) );
+            }
 
             this.ConverterType = type;
         }
+
+        public Type ConverterType { get; }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AESharp.Networking.Packets.Serialization.Transformers
 {
@@ -9,7 +6,7 @@ namespace AESharp.Networking.Packets.Serialization.Transformers
     {
         Start,
         End,
-        Both,
+        Both
     }
 
     [AttributeUsage( AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true )]
@@ -23,7 +20,9 @@ namespace AESharp.Networking.Packets.Serialization.Transformers
         }
 
         public StringTransformerAttribute( SerializationMode mode )
-            : base( mode ) { }
+            : base( mode )
+        {
+        }
 
         protected override bool CanTransform( Type type )
             => type == StringType;
