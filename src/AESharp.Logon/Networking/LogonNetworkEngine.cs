@@ -17,22 +17,12 @@ namespace AESharp.Logon.Networking
 
         public Stream ProcessDataForReceive( Stream dataStream )
         {
-            throw new NotImplementedException();
-        }
-
-        public void ProcessDataForReceive( NetworkEventArgs args )
-        {
-            // Do crypto stuff here
+            return dataStream;
         }
 
         public Stream ProcessDataForSend( Stream dataStream )
         {
-            throw new NotImplementedException();
-        }
-
-        public void ProcessDataForSend( NetworkEventArgs args )
-        {
-            // Do crypto stuff here
+            return dataStream;
         }
     }
 }

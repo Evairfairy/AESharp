@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using AESharp.Core.Extensions;
 using AESharp.Core.Interfaces;
 using AESharp.Core.Interfaces.Networking;
 using AESharp.Networking.Events;
@@ -20,11 +19,10 @@ namespace AESharp.Networking
         private readonly INetworkEngine _networkEngine;
         private readonly IPacketSerializer _serializer;
 
-        public bool IsListening { get; private set; }
-        public IPEndPoint LocalEndPoint { get; }
-
         public TcpServer( IPAddress address, ushort port, INetworkEngine engine, IPacketSerializer serializer )
-            : this( new IPEndPoint( address, port ), engine, serializer ) { }
+            : this( new IPEndPoint( address, port ), engine, serializer )
+        {
+        }
 
         public TcpServer( IPEndPoint endPoint, INetworkEngine engine, IPacketSerializer serializer )
         {
@@ -34,11 +32,18 @@ namespace AESharp.Networking
             this._serializer = serializer;
         }
 
+        public bool IsListening { get; private set; }
+        public IPEndPoint LocalEndPoint { get; }
+
+        public event EventHandler<NetworkEventArgs> ClientConnecting;
+        public event EventHandler<NetworkEventArgs> ClientDisconnected;
+        public event EventHandler<NetworkEventArgs> ReceiveData;
+
         public void Start()
         {
             this._listener.Start();
             this.IsListening = true;
-            this.ListenForConnections();
+            this.ListenForConnections().RunAsync();
         }
 
         public void Stop()
@@ -47,62 +52,68 @@ namespace AESharp.Networking
             this.IsListening = false;
         }
 
-        private async void ListenForConnections()
+        private async Task ListenForConnections()
         {
-            while( this.IsListening )
+            while ( this.IsListening )
             {
-                NetworkEventArgs args = null;
-                TcpClient client = null;
+                TcpClient rawClient = await this._listener.AcceptTcpClientAsync();
+                NetworkClient aeClient = new NetworkClient( rawClient, this._networkEngine, this._serializer );
+                
+                this.ClientLoop( aeClient ).RunAsync();
+            }
+        }
 
-                try
+        private async Task ClientLoop( NetworkClient client )
+        {
+            try
+            {
+                NetworkEventArgs clientConnectArgs = new NetworkEventArgs( client, null );
+                this.ClientConnecting?.Invoke( this, clientConnectArgs );
+
+                if ( clientConnectArgs.DisconnectClient )
                 {
-                    client = await this._listener.AcceptTcpClientAsync();
-                    var aeClient = new NetworkClient( client, this._networkEngine, this._serializer );
-
-                    args = new NetworkEventArgs( aeClient, null );
-                    this.ClientConnecting?.Invoke( this, args );
-
-                    var stream = client.GetStream();
-                    var buffer = new byte[BufferSize];
-                    var amountRead = await stream.ReadAsync( buffer, 0, BufferSize );
-
-                    // Shrink the array is the amount read is smaller than the buffer
-                    if( amountRead < BufferSize )
-                        Array.Resize( ref buffer, amountRead );
-
-                    Stream memory = new MemoryStream( buffer );
-
-                    if( this._networkEngine != null )
-                        memory = this._networkEngine.ProcessDataForReceive( memory );
-
-                    args = new NetworkEventArgs( aeClient, memory );
-                    this.ReceiveData?.Invoke( this, args );
+                    return;
                 }
-                catch { }
-                finally
+
+                NetworkStream ns = client.BaseClient.GetStream();
+
+                while ( true )
                 {
-                    if( args?.DisconnectClient == true )
+                    byte[] buffer = new byte[BufferSize];
+                    int bytesRead = await ns.ReadAsync( buffer, 0, buffer.Length );
+                    Array.Resize( ref buffer, bytesRead );
+
+                    MemoryStream memoryStream = new MemoryStream( buffer );
+
+                    this._networkEngine?.ProcessDataForReceive( memoryStream );
+                    NetworkEventArgs args = new NetworkEventArgs( client, memoryStream );
+                    this.ReceiveData?.Invoke( this, args );
+
+                    if ( args.DisconnectClient )
                     {
-                        client?.Client.Shutdown( SocketShutdown.Both );
-                        client?.Dispose();
-                        this.ClientDisconnected?.Invoke( this, args );
+                        break;
                     }
                 }
+            }
+            finally
+            {
+                NetworkEventArgs args = new NetworkEventArgs( client, Stream.Null );
+                this.ClientDisconnected?.Invoke( this, args );
+                client?.BaseClient.Client.Shutdown( SocketShutdown.Both );
+                client?.BaseClient.Dispose();
             }
         }
 
         public static async Task<IPAddress> ResolveIPAddress( string value )
         {
             IPAddress address;
-            if( IPAddress.TryParse( value, out address ) )
+            if ( IPAddress.TryParse( value, out address ) )
+            {
                 return address;
+            }
 
             IPAddress[] addresses = await Dns.GetHostAddressesAsync( value );
             return addresses[0];
         }
-
-        public event EventHandler<NetworkEventArgs> ClientConnecting;
-        public event EventHandler<NetworkEventArgs> ReceiveData;
-        public event EventHandler<NetworkEventArgs> ClientDisconnected;
     }
 }
