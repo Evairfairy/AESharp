@@ -3,7 +3,7 @@ using AESharp.Networking.Events;
 
 namespace AESharp.Networking.Interfaces
 {
-    public interface IReceivesData
+    public interface INetworkDataReceiver
     {
         event EventHandler<NetworkEventArgs> ReceiveData;
     }

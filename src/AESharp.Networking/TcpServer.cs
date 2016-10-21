@@ -11,7 +11,7 @@ using AESharp.Networking.Interfaces;
 
 namespace AESharp.Networking
 {
-    public sealed class TcpServer : IEventedNetworkServer, IReceivesData
+    public sealed class TcpServer : IEventedNetworkServer, INetworkDataReceiver
     {
         public const ushort BufferSize = 4 * 1024; // 4kb
 

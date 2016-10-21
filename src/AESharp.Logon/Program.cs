@@ -10,6 +10,7 @@ using AESharp.Networking.Events;
 using AESharp.Networking.Packets;
 using AESharp.Networking.Packets.Serialization;
 using AESharp.Logon.Networking.PacketHandlers;
+using AESharp.Networking.Interfaces;
 using SimpleInjector;
 
 namespace AESharp.Logon
