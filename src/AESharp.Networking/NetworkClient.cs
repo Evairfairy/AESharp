@@ -15,6 +15,7 @@ namespace AESharp.Networking
     public class NetworkClient : IReceivesData
     {
         private readonly INetworkEngine _networkEngine;
+        private readonly IPacketSerializer _serializer;
 
         public TcpClient BaseClient { get; }
 

@@ -10,7 +10,7 @@ namespace AESharp.Logon.Networking.PacketHandlers
     {
         public override PacketId PacketId { get; } = PacketId.Challenge;
 
-        public override bool HandlePacket( LogonChallengePacket packet )
+        public override PacketHandlerResult HandlePacket( LogonChallengePacket packet )
         {
             Console.WriteLine( "Received logon packet:" );
             Console.WriteLine( $"\tOpcode:\t\t\t{this.PacketId}" );
@@ -24,10 +24,8 @@ namespace AESharp.Logon.Networking.PacketHandlers
             Console.WriteLine( $"\tTimezone Bias:\t\t{packet.TimezoneBias}" );
             Console.WriteLine( $"\tIP:\t\t\t{packet.IPAddress}" );
             Console.WriteLine( $"\tAccount Name:\t\t{packet.AccountName}" );
-
-            // Return value of false indicates we disconnect the client
-            // think of it as answering the question "should we allow the client to stay connected?"
-            return false;
+            
+            return new PacketHandlerResult( false, null /* TODO */ );
         }
     }
 }

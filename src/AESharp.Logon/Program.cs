@@ -54,9 +54,12 @@ namespace AESharp.Logon
 
             _container.Verify();
 
-            AETcpServer server = _container.GetInstance<AETcpServer>();
-            server.StartListening( IPAddress.Any, 3724 );
+            //AETcpServer server = _container.GetInstance<TcpServer>();
+            //server.StartListening( IPAddress.Any, 3724 );
 
+            TcpServer server = new TcpServer( IPAddress.Any, 3724, _container.GetInstance<INetworkEngine>(),
+                                              packetSerializer );
+            server.Start();
             server.ReceiveData += ServerOnReceiveData;
 
             Console.WriteLine( "Listening..." );
@@ -77,7 +80,8 @@ namespace AESharp.Logon
             }
             
             object packet = serializer.DeserializePacket( definition.PacketType, networkEventArgs.DataStream, null );
-            networkEventArgs.DisconnectClient = !definition.Handler.HandlePacket( packet );
+            PacketHandlerResult result = definition.Handler.HandlePacket( packet );
+            networkEventArgs.DisconnectClient = result.DisconnectClient;
 
             // Nothing else to do at this stage in development
             //networkEventArgs.DisconnectClient = true;

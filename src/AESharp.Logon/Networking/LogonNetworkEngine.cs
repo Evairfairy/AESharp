@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using AESharp.Core.Interfaces.Networking;
+using AESharp.Networking.Events;
 using SimpleInjector;
 
 namespace AESharp.Logon.Networking
@@ -19,7 +20,7 @@ namespace AESharp.Logon.Networking
             throw new NotImplementedException();
         }
 
-        public void ProcessDataForReceive( INetworkEventArgs args )
+        public void ProcessDataForReceive( NetworkEventArgs args )
         {
             // Do crypto stuff here
         }
@@ -29,7 +30,7 @@ namespace AESharp.Logon.Networking
             throw new NotImplementedException();
         }
 
-        public void ProcessDataForSend( INetworkEventArgs args )
+        public void ProcessDataForSend( NetworkEventArgs args )
         {
             // Do crypto stuff here
         }

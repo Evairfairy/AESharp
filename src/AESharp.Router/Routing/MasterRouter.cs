@@ -54,7 +54,7 @@ namespace AESharp.Router.Routing
         internal void StartServer()
         {
             var networkEngine = new RoutingNetworkEngine();
-            var server = new TcpServer( IPAddress.Any, ListenPort, networkEngine );
+            var server = new TcpServer( IPAddress.Any, ListenPort, networkEngine, this._serializer );
 
             server.ReceiveData += this.Server_ReceiveData;
             server.Start();
