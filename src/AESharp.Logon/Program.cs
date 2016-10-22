@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using AESharp.Logon.Universal.Networking;
 using AESharp.Networking;
 using AESharp.Networking.Data;
 using SimpleInjector;
@@ -41,7 +40,7 @@ namespace AESharp.Logon
             }
             catch ( Exception ex )
             {
-                Console.WriteLine( $"Unhandled exception in {nameof(AcceptClientActionAsync)}: {ex}" );
+                Console.WriteLine( $"Unhandled exception in {nameof( AcceptClientActionAsync )}: {ex}" );
             }
             finally
             {

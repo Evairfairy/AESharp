@@ -8,6 +8,8 @@ namespace AESharp.Logon.Universal.Networking.Packets
     {
         public ChallengePacket( LogonPacket packet )
         {
+            this.Error = packet.ReadByte();
+            this.Size = packet.ReadUShort();
             this.Game = packet.ReadFixedString( 4 ).Flip();
             this.Build = new Version( packet.ReadByte(), packet.ReadByte(), packet.ReadByte(), packet.ReadUShort() );
             this.Platform = packet.ReadFixedString( 4 ).Flip();
@@ -19,6 +21,8 @@ namespace AESharp.Logon.Universal.Networking.Packets
             this.AccountName = packet.ReadFixedString( packet.ReadByte() );
         }
 
+        public byte Error { get; private set; }
+        public ushort Size { get; private set; }
         public string Game { get; private set; }
         public Version Build { get; private set; }
         public string Platform { get; private set; }

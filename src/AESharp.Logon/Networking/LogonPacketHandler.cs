@@ -4,7 +4,7 @@ using AESharp.Networking.Packets;
 
 namespace AESharp.Logon.Networking
 {
-    [Obsolete("Reflection based networking will be removed soon")]
+    [Obsolete( "Reflection based networking will be removed soon" )]
     public abstract class LogonPacketHandler< T > : IPacketHandler<T>
         where T : IPacket
     {

@@ -5,7 +5,7 @@ using SimpleInjector;
 
 namespace AESharp.Logon.Networking
 {
-    [Obsolete("Reflection based networking will be removed soon")]
+    [Obsolete( "Reflection based networking will be removed soon" )]
     public class LogonNetworkEngine : INetworkEngine
     {
         private readonly Container _container;

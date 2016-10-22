@@ -3,7 +3,7 @@ using AESharp.Networking.Packets;
 
 namespace AESharp.Logon.Networking.PacketHandlers
 {
-    [Obsolete("Reflection based networking will be removed soon")]
+    [Obsolete( "Reflection based networking will be removed soon" )]
     public class ChallengePacketHandler : LogonPacketHandler<LogonChallengePacket>
     {
         public override PacketId PacketId { get; } = PacketId.Challenge;

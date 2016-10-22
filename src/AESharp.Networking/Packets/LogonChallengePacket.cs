@@ -10,7 +10,7 @@ using AESharp.Networking.Packets.Serialization.Transformers;
 
 namespace AESharp.Networking.Packets
 {
-    [Obsolete("Reflection based networking will be removed soon")]
+    [Obsolete( "Reflection based networking will be removed soon" )]
     public sealed class LogonChallengePacket : IPacket
     {
         public byte Error { get; private set; }

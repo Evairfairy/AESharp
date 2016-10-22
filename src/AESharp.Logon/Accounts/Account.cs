@@ -2,9 +2,8 @@
 {
     public class Account
     {
-        public string Username;
-        public string PasswordHash;
-
         public bool Banned;
+        public string PasswordHash;
+        public string Username;
     }
 }

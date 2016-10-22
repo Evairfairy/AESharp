@@ -16,21 +16,6 @@ namespace AESharp.Logon.Universal.Networking.Packets
                     $"Received packet with incomplete header (only {this.InternalBuffer.Length} bytes received)" );
             }
             this.Opcode = this.ReadByte();
-            this.Error = this.ReadByte();
-            ushort length = this.ReadUShort();
-
-            // Sanity checks
-            if ( length < this.Payload.Count )
-            {
-                throw new InvalidPacketException(
-                    $"Length was read as {length} bytes but payload was {this.Payload.Count} bytes" );
-            }
-
-            if ( length > this.Payload.Count )
-            {
-                throw new InvalidPacketException(
-                    $"Fragmented packets are not supported at this time (length was {length} bytes but payload was {this.Payload.Count} bytes" );
-            }
         }
 
         public byte Opcode { get; set; }
