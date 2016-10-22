@@ -22,13 +22,13 @@ namespace AESharp.Logon
             _container.Verify();
 
             RealTcpServer server = new RealTcpServer( new IPEndPoint( IPAddress.Loopback, 3724 ) );
-            server.Start( AcceptClientAction );
+            server.Start( AcceptClientActionAsync );
 
             Console.WriteLine( "Listening..." );
             Console.ReadLine();
         }
 
-        private static async void AcceptClientAction( TcpClient rawClient )
+        private static async void AcceptClientActionAsync( TcpClient rawClient )
         {
             Console.WriteLine( "Accepting client" );
             LogonRemoteClient client = new LogonRemoteClient( rawClient, new CancellationTokenSource() );
@@ -41,7 +41,7 @@ namespace AESharp.Logon
             }
             catch ( Exception ex )
             {
-                Console.WriteLine( $"Unhandled exception in AcceptClientAction: {ex}" );
+                Console.WriteLine( $"Unhandled exception in {nameof(AcceptClientActionAsync)}: {ex}" );
             }
             finally
             {

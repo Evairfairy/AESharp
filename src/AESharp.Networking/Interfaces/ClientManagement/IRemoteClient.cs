@@ -12,7 +12,7 @@ namespace AESharp.Networking.Interfaces.ClientManagement
 
         Task ListenForDataTask( CancellationToken token );
         Task SendDataTask( byte[] data, CancellationToken token );
-        Task HandleDataTask( byte[] data, CancellationToken token );
+        Task HandleDataAsync( byte[] data, CancellationToken token );
         Task Disconnect( TimeSpan timeToAllowForCancellation );
     }
 }

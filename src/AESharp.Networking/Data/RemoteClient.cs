@@ -67,7 +67,7 @@ namespace AESharp.Networking.Data
 
                 try
                 {
-                    await this.HandleDataTask( buffer, token );
+                    await this.HandleDataAsync( buffer, token );
                 }
                 catch ( InvalidPacketException ex )
                 {
@@ -88,7 +88,7 @@ namespace AESharp.Networking.Data
         /// <param name="data">Data that was sent by the client</param>
         /// <param name="token">cancellation token</param>
         /// <returns>Task</returns>
-        public abstract Task HandleDataTask( byte[] data, CancellationToken token );
+        public abstract Task HandleDataAsync( byte[] data, CancellationToken token );
 
         /// <summary>
         ///     Closes both receive and send sockets for the underlying TcpClient. After calling this method, the RemoteClient
@@ -126,7 +126,7 @@ namespace AESharp.Networking.Data
         /// <returns>Task</returns>
         public async Task HandleDataTask( byte[] data )
         {
-            await this.HandleDataTask( data, this.CancellationToken );
+            await this.HandleDataAsync( data, this.CancellationToken );
         }
 
         ~RemoteClient()

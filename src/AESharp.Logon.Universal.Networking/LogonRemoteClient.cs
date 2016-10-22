@@ -10,12 +10,14 @@ namespace AESharp.Logon.Universal.Networking
 {
     public class LogonRemoteClient : RemoteClient
     {
+        public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
+
         public LogonRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
             : base( rawClient, tokenSource )
         {
         }
 
-        public override async Task HandleDataTask( byte[] data, CancellationToken token )
+        public override async Task HandleDataAsync( byte[] data, CancellationToken token )
         {
             LogonPacket logonPacket = new LogonPacket( data );
 
