@@ -4,8 +4,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using AESharp.Core.Extensions;
-using AESharp.Core.Interfaces;
-using AESharp.Core.Interfaces.Networking;
 using AESharp.Networking.Events;
 using AESharp.Networking.Interfaces;
 

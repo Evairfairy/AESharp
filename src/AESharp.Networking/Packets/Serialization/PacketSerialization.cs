@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using AESharp.Core.Extensions;
-using AESharp.Core.Interfaces;
+using AESharp.Networking.Interfaces;
 
 namespace AESharp.Networking.Packets.Serialization
 {

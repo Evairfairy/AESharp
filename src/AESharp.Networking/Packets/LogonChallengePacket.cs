@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using AESharp.Core.Interfaces;
+using AESharp.Networking.Interfaces;
 using AESharp.Networking.Packets.Serialization;
 using AESharp.Networking.Packets.Serialization.Converters;
 using AESharp.Networking.Packets.Serialization.Transformers;
@@ -10,6 +10,7 @@ using AESharp.Networking.Packets.Serialization.Transformers;
 
 namespace AESharp.Networking.Packets
 {
+    [Obsolete("Reflection based networking will be removed soon")]
     public sealed class LogonChallengePacket : IPacket
     {
         public byte Error { get; private set; }

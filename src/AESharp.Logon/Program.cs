@@ -1,91 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using AESharp.Core.Interfaces;
-using AESharp.Core.Interfaces.Networking;
-using AESharp.Logon.Networking;
-using AESharp.Logon.Networking.PacketHandlers;
+using System.Net.Sockets;
+using System.Threading;
+using AESharp.Logon.Universal.Networking;
 using AESharp.Networking;
-using AESharp.Networking.Events;
-using AESharp.Networking.Interfaces;
-using AESharp.Networking.Packets;
-using AESharp.Networking.Packets.Serialization;
+using AESharp.Networking.Data;
 using SimpleInjector;
 
 namespace AESharp.Logon
 {
     public static class Program
     {
-        private static readonly Dictionary<PacketId, PacketDefinition> PacketTypes;
         private static Container _container;
 
-        static Program()
-        {
-            PacketTypes = new Dictionary<PacketId, PacketDefinition>
-            {
-                [PacketId.Challenge] =
-                new PacketDefinition( typeof( LogonChallengePacket ), new ChallengePacketHandler() )
-            };
-        }
+        private static readonly RemoteClientRepository ClientRepository = new RemoteClientRepository();
 
         public static void Main( string[] args )
         {
             _container = new Container();
 
-            // Build (de)serializers before they're needed to speed up packet reads/writes
-            PacketSerialization packetSerializer = new PacketSerialization();
-            IEnumerable<Type> packetTypes = PacketTypes.Values.Select( t => t.PacketType );
-            packetSerializer.CacheObjects( packetTypes );
-
-            _container.RegisterSingleton( typeof( IPacketSerializer ), packetSerializer );
-            _container.RegisterSingleton<INetworkEngine, LogonNetworkEngine>();
-
             _container.Verify();
 
-            //AETcpServer server = _container.GetInstance<TcpServer>();
-            //server.StartListening( IPAddress.Any, 3724 );
-
-            TcpServer server = new TcpServer( IPAddress.Any, 3724, _container.GetInstance<INetworkEngine>(),
-                packetSerializer );
-            server.Start();
-            server.ReceiveData += ServerOnReceiveData;
+            RealTcpServer server = new RealTcpServer( new IPEndPoint( IPAddress.Loopback, 3724 ) );
+            server.Start( AcceptClientAction );
 
             Console.WriteLine( "Listening..." );
             Console.ReadLine();
         }
 
-        private static void ServerOnReceiveData( object sender, NetworkEventArgs networkEventArgs )
+        private static async void AcceptClientAction( TcpClient rawClient )
         {
-            IPacketSerializer serializer = _container.GetInstance<IPacketSerializer>();
+            Console.WriteLine( "Accepting client" );
+            LogonRemoteClient client = new LogonRemoteClient( rawClient, new CancellationTokenSource() );
 
-            PacketId packetId = (PacketId) networkEventArgs.DataStream.ReadByte();
-            PacketDefinition definition;
-            if ( !PacketTypes.TryGetValue( packetId, out definition ) )
+            Guid clientGuid = Guid.Empty;
+            try
             {
-                Console.Error.WriteLine( "Unknown packet 0x{0:X2}", (int) packetId );
-                networkEventArgs.DisconnectClient = true;
-                return;
+                clientGuid = ClientRepository.AddClient( client );
+                await client.ListenForDataTask( client.CancellationToken );
             }
-
-            object packet = serializer.DeserializePacket( definition.PacketType, networkEventArgs.DataStream, null );
-            PacketHandlerResult result = definition.Handler.HandlePacket( packet );
-            networkEventArgs.DisconnectClient = result.DisconnectClient;
-
-            // Nothing else to do at this stage in development
-            //networkEventArgs.DisconnectClient = true;
-        }
-
-        private sealed class PacketDefinition
-        {
-            public PacketDefinition( Type packetType, IPacketHandler handler )
+            catch ( Exception ex )
             {
-                this.PacketType = packetType;
-                this.Handler = handler;
+                Console.WriteLine( $"Unhandled exception in AcceptClientAction: {ex}" );
             }
-
-            public Type PacketType { get; }
-            public IPacketHandler Handler { get; }
+            finally
+            {
+                if ( clientGuid != Guid.Empty )
+                {
+                    ClientRepository.RemoveClient( clientGuid );
+                }
+            }
         }
     }
 }

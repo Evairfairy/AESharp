@@ -2,8 +2,9 @@
 using System.IO;
 using System.Text;
 
-namespace AESharp.Core.Interfaces
+namespace AESharp.Networking.Interfaces
 {
+    [Obsolete( "Reflection packet handling will be removed soon" )]
     public interface IPacketSerializer
     {
         void SerializePacket( IPacket packet, Stream output, Encoding encoding );

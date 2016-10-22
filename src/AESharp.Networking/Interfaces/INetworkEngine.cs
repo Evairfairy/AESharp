@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
-namespace AESharp.Core.Interfaces.Networking
+namespace AESharp.Networking.Interfaces
 {
+    [Obsolete( "Reflection based networking will be removed soon" )]
     public interface INetworkEngine
     {
         Stream ProcessDataForReceive( Stream dataStream );

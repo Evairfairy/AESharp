@@ -1,6 +1,4 @@
-﻿using AESharp.Core.Interfaces;
-
-namespace AESharp.Networking.Interfaces
+﻿namespace AESharp.Networking.Interfaces
 {
     public interface INetworkDataSender
     {

@@ -1,5 +1,4 @@
 ﻿using System;
-using AESharp.Core.Interfaces;
 using AESharp.Networking.Interfaces;
 using AESharp.Networking.Packets;
 

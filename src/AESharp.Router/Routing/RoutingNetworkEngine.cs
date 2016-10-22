@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using AESharp.Core.Interfaces.Networking;
+using AESharp.Networking.Interfaces;
 
 namespace AESharp.Router.Routing
 {

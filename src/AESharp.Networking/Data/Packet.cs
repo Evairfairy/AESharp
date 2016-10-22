@@ -1,59 +1,57 @@
 ﻿using System;
+using AESharp.Networking.Interfaces;
 
 namespace AESharp.Networking.Data
 {
-    public class NetworkPacket
+    public class Packet : IRealPacket
     {
-        private byte[] _data;
+        private byte[] _internalBuffer;
 
-        public NetworkPacket()
+        public Packet()
         {
-            this._data = new byte[0];
-            this.BytesWritten = 0;
-            this.BytesRead = 0;
+            this._internalBuffer = new byte[0];
+            this.BufferPosition = 0;
         }
 
-        public NetworkPacket( byte[] data )
+        public Packet( byte[] data )
         {
-            this._data = data;
-            this.BytesWritten = data.Length;
-            this.BytesRead = 0;
+            this._internalBuffer = data;
+            this.BufferPosition = 0;
         }
 
-        public int BytesWritten { get; private set; }
-        public int BytesRead { get; private set; }
-
-        public byte[] GetDataWritten()
+        public Packet( IRealPacket packet )
         {
-            byte[] buffer = new byte[this.BytesWritten];
-            Array.Copy( this._data, 0, buffer, 0, this.BytesWritten );
-            return buffer;
+            this._internalBuffer = packet.InternalBuffer;
+            this.BufferPosition = packet.BufferPosition;
         }
+
+        public byte[] InternalBuffer => this._internalBuffer;
+
+        public int BufferPosition { get; set; }
 
         public byte[] ReadBytes( int count )
         {
             byte[] buffer = new byte[count];
 
-            Array.Copy( this._data, this.BytesRead, buffer, 0, count );
-            this.BytesRead += count;
+            Array.Copy( this.InternalBuffer, this.BufferPosition, buffer, 0, count );
+            this.BufferPosition += count;
 
             return buffer;
         }
 
         public void WriteBytes( byte[] val )
         {
-            int requiredLength = this.BytesWritten + val.Length;
-            int currentLength = this._data.Length;
+            int requiredLength = this.BufferPosition + val.Length;
+            int currentLength = this.InternalBuffer.Length;
             int lengthDifference = requiredLength - currentLength;
 
             if ( lengthDifference > 0 )
             {
-                Array.Resize( ref this._data, this._data.Length + lengthDifference );
+                Array.Resize( ref this._internalBuffer, this.InternalBuffer.Length + lengthDifference );
             }
 
-            Array.Copy( val, 0, this._data, this.BytesWritten, val.Length );
-
-            this.BytesWritten += val.Length;
+            Array.Copy( val, 0, this.InternalBuffer, this.BufferPosition, val.Length );
+            this.BufferPosition += val.Length;
         }
 
         public byte ReadByte()
@@ -144,6 +142,11 @@ namespace AESharp.Networking.Data
         public void WriteULong( ulong val )
         {
             this.WriteBytes( BitConverter.GetBytes( val ) );
+        }
+
+        public byte[] BuildPacket()
+        {
+            return this.InternalBuffer;
         }
 
         public string ReadFixedString( int len )

@@ -2,13 +2,12 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using AESharp.Core.Interfaces;
-using AESharp.Core.Interfaces.Networking;
 using AESharp.Networking.Events;
 using AESharp.Networking.Interfaces;
 
 namespace AESharp.Networking
 {
+    [Obsolete( "Reflection packet handling will be removed soon" )]
     public class NetworkClient : INetworkClient
     {
         private readonly INetworkEngine _networkEngine;

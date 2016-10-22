@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
-using AESharp.Core.Interfaces;
 using AESharp.Networking;
 using AESharp.Networking.Events;
 using AESharp.Networking.Interfaces;

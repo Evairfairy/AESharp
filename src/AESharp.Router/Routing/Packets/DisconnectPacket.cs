@@ -1,4 +1,4 @@
-﻿using AESharp.Core.Interfaces;
+﻿using AESharp.Networking.Interfaces;
 using AESharp.Networking.Packets.Serialization;
 using AESharp.Networking.Packets.Serialization.Converters;
 

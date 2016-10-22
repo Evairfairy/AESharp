@@ -1,4 +1,4 @@
-﻿namespace AESharp.Core.Interfaces
+﻿namespace AESharp.Networking.Interfaces
 {
     public interface IPacketFactory
     {

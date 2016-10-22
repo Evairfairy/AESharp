@@ -1,4 +1,5 @@
 ﻿using AESharp.Core.Interfaces;
+using AESharp.Networking.Interfaces;
 
 namespace AESharp.Networking.Packets
 {

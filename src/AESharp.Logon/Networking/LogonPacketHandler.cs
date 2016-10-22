@@ -1,10 +1,10 @@
 ﻿using System;
-using AESharp.Core.Interfaces;
 using AESharp.Networking.Interfaces;
 using AESharp.Networking.Packets;
 
 namespace AESharp.Logon.Networking
 {
+    [Obsolete("Reflection based networking will be removed soon")]
     public abstract class LogonPacketHandler< T > : IPacketHandler<T>
         where T : IPacket
     {
