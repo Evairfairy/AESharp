@@ -11,6 +11,24 @@ namespace AESharp.Networking.Data
         private readonly BinaryReader _reader;
         private readonly BinaryWriter _writer;
 
+        public Packet( Encoding encoding = null )
+            : this( new MemoryStream(), encoding )
+        {
+        }
+
+        public Packet( byte[] data, Encoding encoding = null )
+            : this( new MemoryStream( data ), encoding )
+        {
+        }
+
+        private Packet( MemoryStream dataStream, Encoding encoding = null )
+        {
+            encoding = encoding ?? Encoding.UTF8;
+            this._memoryStream = dataStream;
+            this._reader = new BinaryReader( dataStream, encoding, false );
+            this._writer = new BinaryWriter( dataStream, encoding, false );
+        }
+
         public bool Disposed { get; private set; }
         public long Length => this._memoryStream.Length;
 
@@ -28,20 +46,6 @@ namespace AESharp.Networking.Data
         {
             get { return this._memoryStream.Position; }
             set { this._memoryStream.Position = value; }
-        }
-
-        public Packet( Encoding encoding = null )
-            : this( new MemoryStream(), encoding ) { }
-
-        public Packet( byte[] data, Encoding encoding = null )
-            : this( new MemoryStream( data ), encoding ) { }
-
-        private Packet( MemoryStream dataStream, Encoding encoding = null )
-        {
-            encoding = encoding ?? Encoding.UTF8;
-            this._memoryStream = dataStream;
-            this._reader = new BinaryReader( dataStream, encoding, false );
-            this._writer = new BinaryWriter( dataStream, encoding, false );
         }
 
         public void Dispose() => this.Dispose( true );
@@ -85,11 +89,11 @@ namespace AESharp.Networking.Data
         public Version ReadVersion()
         {
             return new Version(
-                               this.ReadByte(),
-                               this.ReadByte(),
-                               this.ReadByte(),
-                               this.ReadUInt16()
-                              );
+                this.ReadByte(),
+                this.ReadByte(),
+                this.ReadByte(),
+                this.ReadUInt16()
+            );
         }
 
         // IPv4
@@ -98,16 +102,16 @@ namespace AESharp.Networking.Data
         private string ReadString( StringPrefix prefix, StringTerminator terminator )
         {
             int length;
-            switch( prefix )
+            switch ( prefix )
             {
                 case StringPrefix.None:
                 {
                     char end;
-                    switch( terminator )
+                    switch ( terminator )
                     {
                         case StringTerminator.None:
                             throw new InvalidOperationException(
-                                                                "String terminator cannot be none when there is no prefix" );
+                                "String terminator cannot be none when there is no prefix" );
 
                         case StringTerminator.Null:
                             end = '\0';
@@ -124,8 +128,10 @@ namespace AESharp.Networking.Data
                     StringBuilder builder = new StringBuilder();
 
                     char c;
-                    while( ( c = this.ReadChar() ) != end )
+                    while ( ( c = this.ReadChar() ) != end )
+                    {
                         builder.Append( c );
+                    }
 
                     return builder.ToString();
                 }
@@ -148,7 +154,7 @@ namespace AESharp.Networking.Data
 
             string value = this.ReadFixedString( length );
 
-            switch( terminator )
+            switch ( terminator )
             {
                 case StringTerminator.None:
                     break;
@@ -186,20 +192,20 @@ namespace AESharp.Networking.Data
         public void WriteString( string value ) => this._writer.Write( value );
 
         public void WriteByteString( string value )
-                => this.WriteString( value, StringPrefix.Byte, StringTerminator.None );
+            => this.WriteString( value, StringPrefix.Byte, StringTerminator.None );
 
         public void WriteShortString( string value )
-                => this.WriteString( value, StringPrefix.Short, StringTerminator.None );
+            => this.WriteString( value, StringPrefix.Short, StringTerminator.None );
 
         public void WriteIntString( string value )
-                => this.WriteString( value, StringPrefix.Int, StringTerminator.None );
+            => this.WriteString( value, StringPrefix.Int, StringTerminator.None );
 
         public void WriteCString( string value ) => this.WriteString( value, StringPrefix.None, StringTerminator.Null );
 
         private void WriteString( string value, StringPrefix prefix, StringTerminator terminator )
         {
             int maxLength = 0;
-            switch( terminator )
+            switch ( terminator )
             {
                 case StringTerminator.None:
                     break;
@@ -214,23 +220,25 @@ namespace AESharp.Networking.Data
                     throw new NotSupportedException( Enum.GetName( typeof( StringTerminator ), terminator ) );
             }
 
-            switch( prefix )
+            switch ( prefix )
             {
                 case StringPrefix.None:
-                    if( terminator == StringTerminator.None )
+                    if ( terminator == StringTerminator.None )
+                    {
                         throw new InvalidOperationException( "String terminator cannot be none when there is no prefix" );
+                    }
                     break;
 
                 case StringPrefix.Byte:
                     maxLength = byte.MaxValue;
                     this.CheckStringLength( value.Length, maxLength );
-                    this.WriteByte( (byte)value.Length );
+                    this.WriteByte( (byte) value.Length );
                     break;
 
                 case StringPrefix.Short:
                     maxLength = short.MinValue;
                     this.CheckStringLength( value.Length, maxLength );
-                    this.WriteInt16( (short)value.Length );
+                    this.WriteInt16( (short) value.Length );
                     break;
 
                 case StringPrefix.Int:
@@ -248,17 +256,21 @@ namespace AESharp.Networking.Data
 
         private void CheckStringLength( int actualLength, int maxAllowedLength )
         {
-            if( actualLength > maxAllowedLength )
+            if ( actualLength > maxAllowedLength )
+            {
                 throw new InvalidOperationException(
-                                                    $"String length ({actualLength:#,#0}) exceeds maximum length of {maxAllowedLength:#,#0}" );
+                    $"String length ({actualLength:#,#0}) exceeds maximum length of {maxAllowedLength:#,#0}" );
+            }
         }
 
         protected virtual void Dispose( bool disposeManagedResources )
         {
-            if( this.Disposed )
+            if ( this.Disposed )
+            {
                 return;
+            }
 
-            if( disposeManagedResources )
+            if ( disposeManagedResources )
             {
                 this._memoryStream.Dispose();
                 this._reader.Dispose();

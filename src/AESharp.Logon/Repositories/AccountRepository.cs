@@ -23,12 +23,14 @@ namespace AESharp.Logon.Repositories
 
         public Account GetAccount( string username )
         {
-            lock( this._accounts )
+            lock ( this._accounts )
             {
-                foreach( Account account in this._accounts )
+                foreach ( Account account in this._accounts )
                 {
-                    if( account.Username.ToUpperInvariant() == username.ToUpperInvariant() )
+                    if ( account.Username.ToUpperInvariant() == username.ToUpperInvariant() )
+                    {
                         return account;
+                    }
                 }
             }
 

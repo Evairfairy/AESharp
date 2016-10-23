@@ -17,11 +17,15 @@ namespace AESharp.Networking.Data
         /// <returns>The GUID used to identify the client to the repository</returns>
         public Guid AddClient( RemoteClient client )
         {
-            if( client == null )
+            if ( client == null )
+            {
                 throw new NullReferenceException( $"Parameter {nameof( client )} cannot be null" );
+            }
 
-            lock( this._remoteClients )
+            lock ( this._remoteClients )
+            {
                 this._remoteClients.Add( client.ClientGuid, client );
+            }
             return client.ClientGuid;
         }
 
@@ -31,20 +35,26 @@ namespace AESharp.Networking.Data
         /// <param name="clientGuid">The GUID used to identify the client</param>
         public void RemoveClient( Guid clientGuid )
         {
-            if( clientGuid == Guid.Empty )
-                throw new NullReferenceException( $"Parameter {nameof( clientGuid )} cannot be empty" );
-
-            lock( this._remoteClients )
+            if ( clientGuid == Guid.Empty )
             {
-                if( this._remoteClients.ContainsKey( clientGuid ) )
+                throw new NullReferenceException( $"Parameter {nameof( clientGuid )} cannot be empty" );
+            }
+
+            lock ( this._remoteClients )
+            {
+                if ( this._remoteClients.ContainsKey( clientGuid ) )
+                {
                     this._remoteClients.Remove( clientGuid );
+                }
             }
         }
 
         public void RemoveAllClients()
         {
-            lock( this._remoteClients )
+            lock ( this._remoteClients )
+            {
                 this._remoteClients.Clear();
+            }
         }
 
         /// <summary>
@@ -54,11 +64,15 @@ namespace AESharp.Networking.Data
         /// <returns>The IRemoteClient identified by clientGuid</returns>
         public RemoteClient GetClient( Guid clientGuid )
         {
-            if( clientGuid == Guid.Empty )
+            if ( clientGuid == Guid.Empty )
+            {
                 throw new NullReferenceException( $"Parameter {nameof( clientGuid )} cannot be empty" );
+            }
 
-            lock( this._remoteClients )
+            lock ( this._remoteClients )
+            {
                 return this._remoteClients[clientGuid];
+            }
         }
 
         /// <summary>
@@ -69,8 +83,10 @@ namespace AESharp.Networking.Data
         {
             RemoteClient[] clients = new RemoteClient[this._remoteClients.Count];
 
-            lock( this._remoteClients )
+            lock ( this._remoteClients )
+            {
                 this._remoteClients.Values.CopyTo( clients, 0 );
+            }
 
             return clients;
         }

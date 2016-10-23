@@ -14,24 +14,28 @@ namespace AESharp.Router.Routing
         public const ushort ProtocolVersion = 1;
 
         public RoutingRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-            : base( rawClient, tokenSource ) { }
+            : base( rawClient, tokenSource )
+        {
+        }
 
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )
         {
-            if( token.IsCancellationRequested )
+            if ( token.IsCancellationRequested )
+            {
                 return;
+            }
 
-            RoutingPacketId id = (RoutingPacketId)data[0];
-            switch( id )
+            RoutingPacketId id = (RoutingPacketId) data[0];
+            switch ( id )
             {
                 case RoutingPacketId.InitiateHandshake:
                 {
                     InitiateHandshakePacket packet = new InitiateHandshakePacket( data );
-                    if( packet.ProtocolVersion != ProtocolVersion )
+                    if ( packet.ProtocolVersion != ProtocolVersion )
                     {
                         DisconnectPacket disconnect = new DisconnectPacket(
-                                                                           $"Requested protocol version ({packet.ProtocolVersion}) " +
-                                                                           $"is different than the expected version ({ProtocolVersion})" );
+                            $"Requested protocol version ({packet.ProtocolVersion}) " +
+                            $"is different than the expected version ({ProtocolVersion})" );
 
                         await this.SendPacketAsync( disconnect, token );
                         await this.Disconnect( TimeSpan.FromMilliseconds( 100 ) );
@@ -41,10 +45,12 @@ namespace AESharp.Router.Routing
 
                 default:
                     throw new InvalidPacketException(
-                                                     $"Received unknown or unimplemented packet (opcode: 0x{(byte)id:X2})" );
+                        $"Received unknown or unimplemented packet (opcode: 0x{(byte) id:X2})" );
             }
         }
 
-        private void InitiateHandshakeHandler( InitiateHandshakePacket packet ) { }
+        private void InitiateHandshakeHandler( InitiateHandshakePacket packet )
+        {
+        }
     }
 }

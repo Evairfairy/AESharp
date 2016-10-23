@@ -1,5 +1,5 @@
 {
-	"version": "1.0.0-*",
+    "version": "1.0.0-*",
 
     "dependencies": {
         "Microsoft.EntityFrameworkCore": "1.0.1",
@@ -8,9 +8,9 @@
         "MySql.Data.EntityFrameworkCore": "7.0.5-IR21"
     },
 
-	"frameworks": {
-		"netstandard1.6": {
-			"imports": "dnxcore50"
-		}
-	}
+    "frameworks": {
+        "netstandard1.6": {
+            "imports": "dnxcore50"
+        }
+    }
 }

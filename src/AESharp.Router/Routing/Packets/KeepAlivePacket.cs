@@ -1,4 +1,6 @@
 ﻿namespace AESharp.Router.Routing.Packets
 {
-    public class KeepAlivePacket { }
+    public class KeepAlivePacket
+    {
+    }
 }

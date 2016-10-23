@@ -13,21 +13,25 @@ namespace AESharp.Logon
 {
     public class LogonRemoteClient : RemoteClient
     {
-        public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
-
         public LogonRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-            : base( rawClient, tokenSource ) { }
+            : base( rawClient, tokenSource )
+        {
+        }
+
+        public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
 
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )
         {
             LogonPacket logonPacket = new LogonPacket( data );
 
-            if( token.IsCancellationRequested )
-                return;
-
-            switch( logonPacket.Opcode )
+            if ( token.IsCancellationRequested )
             {
-                case (byte)LogonOpcodes.Challenge:
+                return;
+            }
+
+            switch ( logonPacket.Opcode )
+            {
+                case (byte) LogonOpcodes.Challenge:
                 {
                     ChallengePacket packet = new ChallengePacket( logonPacket );
                     Console.WriteLine( "Received logon packet:" );
@@ -44,7 +48,7 @@ namespace AESharp.Logon
 
                     Console.Write( $"Validating username... " );
                     Account account = LogonServices.Accounts.GetAccount( packet.AccountName );
-                    if( account == null )
+                    if ( account == null )
                     {
                         Console.WriteLine( $"failed. Account {packet.AccountName} does not exist." );
 
@@ -58,7 +62,7 @@ namespace AESharp.Logon
                     {
                         Console.WriteLine( "success!" );
 
-                        if( account.Banned )
+                        if ( account.Banned )
                         {
                             Console.WriteLine( $"Account {account.Username} is currently banned." );
                             ChallengeResponsePacket response = new ChallengeResponsePacket
@@ -72,7 +76,7 @@ namespace AESharp.Logon
 
                         Console.WriteLine( $"Validating username and password for account {account.Username}" );
 
-                        this.AuthData.InitSRP6(account.Username, account.PasswordHash.ByteRepresentationToByteArray());
+                        this.AuthData.InitSRP6( account.Username, account.PasswordHash.ByteRepresentationToByteArray() );
 
                         //byte unk2;
                         //byte[] b;
@@ -96,17 +100,17 @@ namespace AESharp.Logon
                         pack.WriteByte( 0 );
                         pack.WriteByte( 0 );
                         BigNumber b = this.AuthData.Srp6.PublicEphemeralValueB;
-                        pack.WriteBytes( b.GetBytes(32) );
+                        pack.WriteBytes( b.GetBytes( 32 ) );
 
                         pack.WriteByte( 1 );
-                        pack.WriteBytes( this.AuthData.Srp6.Generator.GetBytes(1) );
+                        pack.WriteBytes( this.AuthData.Srp6.Generator.GetBytes( 1 ) );
 
                         pack.WriteByte( 32 );
-                        pack.WriteBytes( this.AuthData.Srp6.Modulus.GetBytes(32) );
+                        pack.WriteBytes( this.AuthData.Srp6.Modulus.GetBytes( 32 ) );
 
-                        pack.WriteBytes( this.AuthData.Srp6.Salt.GetBytes(32) );
+                        pack.WriteBytes( this.AuthData.Srp6.Salt.GetBytes( 32 ) );
 
-                        Random rand = new Random(Environment.TickCount);
+                        Random rand = new Random( Environment.TickCount );
                         byte[] randBytes = new byte[16];
                         rand.NextBytes( randBytes );
                         pack.WriteBytes( randBytes );
@@ -127,20 +131,20 @@ namespace AESharp.Logon
                         //{
                         //    Error = ChallengeResponsePacket.ChallengeResponseError.Success
                         //};
-                        
+
                         //responsePacket.SetAuthData( b, g, n, s, unk3, unk4 );
 
                         await this.SendPacketAsync( pack, token );
                     }
                     break;
                 }
-                case (byte)LogonOpcodes.Proof:
+                case (byte) LogonOpcodes.Proof:
                 {
                     ProofPacket proofPacket = new ProofPacket( logonPacket );
-                    
+
                     //this.AuthData.Srp6Data.ProcessAuthLogonProof( "TESTGM", proofPacket.A, proofPacket.M1 );
                     bool proofValid = this.AuthData.Srp6.IsClientProofValid( proofPacket.A, proofPacket.M1 );
-                    
+
                     break;
                 }
                 default:

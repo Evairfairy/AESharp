@@ -10,18 +10,26 @@ namespace AESharp.Core.Crypto
         private const uint KeyLength = 32;
         private static readonly RandomNumberGenerator RandomGenerator = RandomNumberGenerator.Create();
         private static readonly HashAlgorithm Sha1Algorithm = SHA1.Create();
-        private static readonly BigNumber _generator = new BigNumber(7);
-        private static readonly BigNumber _modulus = new BigNumber("B79B3E2A87823CAB8F5EBFBF8EB10108535006298B5BADBD5B53E1895E644B89", 16);
+        private static readonly BigNumber _generator = new BigNumber( 7 );
+
+        private static readonly BigNumber _modulus =
+            new BigNumber( "B79B3E2A87823CAB8F5EBFBF8EB10108535006298B5BADBD5B53E1895E644B89", 16 );
 
         private BigNumber _credentialsHash;
-        private BigNumber _salt;
-        private BigNumber _sessionKey;
         private BigNumber _publicEphemeralValueA;
-        private BigNumber _secretEphemeralValueA = RandomNumber();
         private BigNumber _publicEphemeralValueB;
+        private BigNumber _salt;
+        private BigNumber _secretEphemeralValueA = RandomNumber();
         private BigNumber _secretEphemeralValueB;
-        private BigNumber _verifier;
+        private BigNumber _sessionKey;
         private string _username;
+        private BigNumber _verifier;
+
+        public SecureRemotePassword6( string username, BigNumber credentials )
+        {
+            this.Username = username;
+            this.Credentials = credentials;
+        }
 
         public string Username
         {
@@ -30,31 +38,6 @@ namespace AESharp.Core.Crypto
         }
 
         public BigNumber Credentials { get; set; }
-
-        public SecureRemotePassword6(string username, BigNumber credentials)
-        {
-            this.Username = username;
-            this.Credentials = credentials;
-        }
-
-        private static BigNumber RandomNumber()
-        {
-            return RandomNumber(KeyLength);
-   ;     }
-
-        private static BigNumber RandomNumber(uint size)
-        {
-            byte[] buffer = new byte[size];
-
-            RandomGenerator.GetBytes( buffer );
-
-            if ( buffer[0] == 0 )
-            {
-                buffer[0] = 1;
-            }
-
-            return new BigNumber( buffer );
-        }
 
         public BigNumber ClientSessionKeyProof
             =>
@@ -101,7 +84,7 @@ namespace AESharp.Core.Crypto
 
                 if ( this._publicEphemeralValueA == 0 )
                 {
-                    throw new InvalidDataException($"{nameof( this.PublicEphemeralValueA )} cannot be 0 Mod N");
+                    throw new InvalidDataException( $"{nameof( this.PublicEphemeralValueA )} cannot be 0 Mod N" );
                 }
             }
         }
@@ -113,7 +96,8 @@ namespace AESharp.Core.Crypto
                 if ( this._publicEphemeralValueB == null )
                 {
                     this._secretEphemeralValueB = RandomNumber();
-                    this._publicEphemeralValueB = this.Multiplier * this.Verifier + this.Generator.ModPow( this._secretEphemeralValueB, this.Modulus );
+                    this._publicEphemeralValueB = this.Multiplier * this.Verifier +
+                                                  this.Generator.ModPow( this._secretEphemeralValueB, this.Modulus );
                     this._publicEphemeralValueB %= this.Modulus;
 
                     if ( this._publicEphemeralValueB < 0 )
@@ -197,7 +181,7 @@ namespace AESharp.Core.Crypto
                     data[i] = i % 2 == 0 ? hash1[i / 2] : hash2[i / 2];
                 }
 
-                return new BigNumber(data);
+                return new BigNumber( data );
             }
         }
 
@@ -205,20 +189,40 @@ namespace AESharp.Core.Crypto
 
         public BigNumber Modulus => _modulus;
 
+        private static BigNumber RandomNumber()
+        {
+            return RandomNumber( KeyLength );
+            ;
+        }
+
+        private static BigNumber RandomNumber( uint size )
+        {
+            byte[] buffer = new byte[size];
+
+            RandomGenerator.GetBytes( buffer );
+
+            if ( buffer[0] == 0 )
+            {
+                buffer[0] = 1;
+            }
+
+            return new BigNumber( buffer );
+        }
+
         public bool IsClientProofValid( BigNumber clientProof )
         {
             BigNumber myProof = this.ClientSessionKeyProof;
 
             Console.Write( "Client M: " );
-            foreach (byte b in clientProof.GetBytes())
+            foreach ( byte b in clientProof.GetBytes() )
             {
-                Console.Write($"{b:x}");
+                Console.Write( $"{b:x}" );
             }
             Console.WriteLine();
-            Console.Write("Our M: ");
-            foreach (byte b in myProof.GetBytes())
+            Console.Write( "Our M: " );
+            foreach ( byte b in myProof.GetBytes() )
             {
-                Console.Write($"{b:x}");
+                Console.Write( $"{b:x}" );
             }
             Console.WriteLine();
 
@@ -243,6 +247,7 @@ namespace AESharp.Core.Crypto
             this.PublicEphemeralValueA = packetA;
 
             return this.IsClientProofValid( clientProof );
-   ;     }
+            ;
+        }
     }
 }

@@ -15,6 +15,13 @@ namespace AESharp.Networking.Data
     {
         private const int BufferSize = 4096;
 
+        protected RemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
+        {
+            this.RawClient = rawClient;
+            this.TokenSource = tokenSource;
+            this.CancellationToken = this.TokenSource.Token;
+        }
+
         public TcpClient RawClient { get; }
 
         public CancellationToken CancellationToken { get; }
@@ -30,29 +37,26 @@ namespace AESharp.Networking.Data
         /// </summary>
         public bool Connected => this.RawClient.Connected;
 
-        protected RemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-        {
-            this.RawClient = rawClient;
-            this.TokenSource = tokenSource;
-            this.CancellationToken = this.TokenSource.Token;
-        }
-
         public async Task ListenForDataTask( CancellationToken token )
         {
-            if( this.RawClient == null )
+            if ( this.RawClient == null )
+            {
                 throw new NullReferenceException( $"{nameof( this.RawClient )} cannot be null" );
+            }
 
-            if( !this.Connected )
+            if ( !this.Connected )
+            {
                 throw new InvalidOperationException( "Must be connected to listen for data" );
+            }
 
             NetworkStream ns = this.RawClient.GetStream();
 
-            while( !token.IsCancellationRequested && this.Connected )
+            while ( !token.IsCancellationRequested && this.Connected )
             {
                 byte[] buffer = new byte[BufferSize];
                 int bytesRead = await ns.ReadAsync( buffer, 0, buffer.Length, token );
 
-                if( bytesRead == 0 )
+                if ( bytesRead == 0 )
                 {
                     this.DisconnectEx( 100 ).RunAsync();
                     break;
@@ -64,7 +68,7 @@ namespace AESharp.Networking.Data
                 {
                     await this.HandleDataAsync( buffer, token );
                 }
-                catch( InvalidPacketException ex )
+                catch ( InvalidPacketException ex )
                 {
                     Console.WriteLine( ex.Message );
                     this.DisconnectEx( 100 ).RunAsync();
@@ -105,7 +109,9 @@ namespace AESharp.Networking.Data
                 this.RawClient?.Client?.Shutdown( SocketShutdown.Both );
             }
             // Socket has already been closed
-            catch( ObjectDisposedException ) { }
+            catch ( ObjectDisposedException )
+            {
+            }
         }
 
         /// <summary>

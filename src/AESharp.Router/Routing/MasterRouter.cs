@@ -16,8 +16,6 @@ namespace AESharp.Router.Routing
 
         private readonly TcpServer _server;
 
-        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
-
         static MasterRouter()
         {
             ClientRepository = new RemoteClientRepository();
@@ -34,13 +32,15 @@ namespace AESharp.Router.Routing
             this._server = new TcpServer( new IPEndPoint( IPAddress.Loopback, RoutingRemoteClient.RoutingPort ) );
         }
 
+        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
+
         internal void Start()
-                => this._server.Start( AcceptClientActionAsync );
+            => this._server.Start( AcceptClientActionAsync );
 
         internal async Task Stop()
         {
             DisconnectPacket packet = new DisconnectPacket( "Master router shutting down" );
-            foreach( RemoteClient client in ClientRepository.GetAllClients() )
+            foreach ( RemoteClient client in ClientRepository.GetAllClients() )
             {
                 await client.SendPacketAsync( packet );
                 await client.Disconnect( TimeSpan.FromMilliseconds( 100 ) );
@@ -59,14 +59,16 @@ namespace AESharp.Router.Routing
                 clientGuid = ClientRepository.AddClient( client );
                 await client.ListenForDataTask( client.CancellationToken );
             }
-            catch( Exception ex )
+            catch ( Exception ex )
             {
                 Console.WriteLine( $"Unhandled exception in {nameof( AcceptClientActionAsync )}: {ex}" );
             }
             finally
             {
-                if( clientGuid != Guid.Empty )
+                if ( clientGuid != Guid.Empty )
+                {
                     ClientRepository.RemoveClient( clientGuid );
+                }
             }
         }
     }

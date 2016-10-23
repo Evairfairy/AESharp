@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 
 namespace AESharp.Core.Crypto
 {
@@ -17,7 +16,7 @@ namespace AESharp.Core.Crypto
             long tempVal = value;
 
             this.DataLength = 0;
-            while ( value != 0 && this.DataLength < MaxLength )
+            while ( ( value != 0 ) && ( this.DataLength < MaxLength ) )
             {
                 this.data[this.DataLength] = (uint) ( value & 0xffffffff );
                 value >>= 32;
@@ -26,7 +25,7 @@ namespace AESharp.Core.Crypto
 
             if ( tempVal > 0 )
             {
-                if ( value != 0 || ( this.data[MaxLength - 1] & 0x80000000 ) != 0 )
+                if ( ( value != 0 ) || ( ( this.data[MaxLength - 1] & 0x80000000 ) != 0 ) )
                 {
                     throw new ArithmeticException(
                         $"Positive overflow while constructing BigNumber with parameter {tempVal}" );
@@ -34,7 +33,7 @@ namespace AESharp.Core.Crypto
             }
             else if ( tempVal < 0 )
             {
-                if ( value != -1 || ( this.data[this.DataLength - 1] & 0x80000000 ) == 0 )
+                if ( ( value != -1 ) || ( ( this.data[this.DataLength - 1] & 0x80000000 ) == 0 ) )
                 {
                     throw new ArithmeticException(
                         $"Negative underflow while constructing BigNumber with parameter {tempVal}" );
@@ -45,12 +44,6 @@ namespace AESharp.Core.Crypto
             {
                 this.DataLength = 1;
             }
-        }
-
-        // Approved
-        public static implicit operator BigNumber( byte[] value )
-        {
-            return new BigNumber(value);
         }
 
         // Approved
@@ -70,11 +63,11 @@ namespace AESharp.Core.Crypto
             {
                 int posVal = value[i];
 
-                if ( posVal >= '0' && posVal <= '9' )
+                if ( ( posVal >= '0' ) && ( posVal <= '9' ) )
                 {
                     posVal -= '0';
                 }
-                else if ( posVal >= 'A' && posVal <= 'Z' )
+                else if ( ( posVal >= 'A' ) && ( posVal <= 'Z' ) )
                 {
                     posVal = posVal - 'A' + 10;
                 }
@@ -106,14 +99,14 @@ namespace AESharp.Core.Crypto
             {
                 if ( ( result.data[MaxLength - 1] & 0x80000000 ) == 0 )
                 {
-                    throw new ArithmeticException($"Negative underflow while constructing {nameof( BigNumber )}");
+                    throw new ArithmeticException( $"Negative underflow while constructing {nameof( BigNumber )}" );
                 }
             }
             else
             {
                 if ( ( result.data[MaxLength - 1] & 0x80000000 ) != 0 )
                 {
-                    throw new ArithmeticException($"Positive overflow while constructing {nameof( BigNumber )}");
+                    throw new ArithmeticException( $"Positive overflow while constructing {nameof( BigNumber )}" );
                 }
             }
 
@@ -138,9 +131,9 @@ namespace AESharp.Core.Crypto
         {
             this.SetValue( bn );
         }
-        
+
         // Approved
-        public BigNumber(byte[] inData)
+        public BigNumber( byte[] inData )
         {
             inData = (byte[]) inData.Clone();
 
@@ -172,7 +165,7 @@ namespace AESharp.Core.Crypto
                 }
                 case 2:
                 {
-                    this.data[this.DataLength - 1] = (uint) ((inData[0] << 8) + inData[1]);
+                    this.data[this.DataLength - 1] = (uint) ( ( inData[0] << 8 ) + inData[1] );
                     break;
                 }
                 case 3:
@@ -182,7 +175,7 @@ namespace AESharp.Core.Crypto
                 }
             }
 
-            while ( this.DataLength > 1 && this.data[this.DataLength - 1] == 0 )
+            while ( ( this.DataLength > 1 ) && ( this.data[this.DataLength - 1] == 0 ) )
             {
                 --this.DataLength;
             }
@@ -195,7 +188,7 @@ namespace AESharp.Core.Crypto
 
             if ( this.DataLength > MaxLength )
             {
-                throw new ArithmeticException("Byte overflow in constructor");
+                throw new ArithmeticException( "Byte overflow in constructor" );
             }
 
             this.data = new uint[MaxLength];
@@ -205,14 +198,20 @@ namespace AESharp.Core.Crypto
                 this.data[j] = inData[i];
             }
 
-            while ( this.DataLength > 1 && this.data[this.DataLength - 1] == 0 )
+            while ( ( this.DataLength > 1 ) && ( this.data[this.DataLength - 1] == 0 ) )
             {
                 --this.DataLength;
             }
         }
 
         // Approved
-        private static void Reverse<T>( T[] buffer )
+        public static implicit operator BigNumber( byte[] value )
+        {
+            return new BigNumber( value );
+        }
+
+        // Approved
+        private static void Reverse< T >( T[] buffer )
         {
             Reverse( buffer, buffer.Length );
         }
@@ -264,20 +263,20 @@ namespace AESharp.Core.Crypto
                 result.data[i] = (uint) ( sum & 0xffffffff );
             }
 
-            if ( carry != 0 && result.DataLength < MaxLength )
+            if ( ( carry != 0 ) && ( result.DataLength < MaxLength ) )
             {
                 result.data[result.DataLength] = (uint) carry;
                 ++result.DataLength;
             }
 
-            while ( result.DataLength > 1 && result.data[result.DataLength - 1] == 0 )
+            while ( ( result.DataLength > 1 ) && ( result.data[result.DataLength - 1] == 0 ) )
             {
                 --result.DataLength;
             }
 
             int lastPos = MaxLength - 1;
-            if ( ( bn1.data[lastPos] & 0x80000000 ) == ( bn2.data[lastPos] & 0x80000000 ) &&
-                 ( result.data[lastPos] & 0x80000000 ) != ( bn1.data[lastPos] & 0x80000000 ) )
+            if ( ( ( bn1.data[lastPos] & 0x80000000 ) == ( bn2.data[lastPos] & 0x80000000 ) ) &&
+                 ( ( result.data[lastPos] & 0x80000000 ) != ( bn1.data[lastPos] & 0x80000000 ) ) )
             {
                 throw new ArithmeticException();
             }
@@ -341,7 +340,7 @@ namespace AESharp.Core.Crypto
             }
             catch
             {
-                throw new ArithmeticException("Multiplication overflow");
+                throw new ArithmeticException( "Multiplication overflow" );
             }
 
             result.DataLength = bn1.DataLength + bn2.DataLength;
@@ -350,7 +349,7 @@ namespace AESharp.Core.Crypto
                 result.DataLength = MaxLength;
             }
 
-            while ( result.DataLength > 1 && result.data[result.DataLength - 1] == 0 )
+            while ( ( result.DataLength > 1 ) && ( result.data[result.DataLength - 1] == 0 ) )
             {
                 --result.DataLength;
             }
@@ -358,7 +357,7 @@ namespace AESharp.Core.Crypto
             if ( ( result.data[lastPos] & 0x80000000 ) != 0 )
             {
                 // ReSharper disable once InvertIf
-                if ( bn1IsNegative != bn2IsNegative && result.data[lastPos] == 0x80000000 )
+                if ( ( bn1IsNegative != bn2IsNegative ) && ( result.data[lastPos] == 0x80000000 ) )
                 {
                     if ( result.DataLength == 1 )
                     {
@@ -366,7 +365,7 @@ namespace AESharp.Core.Crypto
                     }
 
                     bool isMaxNegative = true;
-                    for ( int i = 0; i < result.DataLength - 1 && isMaxNegative; ++i )
+                    for ( int i = 0; ( i < result.DataLength - 1 ) && isMaxNegative; ++i )
                     {
                         if ( result.data[i] != 0 )
                         {
@@ -380,11 +379,13 @@ namespace AESharp.Core.Crypto
                     }
                 }
 
-                throw new ArithmeticException("Multiplication overflow");
+                throw new ArithmeticException( "Multiplication overflow" );
             }
 
             if ( bn1IsNegative != bn2IsNegative )
+            {
                 return -result;
+            }
 
             return result;
         }
@@ -392,12 +393,12 @@ namespace AESharp.Core.Crypto
         // Approved
         public static BigNumber operator -( BigNumber bn1 )
         {
-            if ( bn1.DataLength == 1 && bn1.data[0] == 0 )
+            if ( ( bn1.DataLength == 1 ) && ( bn1.data[0] == 0 ) )
             {
                 return new BigNumber();
             }
 
-            BigNumber result = new BigNumber(bn1);
+            BigNumber result = new BigNumber( bn1 );
 
             for ( int i = 0; i < MaxLength; ++i )
             {
@@ -407,7 +408,7 @@ namespace AESharp.Core.Crypto
             long carry = 1;
             int index = 0;
 
-            while ( carry != 0 && index < MaxLength )
+            while ( ( carry != 0 ) && ( index < MaxLength ) )
             {
                 long val;
                 val = result.data[index];
@@ -421,12 +422,12 @@ namespace AESharp.Core.Crypto
 
             if ( ( bn1.data[MaxLength - 1] & 0x80000000 ) == ( result.data[MaxLength - 1] & 0x80000000 ) )
             {
-                throw new ArithmeticException($"Overflow in negation");
+                throw new ArithmeticException( $"Overflow in negation" );
             }
 
             result.DataLength = MaxLength;
 
-            while ( result.DataLength > 1 && result.data[result.DataLength - 1] == 0 )
+            while ( ( result.DataLength > 1 ) && ( result.data[result.DataLength - 1] == 0 ) )
             {
                 --result.DataLength;
             }
@@ -435,15 +436,15 @@ namespace AESharp.Core.Crypto
         }
 
         // Approved
-        public static explicit operator BigNumber(int value)
+        public static explicit operator BigNumber( int value )
         {
-            return new BigNumber(value);
+            return new BigNumber( value );
         }
 
         // Approved
         public static explicit operator BigNumber( long value )
         {
-            return new BigNumber(value);
+            return new BigNumber( value );
         }
 
         // Approved
@@ -474,7 +475,7 @@ namespace AESharp.Core.Crypto
 
             result.DataLength = MaxLength;
 
-            while ( result.DataLength > 1 && result.data[result.DataLength - 1] == 0 )
+            while ( ( result.DataLength > 1 ) && ( result.data[result.DataLength - 1] == 0 ) )
             {
                 --result.DataLength;
             }
@@ -503,18 +504,18 @@ namespace AESharp.Core.Crypto
         // Finished
         public static bool operator !=( BigNumber bn1, int bn2 )
         {
-            return bn1 != (BigNumber) bn2 ;
+            return bn1 != (BigNumber) bn2;
         }
 
         // Finished
         public static bool operator ==( BigNumber bn1, BigNumber bn2 )
         {
-            if ((object)bn1 == null && (object)bn2 == null )
+            if ( ( (object) bn1 == null ) && ( (object) bn2 == null ) )
             {
                 return true;
             }
 
-            if ( (object)bn1 == null || (object)bn2 == null )
+            if ( ( (object) bn1 == null ) || ( (object) bn2 == null ) )
             {
                 return false;
             }
@@ -525,12 +526,12 @@ namespace AESharp.Core.Crypto
         // Finished
         public static bool operator !=( BigNumber bn1, BigNumber bn2 )
         {
-            if ( (object) bn1 == null && (object) bn2 == null )
+            if ( ( (object) bn1 == null ) && ( (object) bn2 == null ) )
             {
                 return false;
             }
 
-            if ( (object) bn1 == null || (object) bn2 == null )
+            if ( ( (object) bn1 == null ) || ( (object) bn2 == null ) )
             {
                 return true;
             }
@@ -563,7 +564,7 @@ namespace AESharp.Core.Crypto
         public static BigNumber operator %( BigNumber bn1, BigNumber bn2 )
         {
             BigNumber quotient = new BigNumber();
-            BigNumber remainder = new BigNumber(bn1);
+            BigNumber remainder = new BigNumber( bn1 );
 
             int lastPos = MaxLength - 1;
             bool dividendNegative = false;
@@ -616,7 +617,7 @@ namespace AESharp.Core.Crypto
             int shift = 0;
             int resultPos = 0;
 
-            while ( mask != 0 && ( val & mask ) == 0 )
+            while ( ( mask != 0 ) && ( ( val & mask ) == 0 ) )
             {
                 ++shift;
                 mask >>= 1;
@@ -651,7 +652,7 @@ namespace AESharp.Core.Crypto
                 {
                     done = true;
 
-                    if ( qHat == 0x100000000 || qHat * secondDivisorByte > ( rHat << 32 ) + remainder[pos - 2] )
+                    if ( ( qHat == 0x100000000 ) || ( qHat * secondDivisorByte > ( rHat << 32 ) + remainder[pos - 2] ) )
                     {
                         --qHat;
                         rHat += firstDivisorByte;
@@ -668,7 +669,7 @@ namespace AESharp.Core.Crypto
                     dividendPart[h] = remainder[pos - h];
                 }
 
-                BigNumber kk = new BigNumber(dividendPart);
+                BigNumber kk = new BigNumber( dividendPart );
                 BigNumber ss = bn2 * (long) qHat;
 
                 while ( ss > kk )
@@ -701,7 +702,7 @@ namespace AESharp.Core.Crypto
                 outQuotient.data[y] = 0;
             }
 
-            while ( outQuotient.DataLength > 1 && outQuotient.data[outQuotient.DataLength - 1] == 0 )
+            while ( ( outQuotient.DataLength > 1 ) && ( outQuotient.data[outQuotient.DataLength - 1] == 0 ) )
             {
                 --outQuotient.DataLength;
             }
@@ -730,7 +731,7 @@ namespace AESharp.Core.Crypto
             int invShift = 0;
             int bufLen = buffer.Length;
 
-            while ( bufLen > 1 && buffer[bufLen - 1] == 0 )
+            while ( ( bufLen > 1 ) && ( buffer[bufLen - 1] == 0 ) )
             {
                 --bufLen;
             }
@@ -756,7 +757,7 @@ namespace AESharp.Core.Crypto
                 count -= shiftAmount;
             }
 
-            while ( bufLen > 1 && buffer[bufLen - 1] == 0 )
+            while ( ( bufLen > 1 ) && ( buffer[bufLen - 1] == 0 ) )
             {
                 --bufLen;
             }
@@ -793,13 +794,14 @@ namespace AESharp.Core.Crypto
                 result.DataLength = MaxLength;
             }
 
-            while ( result.DataLength > 1 && result.data[result.DataLength - 1] == 0 )
+            while ( ( result.DataLength > 1 ) && ( result.data[result.DataLength - 1] == 0 ) )
             {
                 --result.DataLength;
             }
 
             int lastPos = MaxLength - 1;
-            if ((bn1.data[lastPos] & 0x80000000) != (bn2.data[lastPos] & 0x80000000) && (result.data[lastPos] & 0x80000000) != (bn1.data[lastPos] & 0x80000000))
+            if ( ( ( bn1.data[lastPos] & 0x80000000 ) != ( bn2.data[lastPos] & 0x80000000 ) ) &&
+                 ( ( result.data[lastPos] & 0x80000000 ) != ( bn1.data[lastPos] & 0x80000000 ) ) )
             {
                 throw new ArithmeticException();
             }
@@ -816,7 +818,7 @@ namespace AESharp.Core.Crypto
         // Finished
         public static BigNumber operator <<( BigNumber bn1, int shiftVal )
         {
-            BigNumber result = new BigNumber(bn1);
+            BigNumber result = new BigNumber( bn1 );
             result.DataLength = ShiftLeft( result.data, shiftVal );
 
             return result;
@@ -828,7 +830,7 @@ namespace AESharp.Core.Crypto
             int shiftAmount = 32;
             int bufLen = buffer.Length;
 
-            while ( bufLen > 1 && buffer[bufLen - 1] == 0 )
+            while ( ( bufLen > 1 ) && ( buffer[bufLen - 1] == 0 ) )
             {
                 --bufLen;
             }
@@ -865,7 +867,8 @@ namespace AESharp.Core.Crypto
         }
 
         // Finished
-        private static void SingleByteDivide( BigNumber bn1, BigNumber bn2, BigNumber outQuotient, BigNumber outRemainder )
+        private static void SingleByteDivide( BigNumber bn1, BigNumber bn2, BigNumber outQuotient,
+            BigNumber outRemainder )
         {
             uint[] result = new uint[MaxLength];
             int resultPos = 0;
@@ -876,7 +879,7 @@ namespace AESharp.Core.Crypto
             }
             outRemainder.DataLength = bn1.DataLength;
 
-            while ( outRemainder.DataLength > 1 && outRemainder.data[outRemainder.DataLength - 1] == 0 )
+            while ( ( outRemainder.DataLength > 1 ) && ( outRemainder.data[outRemainder.DataLength - 1] == 0 ) )
             {
                 --outRemainder.DataLength;
             }
@@ -915,7 +918,7 @@ namespace AESharp.Core.Crypto
                 outQuotient.data[j] = 0;
             }
 
-            while ( outQuotient.DataLength > 1 && outQuotient.data[outQuotient.DataLength - 1] == 0 )
+            while ( ( outQuotient.DataLength > 1 ) && ( outQuotient.data[outQuotient.DataLength - 1] == 0 ) )
             {
                 --outQuotient.DataLength;
             }
@@ -925,7 +928,7 @@ namespace AESharp.Core.Crypto
                 outQuotient.DataLength = 1;
             }
 
-            while ( outRemainder.DataLength > 1 && outRemainder.data[outRemainder.DataLength - 1] == 0 )
+            while ( ( outRemainder.DataLength > 1 ) && ( outRemainder.data[outRemainder.DataLength - 1] == 0 ) )
             {
                 --outRemainder.DataLength;
             }
@@ -936,18 +939,18 @@ namespace AESharp.Core.Crypto
         {
             int pos = MaxLength - 1;
 
-            if ( ( bn1.data[pos] & 0x80000000 ) != 0 && ( bn2.data[pos] & 0x80000000 ) == 0 )
+            if ( ( ( bn1.data[pos] & 0x80000000 ) != 0 ) && ( ( bn2.data[pos] & 0x80000000 ) == 0 ) )
             {
                 return true;
             }
 
-            if ( ( bn1.data[pos] & 0x80000000 ) == 0 && ( bn2.data[pos] & 0x80000000 ) != 0 )
+            if ( ( ( bn1.data[pos] & 0x80000000 ) == 0 ) && ( ( bn2.data[pos] & 0x80000000 ) != 0 ) )
             {
                 return false;
             }
 
             int len = bn1.DataLength > bn2.DataLength ? bn1.DataLength : bn2.DataLength;
-            for ( pos = len - 1; pos >= 0 && bn1.data[pos] == bn2.data[pos]; --pos )
+            for ( pos = len - 1; ( pos >= 0 ) && ( bn1.data[pos] == bn2.data[pos] ); --pos )
             {
                 // Ignored
             }
@@ -970,18 +973,18 @@ namespace AESharp.Core.Crypto
         {
             int pos = MaxLength - 1;
 
-            if ( ( bn1.data[pos] & 0x80000000 ) != 0 && ( bn2.data[pos] & 0x80000000 ) == 0 )
+            if ( ( ( bn1.data[pos] & 0x80000000 ) != 0 ) && ( ( bn2.data[pos] & 0x80000000 ) == 0 ) )
             {
                 return false;
             }
 
-            if ( ( bn1.data[pos] & 0x80000000 ) == 0 && ( bn2.data[pos] & 0x80000000 ) != 0 )
+            if ( ( ( bn1.data[pos] & 0x80000000 ) == 0 ) && ( ( bn2.data[pos] & 0x80000000 ) != 0 ) )
             {
                 return true;
             }
 
             int len = bn1.DataLength > bn2.DataLength ? bn1.DataLength : bn2.DataLength;
-            for ( pos = len - 1; pos >= 0 && bn1.data[pos] == bn2.data[pos]; --pos )
+            for ( pos = len - 1; ( pos >= 0 ) && ( bn1.data[pos] == bn2.data[pos] ); --pos )
             {
                 // Ignored
             }
@@ -1000,7 +1003,7 @@ namespace AESharp.Core.Crypto
         }
 
         // Approved
-        public byte[] GetBytes(int numBytes)
+        public byte[] GetBytes( int numBytes )
         {
             byte[] result = new byte[numBytes];
 
@@ -1020,7 +1023,7 @@ namespace AESharp.Core.Crypto
                         return result;
                     }
 
-                    result[i * 4 + b] = (byte) ( this.data[i] >> ( b * 8 ) & 0xff );
+                    result[i * 4 + b] = (byte) ( ( this.data[i] >> ( b * 8 ) ) & 0xff );
                 }
             }
 
@@ -1030,7 +1033,7 @@ namespace AESharp.Core.Crypto
         // Approved
         public int BitCount()
         {
-            while ( this.DataLength > 1 && this.data[this.DataLength - 1] == 0 )
+            while ( ( this.DataLength > 1 ) && ( this.data[this.DataLength - 1] == 0 ) )
             {
                 --this.DataLength;
             }
@@ -1039,7 +1042,7 @@ namespace AESharp.Core.Crypto
             uint mask = 0x80000000;
             int bits = 32;
 
-            while ( bits > 0 && ( value & mask ) == 0 )
+            while ( ( bits > 0 ) && ( ( value & mask ) == 0 ) )
             {
                 --bits;
                 mask >>= 1;
@@ -1099,7 +1102,7 @@ namespace AESharp.Core.Crypto
         {
             if ( ( exp.data[MaxLength - 1] & 0x80000000 ) != 0 )
             {
-                throw new ArithmeticException("Positive exponents only");
+                throw new ArithmeticException( "Positive exponents only" );
             }
 
             BigNumber resultNum = (BigNumber) 1;
@@ -1141,9 +1144,9 @@ namespace AESharp.Core.Crypto
 
                     tempNum = BarrettReduction( tempNum * tempNum, n, constant );
 
-                    if ( tempNum.DataLength == 1 && tempNum.data[0] == 1 )
+                    if ( ( tempNum.DataLength == 1 ) && ( tempNum.data[0] == 1 ) )
                     {
-                        if ( thisNegative && ( exp.data[0] & 0x1 ) != 0 )
+                        if ( thisNegative && ( ( exp.data[0] & 0x1 ) != 0 ) )
                         {
                             return -resultNum;
                         }
@@ -1159,7 +1162,7 @@ namespace AESharp.Core.Crypto
                 }
             }
 
-            if ( thisNegative && ( exp.data[0] & 0x1 ) != 0 )
+            if ( thisNegative && ( ( exp.data[0] & 0x1 ) != 0 ) )
             {
                 return -resultNum;
             }
@@ -1221,7 +1224,7 @@ namespace AESharp.Core.Crypto
 
                 ulong mcarry = 0;
                 int t = i;
-                for ( int j = 0; j < n.DataLength && t < kPlusOne; ++j, ++t )
+                for ( int j = 0; ( j < n.DataLength ) && ( t < kPlusOne ); ++j, ++t )
                 {
                     ulong q3Data = q3.data[i];
                     ulong nData = n.data[j];
@@ -1240,7 +1243,7 @@ namespace AESharp.Core.Crypto
 
             r2.DataLength = kPlusOne;
 
-            while ( r2.DataLength > 1 && r2.data[r2.DataLength - 1] == 0 )
+            while ( ( r2.DataLength > 1 ) && ( r2.data[r2.DataLength - 1] == 0 ) )
             {
                 --r2.DataLength;
             }
@@ -1266,13 +1269,13 @@ namespace AESharp.Core.Crypto
         // Approved
         public static bool operator >=( BigNumber bn1, BigNumber bn2 )
         {
-            return bn1 == bn2 || bn1 > bn2;
+            return ( bn1 == bn2 ) || ( bn1 > bn2 );
         }
 
         // Approved
         public static bool operator <=( BigNumber bn1, BigNumber bn2 )
         {
-            return bn1 == bn2 || bn1 < bn2;
+            return ( bn1 == bn2 ) || ( bn1 < bn2 );
         }
     }
 }

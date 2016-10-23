@@ -21,8 +21,10 @@ namespace AESharp.Core.Extensions
         public static IEnumerable<string> Chunks( this string source, int chunkSize )
         {
             int len = source.Length;
-            for( int i = 0; i < len; i += chunkSize )
+            for ( int i = 0; i < len; i += chunkSize )
+            {
                 yield return source.Substring( i, Math.Min( chunkSize, len - i ) );
+            }
         }
     }
 }

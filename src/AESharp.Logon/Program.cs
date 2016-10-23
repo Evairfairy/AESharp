@@ -38,14 +38,16 @@ namespace AESharp.Logon
                 clientGuid = ClientRepository.AddClient( client );
                 await client.ListenForDataTask( client.CancellationToken );
             }
-            catch( Exception ex )
+            catch ( Exception ex )
             {
                 Console.WriteLine( $"Unhandled exception in {nameof( AcceptClientActionAsync )}: {ex}" );
             }
             finally
             {
-                if( clientGuid != Guid.Empty )
+                if ( clientGuid != Guid.Empty )
+                {
                     ClientRepository.RemoveClient( clientGuid );
+                }
             }
         }
     }

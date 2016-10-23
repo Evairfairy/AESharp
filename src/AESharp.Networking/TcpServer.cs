@@ -11,13 +11,13 @@ namespace AESharp.Networking
         public const int BufferSize = 4096;
         private TcpListener _listener;
 
-        public bool IsListening { get; private set; }
-        public IPEndPoint LocalEndPoint { get; }
-
         public TcpServer( IPEndPoint localEndPoint )
         {
             this.LocalEndPoint = localEndPoint;
         }
+
+        public bool IsListening { get; private set; }
+        public IPEndPoint LocalEndPoint { get; }
 
         public void Start( Action<TcpClient> acceptClientAction )
         {
@@ -36,7 +36,7 @@ namespace AESharp.Networking
 
         private async Task ListenForConnections( Action<TcpClient> acceptClientAction )
         {
-            while( this.IsListening )
+            while ( this.IsListening )
             {
                 TcpClient client = await this._listener.AcceptTcpClientAsync();
                 Task.Run( () => acceptClientAction( client ) ).RunAsync();

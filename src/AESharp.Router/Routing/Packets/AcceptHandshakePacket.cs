@@ -2,5 +2,7 @@
 
 namespace AESharp.Router.Routing.Packets
 {
-    internal sealed class AcceptHandshakePacket : Packet { }
+    internal sealed class AcceptHandshakePacket : Packet
+    {
+    }
 }
