@@ -78,7 +78,7 @@ namespace AESharp.Networking.Data
         public string ReadFixedString( int len )
         {
             char[] chars = this.ReadChars( len );
-            return new string( chars );
+            return new string( chars ).TrimEnd( '\0' );
         }
 
         public string ReadByteString() => this.ReadString( StringPrefix.Byte, StringTerminator.None );
