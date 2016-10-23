@@ -7,11 +7,11 @@ namespace AESharp.Logon
         public bool Initialised { get; } = false;
 
         // Init this manually after we're sure the packet isn't junk
-        public SRP6 Srp6Data { get; private set; }
+        public SecureRemotePassword6 Srp6 { get; private set; }
 
-        public void InitSRP6()
+        public void InitSRP6(string username, byte[] passwordHash)
         {
-            this.Srp6Data = new SRP6();
+            this.Srp6 = new SecureRemotePassword6( username, SecureRemotePassword6.GenerateCredentialsHash( "TESTGM", "TESTGM" ) );
         }
     }
 }
