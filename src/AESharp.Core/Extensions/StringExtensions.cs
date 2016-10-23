@@ -9,7 +9,9 @@ namespace AESharp.Core.Extensions
     {
         public static string Reverse( this string s )
         {
-            return new string( s.Reverse().ToArray() );
+            char[] chars = s.ToCharArray();
+            Array.Reverse( chars );
+            return new string( chars );
         }
 
         public static byte[] ByteRepresentationToByteArray( this string s )
