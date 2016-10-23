@@ -37,6 +37,11 @@ namespace AESharp.Networking.Data
         /// </summary>
         public bool Connected => this.RawClient.Connected;
 
+        /// <summary>
+        ///     Begins listening for data, calling this.HandleDataAsync when data is received
+        /// </summary>
+        /// <param name="token">Cancellation token</param>
+        /// <returns>Task</returns>
         public async Task ListenForDataTask( CancellationToken token )
         {
             if ( this.RawClient == null )
@@ -76,12 +81,23 @@ namespace AESharp.Networking.Data
             }
         }
 
+        /// <summary>
+        ///     Sends a packet to the RemoteClient
+        /// </summary>
+        /// <param name="packet">Packet to send</param>
+        /// <param name="token">Cancellation token</param>
+        /// <returns>Task</returns>
         public async Task SendPacketAsync( Packet packet, CancellationToken token )
         {
-            byte[] buffer = packet.InternalBuffer;
+            byte[] buffer = packet.BuildPacket();
             await this.RawClient.GetStream().WriteAsync( buffer, 0, buffer.Length, token );
         }
 
+        /// <summary>
+        ///     Sends a packet to the RemoteClient
+        /// </summary>
+        /// <param name="packet">Packet to send</param>
+        /// <returns>Task</returns>
         public async Task SendPacketAsync( Packet packet )
         {
             await this.SendPacketAsync( packet, this.CancellationToken );

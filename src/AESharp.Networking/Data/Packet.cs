@@ -32,7 +32,7 @@ namespace AESharp.Networking.Data
         public bool Disposed { get; private set; }
         public long Length => this._memoryStream.Length;
 
-        public byte[] InternalBuffer
+        protected byte[] InternalBuffer
         {
             get
             {
@@ -46,6 +46,31 @@ namespace AESharp.Networking.Data
         {
             get { return this._memoryStream.Position; }
             set { this._memoryStream.Position = value; }
+        }
+
+        /// <summary>
+        ///     Seeks to the beginning of the packet
+        /// </summary>
+        public void SeekToBegin()
+        {
+            this._memoryStream.Seek( 0, SeekOrigin.Begin );
+        }
+
+        /// <summary>
+        ///     Seeks to the end of the packet
+        /// </summary>
+        public void SeekToEnd()
+        {
+            this._memoryStream.Seek( 0, SeekOrigin.End );
+        }
+
+        /// <summary>
+        ///     Returns the byte[] representation of the current packet
+        /// </summary>
+        /// <returns>The byte[] representation of the current packet</returns>
+        public virtual byte[] BuildPacket()
+        {
+            return this.InternalBuffer;
         }
 
         public void Dispose() => this.Dispose( true );

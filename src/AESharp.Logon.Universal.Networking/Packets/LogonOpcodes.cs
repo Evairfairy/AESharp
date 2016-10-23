@@ -2,8 +2,9 @@
 {
     public enum LogonOpcodes
     {
-        Challenge = 0,
-        Proof = 1,
+        Challenge = 0x0,
+        Proof = 0x1,
+        ReconnectChallenge = 0x2,
         RealmList = 0x10,
         Invalid = 0xff
     }
