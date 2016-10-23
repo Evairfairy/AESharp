@@ -74,26 +74,11 @@ namespace AESharp.Logon
                             return;
                         }
 
+                        this.AuthData.DbAccount = account;
+
                         Console.WriteLine( $"Validating username and password for account {account.Username}" );
 
                         this.AuthData.InitSRP6( account.Username, account.PasswordHash.ByteRepresentationToByteArray() );
-
-                        //byte unk2;
-                        //byte[] b;
-                        //byte[] g;
-                        //byte[] n;
-                        //byte[] s;
-                        //byte[] unk3;
-                        //byte unk4;
-
-                        //this.AuthData.Srp6Data.GenerateAuthLogonChallenge( account.PasswordHash, out unk2, out b, out g,
-                        //    out n, out s, out unk3, out unk4 );
-
-                        //byte[] pevB;
-                        //byte[] gen;
-                        //byte[] mod;
-                        //byte[] salt;
-                        //this.AuthData.Srp6Data.GenerateAuthLogonChallenge_WC( account.PasswordHash, out pevB, out gen, out mod, out salt );
 
                         Packet pack = new Packet();
                         pack.WriteByte( 0 );
@@ -117,23 +102,6 @@ namespace AESharp.Logon
 
                         pack.WriteByte( 0 );
 
-                        //pack.WriteBytes( pevB );
-                        //pack.WriteByte( 1 );
-                        //pack.WriteByte( gen[0] );
-                        //pack.WriteByte( 32 );
-                        //pack.WriteBytes( mod );
-                        //pack.WriteBytes( salt );
-
-                        //pack.WriteBytes( this.AuthData.Srp6Data.GetRandomBytes( 16 ) );
-                        //pack.WriteByte( 0x0 );
-
-                        //ChallengeResponsePacket responsePacket = new ChallengeResponsePacket
-                        //{
-                        //    Error = ChallengeResponsePacket.ChallengeResponseError.Success
-                        //};
-
-                        //responsePacket.SetAuthData( b, g, n, s, unk3, unk4 );
-
                         await this.SendPacketAsync( pack, token );
                     }
                     break;
@@ -142,8 +110,58 @@ namespace AESharp.Logon
                 {
                     ProofPacket proofPacket = new ProofPacket( logonPacket );
 
-                    //this.AuthData.Srp6Data.ProcessAuthLogonProof( "TESTGM", proofPacket.A, proofPacket.M1 );
                     bool proofValid = this.AuthData.Srp6.IsClientProofValid( proofPacket.A, proofPacket.M1 );
+                    if ( !proofValid )
+                    {
+                        ChallengeResponsePacket response = new ChallengeResponsePacket
+                        {
+                            Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
+                        };
+                        await this.SendPacketAsync( response.Build(), token );
+                        return;
+                    }
+
+                    Packet successPacket = new Packet();
+                    successPacket.WriteByte( 0x1 );
+                    successPacket.WriteByte( 0x0 );
+                    successPacket.WriteBytes( this.AuthData.Srp6.ServerSessionKeyProof.GetBytes( 20 ) );
+                    successPacket.WriteInt32( 0 );
+                    successPacket.WriteInt32( 0 );
+                    successPacket.WriteInt16( 0 );
+
+                    await this.SendPacketAsync( successPacket, token );
+
+                    break;
+                }
+                case (byte) LogonOpcodes.RealmList:
+                {
+                    Packet realmPacket = new Packet();
+                    realmPacket.WriteByte( 0x10 );
+
+                    long oldPosition = realmPacket.BufferPosition;
+                    realmPacket.WriteInt16( 0 );
+                    realmPacket.WriteInt32( 0 );
+
+                    realmPacket.WriteInt16( 0 );
+
+                    // Write realms here
+                    //realmPacket.WriteByte( 0 ); // ServerType
+                    //realmPacket.WriteByte( 0 ); // Status
+                    //realmPacket.WriteByte(0  ); // Flags
+                    //realmPacket.WriteCString( "Example Realm" );
+                    //realmPacket.WriteCString( "127.0.0.1:8085" );
+                    //realmPacket.WriteSingle( 0 ); // Population
+                    //realmPacket.WriteByte( 3 ); // Characters
+                    //realmPacket.WriteByte( 0 ); // TimeZone
+                    //realmPacket.WriteByte( 0 );
+
+                    realmPacket.WriteByte( 0x10 );
+                    realmPacket.WriteByte( 0x0 );
+
+                    realmPacket.BufferPosition = oldPosition;
+                    realmPacket.WriteInt16( (short) ( realmPacket.Length - 3 ) );
+
+                    await this.SendPacketAsync( realmPacket, token );
 
                     break;
                 }

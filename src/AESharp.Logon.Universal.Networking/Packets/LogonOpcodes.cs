@@ -4,6 +4,7 @@
     {
         Challenge = 0,
         Proof = 1,
+        RealmList = 0x10,
         Invalid = 0xff
     }
 }

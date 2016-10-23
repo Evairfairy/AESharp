@@ -1,10 +1,12 @@
 ﻿using AESharp.Core.Crypto;
+using AESharp.Logon.Accounts;
 
 namespace AESharp.Logon
 {
     public class LogonAuthenticationData
     {
         public bool Initialised { get; } = false;
+        public Account DbAccount { get; set; }
 
         // Init this manually after we're sure the packet isn't junk
         public SecureRemotePassword6 Srp6 { get; private set; }
