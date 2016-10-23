@@ -16,11 +16,11 @@ namespace AESharp.Core.Extensions
 
         public static byte[] ByteRepresentationToByteArray( this string s )
         {
-            IEnumerable<string> byteStrings = s.Chunks( 2 );
+            IEnumerable<string> byteStrings = s.InChunksOf( 2 );
             return byteStrings.Select( x => byte.Parse( x, NumberStyles.AllowHexSpecifier ) ).ToArray();
         }
 
-        public static IEnumerable<string> Chunks( this string source, int chunkSize )
+        public static IEnumerable<string> InChunksOf( this string source, int chunkSize )
         {
             int len = source.Length;
             for ( int i = 0; i < len; i += chunkSize )
@@ -28,8 +28,5 @@ namespace AESharp.Core.Extensions
                 yield return source.Substring( i, Math.Min( chunkSize, len - i ) );
             }
         }
-
-        public static string Join<T>( this IEnumerable<T> collection, string delim )
-                => string.Join( delim, collection );
     }
 }
