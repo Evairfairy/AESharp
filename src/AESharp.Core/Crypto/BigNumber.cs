@@ -153,7 +153,8 @@ namespace AESharp.Core.Crypto
             for ( int i = inData.Length - 1, j = 0; i >= 3; i -= 4, ++j )
             {
                 this.data[j] =
-                    (uint) ( ( inData[i - 3] << 24 ) + ( inData[i - 2] << 16 ) + ( inData[i - 1] << 8 ) + inData[i] );
+                    (uint)
+                    ( ( inData[i - 3] << 24 ) + ( inData[i - 2] << 16 ) + ( inData[i - 1] << 8 ) + inData[i] );
             }
 
             switch ( leftOver )
@@ -211,13 +212,13 @@ namespace AESharp.Core.Crypto
         }
 
         // Approved
-        private static void Reverse< T >( T[] buffer )
+        private static void Reverse<T>( T[] buffer )
         {
             Reverse( buffer, buffer.Length );
         }
 
         // Approved
-        private static void Reverse< T >( T[] buffer, int length )
+        private static void Reverse<T>( T[] buffer, int length )
         {
             for ( int i = 0; i < length / 2; ++i )
             {

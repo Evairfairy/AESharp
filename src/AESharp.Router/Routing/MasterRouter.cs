@@ -16,6 +16,8 @@ namespace AESharp.Router.Routing
 
         private readonly TcpServer _server;
 
+        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
+
         static MasterRouter()
         {
             ClientRepository = new RemoteClientRepository<RemoteClient>();
@@ -31,8 +33,6 @@ namespace AESharp.Router.Routing
         {
             this._server = new TcpServer( new IPEndPoint( IPAddress.Loopback, RoutingRemoteClient.RoutingPort ) );
         }
-
-        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
 
         internal void Start()
             => this._server.Start( AcceptClientActionAsync );

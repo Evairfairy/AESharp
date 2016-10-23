@@ -5,11 +5,6 @@ namespace AESharp.Logon.Universal.Networking.Packets
 {
     public sealed class LogonPacket : Packet
     {
-        public LogonPacket( byte[] data ) : base( data )
-        {
-            this.Opcode = this.ReadByte();
-        }
-
         public byte Opcode { get; set; }
 
         public byte Error { get; set; }
@@ -21,5 +16,10 @@ namespace AESharp.Logon.Universal.Networking.Packets
 
         public ArraySegment<byte> Payload
             => new ArraySegment<byte>( this.InternalBuffer, 1, this.Length );
+
+        public LogonPacket( byte[] data ) : base( data )
+        {
+            this.Opcode = this.ReadByte();
+        }
     }
 }

@@ -13,11 +13,6 @@ namespace AESharp.World.Networking
     {
         private uint _seed;
 
-        public RealmRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-            : base( rawClient, tokenSource )
-        {
-        }
-
         public uint Seed
         {
             get
@@ -33,6 +28,11 @@ namespace AESharp.World.Networking
 
                 return this._seed;
             }
+        }
+
+        public RealmRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
+            : base( rawClient, tokenSource )
+        {
         }
 
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )

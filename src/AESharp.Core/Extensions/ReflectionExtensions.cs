@@ -31,7 +31,7 @@ namespace AESharp.Core.Extensions
             return type.IsAssignableFrom( self );
         }
 
-        public static bool Implements< T >( this Type self )
+        public static bool Implements<T>( this Type self )
             => self.Implements( typeof( T ) );
     }
 }

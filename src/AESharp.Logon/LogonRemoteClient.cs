@@ -14,12 +14,12 @@ namespace AESharp.Logon
 {
     public class LogonRemoteClient : RemoteClient
     {
+        public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
+
         public LogonRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
             : base( rawClient, tokenSource )
         {
         }
-
-        public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
 
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )
         {

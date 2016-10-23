@@ -15,13 +15,6 @@ namespace AESharp.Networking.Data
     {
         private const int BufferSize = 4096;
 
-        protected RemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-        {
-            this.RawClient = rawClient;
-            this.TokenSource = tokenSource;
-            this.CancellationToken = this.TokenSource.Token;
-        }
-
         public TcpClient RawClient { get; }
 
         public CancellationToken CancellationToken { get; }
@@ -36,6 +29,13 @@ namespace AESharp.Networking.Data
         ///     True if the underlying TcpClient is connected - if false the RemoteClient is invalid and should no longer be used.
         /// </summary>
         public bool Connected => this.RawClient.Connected;
+
+        protected RemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
+        {
+            this.RawClient = rawClient;
+            this.TokenSource = tokenSource;
+            this.CancellationToken = this.TokenSource.Token;
+        }
 
         /// <summary>
         ///     Begins listening for data, calling this.HandleDataAsync when data is received

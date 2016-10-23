@@ -8,6 +8,9 @@ namespace AESharp.Router.Routing.Packets
         // This packet is always the same size
         private const int ExpectedSize = sizeof( byte ) + sizeof( ushort );
 
+        public RoutingPacketId PacketId { get; } = RoutingPacketId.InitiateHandshake;
+        public ushort ProtocolVersion { get; }
+
         // TODO: normally protocol shouldn't be specified manually. This is only for debug purposes.
         public InitiateHandshakePacket( ushort protocolVersion )
         {
@@ -30,8 +33,5 @@ namespace AESharp.Router.Routing.Packets
             this.PacketId = (RoutingPacketId) this.ReadByte();
             this.ProtocolVersion = this.ReadUInt16();
         }
-
-        public RoutingPacketId PacketId { get; } = RoutingPacketId.InitiateHandshake;
-        public ushort ProtocolVersion { get; }
     }
 }

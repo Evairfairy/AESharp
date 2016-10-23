@@ -9,7 +9,8 @@ namespace AESharp.Logon
 {
     public class InteropRemoteClient : RemoteClient
     {
-        public InteropRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource ) : base( rawClient, tokenSource )
+        public InteropRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
+            : base( rawClient, tokenSource )
         {
         }
 
@@ -35,7 +36,7 @@ namespace AESharp.Logon
                         clients.Find( x => x.AuthData.DbAccount.Username.ToUpper() == accountName.ToUpper() );
                     if ( client == null )
                     {
-                        Packet response = new Packet(  );
+                        Packet response = new Packet();
                         response.WriteInt32( 0x1001 );
                         response.WriteShortString( accountName );
                         response.WriteBoolean( false );
@@ -44,11 +45,11 @@ namespace AESharp.Logon
                     }
                     else
                     {
-                        Packet response = new Packet(  );
+                        Packet response = new Packet();
                         response.WriteInt32( 0x1001 );
                         response.WriteShortString( accountName );
                         response.WriteBoolean( true );
-                        response.WriteBytes( client.AuthData.Srp6.SessionKeyRaw.GetBytes(40) );
+                        response.WriteBytes( client.AuthData.Srp6.SessionKeyRaw.GetBytes( 40 ) );
 
                         await this.SendPacketAsync( response, token );
                     }
@@ -57,7 +58,7 @@ namespace AESharp.Logon
                 }
                 default:
                 {
-                        throw new InvalidPacketException(
+                    throw new InvalidPacketException(
                         $"Received unknown or unimplemented packet (opcode: 0x{opcode:x2})" );
                 }
             }

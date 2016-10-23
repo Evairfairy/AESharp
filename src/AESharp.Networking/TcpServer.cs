@@ -11,13 +11,13 @@ namespace AESharp.Networking
         public const int BufferSize = 4096;
         private TcpListener _listener;
 
+        public bool IsListening { get; private set; }
+        public IPEndPoint LocalEndPoint { get; }
+
         public TcpServer( IPEndPoint localEndPoint )
         {
             this.LocalEndPoint = localEndPoint;
         }
-
-        public bool IsListening { get; private set; }
-        public IPEndPoint LocalEndPoint { get; }
 
         public void Start( Action<TcpClient> acceptClientAction )
         {

@@ -6,13 +6,13 @@
         private byte _indexTwo;
         private byte[] _permutation;
 
+        public bool Initialized { get; private set; }
+        public byte[] Key { get; private set; }
+
         public RC4Engine()
         {
             this.Reset();
         }
-
-        public bool Initialized { get; private set; }
-        public byte[] Key { get; private set; }
 
         private void Reset()
         {

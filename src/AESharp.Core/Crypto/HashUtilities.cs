@@ -6,35 +6,16 @@ namespace AESharp.Core.Crypto
 {
     public static class HashUtilities
     {
-        public static byte[] FinalizeHash( HashAlgorithm algorithm, params HashDataBroker[] brokers )
-        {
-            MemoryStream buffer = new MemoryStream();
-
-            foreach ( HashDataBroker broker in brokers )
-            {
-                buffer.Write( broker.RawData, 0, broker.Length );
-            }
-
-            buffer.Position = 0;
-
-            return algorithm.ComputeHash( buffer );
-        }
-
-        public static BigNumber HashToBigNumber( HashAlgorithm algorithm, params HashDataBroker[] brokers )
-        {
-            return new BigNumber( FinalizeHash( algorithm, brokers ) );
-        }
-
         public class HashDataBroker
         {
             internal byte[] RawData;
+
+            internal int Length => this.RawData.Length;
 
             public HashDataBroker( byte[] data )
             {
                 this.RawData = data;
             }
-
-            internal int Length => this.RawData.Length;
 
             public static implicit operator HashDataBroker( byte[] data )
             {
@@ -55,6 +36,25 @@ namespace AESharp.Core.Crypto
             {
                 return new HashDataBroker( new BigNumber( i ).GetBytes() );
             }
+        }
+
+        public static byte[] FinalizeHash( HashAlgorithm algorithm, params HashDataBroker[] brokers )
+        {
+            MemoryStream buffer = new MemoryStream();
+
+            foreach ( HashDataBroker broker in brokers )
+            {
+                buffer.Write( broker.RawData, 0, broker.Length );
+            }
+
+            buffer.Position = 0;
+
+            return algorithm.ComputeHash( buffer );
+        }
+
+        public static BigNumber HashToBigNumber( HashAlgorithm algorithm, params HashDataBroker[] brokers )
+        {
+            return new BigNumber( FinalizeHash( algorithm, brokers ) );
         }
     }
 }

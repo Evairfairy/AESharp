@@ -11,24 +11,6 @@ namespace AESharp.Networking.Data
         private readonly BinaryReader _reader;
         private readonly BinaryWriter _writer;
 
-        public Packet( Encoding encoding = null )
-            : this( new MemoryStream(), encoding )
-        {
-        }
-
-        public Packet( byte[] data, Encoding encoding = null )
-            : this( new MemoryStream( data ), encoding )
-        {
-        }
-
-        private Packet( MemoryStream dataStream, Encoding encoding = null )
-        {
-            encoding = encoding ?? Encoding.UTF8;
-            this._memoryStream = dataStream;
-            this._reader = new BinaryReader( dataStream, encoding, false );
-            this._writer = new BinaryWriter( dataStream, encoding, false );
-        }
-
         public bool Disposed { get; private set; }
         public long Length => this._memoryStream.Length;
 
@@ -46,6 +28,24 @@ namespace AESharp.Networking.Data
         {
             get { return this._memoryStream.Position; }
             set { this._memoryStream.Position = value; }
+        }
+
+        public Packet( Encoding encoding = null )
+            : this( new MemoryStream(), encoding )
+        {
+        }
+
+        public Packet( byte[] data, Encoding encoding = null )
+            : this( new MemoryStream( data ), encoding )
+        {
+        }
+
+        private Packet( MemoryStream dataStream, Encoding encoding = null )
+        {
+            encoding = encoding ?? Encoding.UTF8;
+            this._memoryStream = dataStream;
+            this._reader = new BinaryReader( dataStream, encoding, false );
+            this._writer = new BinaryWriter( dataStream, encoding, false );
         }
 
         /// <summary>

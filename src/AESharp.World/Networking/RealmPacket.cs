@@ -6,58 +6,6 @@ namespace AESharp.World.Networking
 {
     public class RealmPacket : Packet
     {
-        public RealmPacket( bool sendingToRemoteClient )
-        {
-            this.SendingToRemoteClient = sendingToRemoteClient;
-        }
-
-        // We deliberately avoid passing in the data param to separate header and payload
-        // ReSharper disable once RedundantBaseConstructorCall
-        /// <summary>
-        ///     Constructs a RealmPacket from a copy of the byte[] given.
-        ///     Does not retain reader position, so if additional data should be
-        ///     appended then SeekToEnd() must be called
-        /// </summary>
-        /// <param name="data">
-        ///     The unencrypted data to construct the packet with. Must include the packet header (4 or 6 bytes),
-        ///     however a payload is not required
-        /// </param>
-        /// <param name="sendingToRemoteClient">
-        ///     True if we are sending the packet to a remote client, false if we received the
-        ///     packet
-        /// </param>
-        public RealmPacket( byte[] data, bool sendingToRemoteClient ) : base()
-        {
-            this.SendingToRemoteClient = sendingToRemoteClient;
-
-            if ( data.Length < this.HeaderSize )
-            {
-                throw new InvalidPacketException(
-                    $"{nameof( data )} must be at least {this.HeaderSize} bytes (packet header)" );
-            }
-
-            byte[] headerBytes = new byte[this.HeaderSize];
-            Array.Copy( data, headerBytes, this.HeaderSize );
-
-            if ( data.Length != this.HeaderSize )
-            {
-                // We also have a payload
-                this.WriteBytes( data, this.HeaderSize, data.Length - this.HeaderSize );
-                this.SeekToBegin();
-            }
-
-            this.Size = BitConverter.ToUInt16( headerBytes, 0 );
-
-            if ( this.SendingToRemoteClient )
-            {
-                this.Opcode = BitConverter.ToUInt16( headerBytes, 2 );
-            }
-            else
-            {
-                this.Opcode = BitConverter.ToInt32( headerBytes, 2 );
-            }
-        }
-
         public bool SendingToRemoteClient { get; set; }
 
         /// <summary>
@@ -111,6 +59,58 @@ namespace AESharp.World.Networking
 
                     return header;
                 }
+            }
+        }
+
+        public RealmPacket( bool sendingToRemoteClient )
+        {
+            this.SendingToRemoteClient = sendingToRemoteClient;
+        }
+
+        // We deliberately avoid passing in the data param to separate header and payload
+        // ReSharper disable once RedundantBaseConstructorCall
+        /// <summary>
+        ///     Constructs a RealmPacket from a copy of the byte[] given.
+        ///     Does not retain reader position, so if additional data should be
+        ///     appended then SeekToEnd() must be called
+        /// </summary>
+        /// <param name="data">
+        ///     The unencrypted data to construct the packet with. Must include the packet header (4 or 6 bytes),
+        ///     however a payload is not required
+        /// </param>
+        /// <param name="sendingToRemoteClient">
+        ///     True if we are sending the packet to a remote client, false if we received the
+        ///     packet
+        /// </param>
+        public RealmPacket( byte[] data, bool sendingToRemoteClient ) : base()
+        {
+            this.SendingToRemoteClient = sendingToRemoteClient;
+
+            if ( data.Length < this.HeaderSize )
+            {
+                throw new InvalidPacketException(
+                    $"{nameof( data )} must be at least {this.HeaderSize} bytes (packet header)" );
+            }
+
+            byte[] headerBytes = new byte[this.HeaderSize];
+            Array.Copy( data, headerBytes, this.HeaderSize );
+
+            if ( data.Length != this.HeaderSize )
+            {
+                // We also have a payload
+                this.WriteBytes( data, this.HeaderSize, data.Length - this.HeaderSize );
+                this.SeekToBegin();
+            }
+
+            this.Size = BitConverter.ToUInt16( headerBytes, 0 );
+
+            if ( this.SendingToRemoteClient )
+            {
+                this.Opcode = BitConverter.ToUInt16( headerBytes, 2 );
+            }
+            else
+            {
+                this.Opcode = BitConverter.ToInt32( headerBytes, 2 );
             }
         }
 

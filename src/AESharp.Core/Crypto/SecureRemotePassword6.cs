@@ -25,12 +25,6 @@ namespace AESharp.Core.Crypto
         private string _username;
         private BigNumber _verifier;
 
-        public SecureRemotePassword6( string username, BigNumber credentials )
-        {
-            this.Username = username;
-            this.Credentials = credentials;
-        }
-
         public string Username
         {
             get { return this._username; }
@@ -188,6 +182,12 @@ namespace AESharp.Core.Crypto
         public BigNumber Generator => _generator;
 
         public BigNumber Modulus => _modulus;
+
+        public SecureRemotePassword6( string username, BigNumber credentials )
+        {
+            this.Username = username;
+            this.Credentials = credentials;
+        }
 
         private static BigNumber RandomNumber()
         {

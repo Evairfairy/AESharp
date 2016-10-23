@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using AESharp.Networking;
-using AESharp.Networking.Data;
 using SimpleInjector;
 
 namespace AESharp.Logon
