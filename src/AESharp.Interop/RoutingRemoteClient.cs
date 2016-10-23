@@ -29,7 +29,9 @@ namespace AESharp.Interop
             this.LastKeepAliveGuid = Guid.Empty;
             this.OutboundMode = outboundMode;
             if ( !this.OutboundMode )
+            {
                 this.KeepAliveLoopAsync();
+            }
         }
 
         public static async Task<RoutingRemoteClient> ConnectToMasterRouter()
@@ -49,7 +51,9 @@ namespace AESharp.Interop
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )
         {
             if ( token.IsCancellationRequested )
+            {
                 return;
+            }
 
             RoutingPacketId id = (RoutingPacketId)data[0];
             Console.WriteLine(
@@ -98,7 +102,9 @@ namespace AESharp.Interop
                     Console.WriteLine( $"Client kicked. Reason: {disconnect.Reason}" );
 
                     if ( !this.Connected )
+                    {
                         await this.Disconnect( TimeSpan.FromMilliseconds( 100 ) );
+                    }
 
                     break;
                 }

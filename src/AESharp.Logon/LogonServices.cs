@@ -9,9 +9,9 @@ namespace AESharp.Logon
         public static RealmRepository Realms = new RealmRepository();
 
         public static RemoteClientRepository<LogonRemoteClient> LogonClients =
-            new RemoteClientRepository<LogonRemoteClient>();
+                new RemoteClientRepository<LogonRemoteClient>();
 
         public static RemoteClientRepository<InteropRemoteClient> InteropClients =
-            new RemoteClientRepository<InteropRemoteClient>();
+                new RemoteClientRepository<InteropRemoteClient>();
     }
 }

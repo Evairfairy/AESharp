@@ -30,6 +30,6 @@ namespace AESharp.Core.Extensions
         }
 
         public static string Join<T>( this IEnumerable<T> collection, string delim )
-                => String.Join( delim, collection );
+                => string.Join( delim, collection );
     }
 }

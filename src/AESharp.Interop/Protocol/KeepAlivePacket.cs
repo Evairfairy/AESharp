@@ -1,5 +1,4 @@
 ﻿using System;
-using AESharp.Interop.Extensions;
 
 namespace AESharp.Interop.Protocol
 {
@@ -18,7 +17,7 @@ namespace AESharp.Interop.Protocol
         {
             this.TimeSent = timeSent;
             this.Guid = guid;
-            
+
             this.WriteDateTime( timeSent );
             this.WriteGuid( guid );
         }

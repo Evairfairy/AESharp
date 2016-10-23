@@ -31,9 +31,7 @@ namespace AESharp.World.Networking
         }
 
         public RealmRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-            : base( rawClient, tokenSource )
-        {
-        }
+            : base( rawClient, tokenSource ) { }
 
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )
         {

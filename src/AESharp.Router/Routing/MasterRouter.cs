@@ -4,9 +4,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Interop;
+using AESharp.Interop.Protocol;
 using AESharp.Networking;
 using AESharp.Networking.Data;
-using AESharp.Interop.Protocol;
 
 namespace AESharp.Router.Routing
 {
@@ -36,7 +36,7 @@ namespace AESharp.Router.Routing
         }
 
         internal void Start()
-            => this._server.Start( AcceptClientActionAsync );
+                => this._server.Start( AcceptClientActionAsync );
 
         internal async Task Stop()
         {

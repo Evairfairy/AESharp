@@ -46,11 +46,11 @@ namespace AESharp.World
                 packet.WriteUInt32( 0 ); // unk5
 
                 Task.Run( async () =>
-                    {
-                        // Give us time to start listening
-                        await Task.Delay( 500 );
-                        await client.SendPacketAsync( packet );
-                    } ).RunAsync();
+                          {
+                              // Give us time to start listening
+                              await Task.Delay( 500 );
+                              await client.SendPacketAsync( packet );
+                          } ).RunAsync();
 
                 await client.ListenForDataTask( client.CancellationToken );
             }

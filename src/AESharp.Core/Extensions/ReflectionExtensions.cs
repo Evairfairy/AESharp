@@ -32,6 +32,6 @@ namespace AESharp.Core.Extensions
         }
 
         public static bool Implements<T>( this Type self )
-            => self.Implements( typeof( T ) );
+                => self.Implements( typeof( T ) );
     }
 }
