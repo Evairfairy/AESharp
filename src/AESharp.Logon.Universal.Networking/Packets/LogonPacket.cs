@@ -6,17 +6,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
 {
     public sealed class LogonPacket : Packet
     {
-        private const int HeaderSize = sizeof( byte ) + sizeof( byte ) + sizeof( ushort );
-
-        public LogonPacket( byte[] data ) : base( data )
-        {
-            if ( this.InternalBuffer.Length < HeaderSize )
-            {
-                throw new InvalidPacketException(
-                    $"Received packet with incomplete header (only {this.InternalBuffer.Length} bytes received)" );
-            }
-            this.Opcode = this.ReadByte();
-        }
+        private const int HeaderSize = sizeof( byte ) * 2 + sizeof( ushort );
 
         public byte Opcode { get; set; }
 
@@ -25,9 +15,19 @@ namespace AESharp.Logon.Universal.Networking.Packets
         /// <summary>
         ///     Automatically calculated when sending
         /// </summary>
-        public ushort Length => (ushort) this.Payload.Array.Length;
+        public new ushort Length => (ushort)( base.Length - HeaderSize );
 
         public ArraySegment<byte> Payload
-            => new ArraySegment<byte>( this.InternalBuffer, HeaderSize, this.InternalBuffer.Length - HeaderSize );
+                => new ArraySegment<byte>( this.InternalBuffer, HeaderSize, this.Length );
+
+        public LogonPacket( byte[] data ) : base( data )
+        {
+            if( this.Length < HeaderSize )
+            {
+                throw new InvalidPacketException(
+                                                 $"Received packet with incomplete header (only {this.Length} bytes received)" );
+            }
+            this.Opcode = this.ReadByte();
+        }
     }
 }

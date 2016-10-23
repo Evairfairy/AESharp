@@ -3,8 +3,8 @@
     public class ProofPacket
     {
         public byte[] A;
-        public byte[] M1;
         public byte[] CrcHash;
+        public byte[] M1;
         public byte NumberOfKeys;
         public byte Unk;
 

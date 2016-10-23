@@ -1,21 +1,21 @@
 {
-    "version": "1.0.0-*",
-    "buildOptions": {
-        "emitEntryPoint": true
-    },
+	"version": "1.0.0-*",
+	"buildOptions": {
+		"emitEntryPoint": true
+	},
 
-    "dependencies": {
-        "AESharp.Core": "1.0.0-*",
-        "AESharp.Networking": "1.0.0-*",
-        "Microsoft.NETCore.App": {
-            "type": "platform",
-            "version": "1.0.0"
-        },
-    },
+	"dependencies": {
+		"AESharp.Core": "1.0.0-*",
+		"AESharp.Networking": "1.0.0-*",
+		"Microsoft.NETCore.App": {
+			"type": "platform",
+			"version": "1.0.0"
+		}
+	},
 
-    "frameworks": {
-        "netcoreapp1.0": {
-            "imports": "dnxcore50"
-        }
-    }
+	"frameworks": {
+		"netcoreapp1.0": {
+			"imports": "dnxcore50"
+		}
+	}
 }

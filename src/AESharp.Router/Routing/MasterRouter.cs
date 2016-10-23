@@ -1,36 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net;
-using System.Text;
+using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using AESharp.Networking;
-using AESharp.Networking.Events;
-using AESharp.Networking.Interfaces;
-using AESharp.Networking.Packets;
-using AESharp.Networking.Packets.Serialization;
-using AESharp.Router.Routing.Packets.Handlers;
+using AESharp.Networking.Data;
+using AESharp.Router.Routing.Packets;
 
 namespace AESharp.Router.Routing
 {
     public sealed class MasterRouter
     {
-        public const ushort ListenPort = 10695;
-        public const ushort ProtocolVersion = 1;
-
-        private static readonly ReadOnlyDictionary<RoutingPacketId, IPacketHandler> _packets;
         private static MasterRouter _instance;
+        private static readonly RemoteClientRepository ClientRepository;
 
-        private readonly IPacketSerializer _serializer;
+        private readonly TcpServer _server;
+
+        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
 
         static MasterRouter()
         {
-            Dictionary<RoutingPacketId, IPacketHandler> packets = new Dictionary<RoutingPacketId, IPacketHandler>
-            {
-                [RoutingPacketId.InitiateHandshake] = new InitiateHandshakePacketHandler()
-            };
-
-            _packets = new ReadOnlyDictionary<RoutingPacketId, IPacketHandler>( packets );
+            ClientRepository = new RemoteClientRepository();
         }
 
         private MasterRouter()
@@ -41,50 +31,42 @@ namespace AESharp.Router.Routing
         // Server-mode constructor
         internal MasterRouter( IPAddress address )
         {
-            PacketSerialization serializer = new PacketSerialization();
-            IEnumerable<Type> types = _packets.Select( p => p.Value.Type );
-            serializer.CacheObjects( types );
-
-            this._serializer = serializer;
+            this._server = new TcpServer( new IPEndPoint( IPAddress.Loopback, RoutingRemoteClient.RoutingPort ) );
         }
 
-        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
+        internal void Start()
+                => this._server.Start( AcceptClientActionAsync );
 
-        internal void StartServer()
+        internal async Task Stop()
         {
-            RoutingNetworkEngine networkEngine = new RoutingNetworkEngine();
-            TcpServer server = new TcpServer( IPAddress.Any, ListenPort, networkEngine, this._serializer );
+            DisconnectPacket packet = new DisconnectPacket( "Master router shutting down" );
+            foreach( RemoteClient client in ClientRepository.GetAllClients() )
+            {
+                await client.SendPacketAsync( packet );
+                await client.Disconnect( TimeSpan.FromMilliseconds( 100 ) );
+            }
 
-            server.ReceiveData += this.Server_ReceiveData;
-            server.Start();
+            ClientRepository.RemoveAllClients();
         }
 
-        private void Server_ReceiveData( object sender, NetworkEventArgs e )
+        private static async void AcceptClientActionAsync( TcpClient rawClient )
         {
-            RoutingPacketId id = (RoutingPacketId) e.DataStream.ReadByte();
+            RoutingRemoteClient client = new RoutingRemoteClient( rawClient, new CancellationTokenSource() );
+            Guid clientGuid = Guid.Empty;
 
-            IPacketHandler handler;
-            if ( !_packets.TryGetValue( id, out handler ) )
+            try
             {
-                e.DisconnectClient = true;
-                return;
+                clientGuid = ClientRepository.AddClient( client );
+                await client.ListenForDataTask( client.CancellationToken );
             }
-
-            object packet = this._serializer.DeserializePacket( handler.Type, e.DataStream, Encoding.UTF8 );
-            PacketHandlerResult result = handler.HandlePacket( packet );
-
-            if ( result.ResponsePacket != null )
+            catch( Exception ex )
             {
-                e.Client.SendPacket( result.ResponsePacket );
+                Console.WriteLine( $"Unhandled exception in {nameof( AcceptClientActionAsync )}: {ex}" );
             }
-
-            if ( result.DisconnectClient )
+            finally
             {
-                e.DisconnectClient = result.DisconnectClient;
-            }
-            else
-            {
-                e.Client.HandleIncomingPackets();
+                if( clientGuid != Guid.Empty )
+                    ClientRepository.RemoveClient( clientGuid );
             }
         }
     }

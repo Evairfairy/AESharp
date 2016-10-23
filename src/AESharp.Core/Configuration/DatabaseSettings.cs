@@ -6,8 +6,7 @@ namespace AESharp.Core.Configuration
     [JsonObject( MemberSerialization.OptIn )]
     public sealed class DatabaseSettings
     {
-        [JsonProperty( "driver" )]
-        [JsonConverter( typeof( StringEnumConverter ) )]
+        [JsonProperty( "driver" ), JsonConverter( typeof( StringEnumConverter ) )]
         public DatabaseDriver Driver { get; private set; }
 
         [JsonProperty( "hostname" )]

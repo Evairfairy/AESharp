@@ -1,187 +1,271 @@
 ﻿using System;
-using AESharp.Networking.Interfaces;
+using System.IO;
+using System.Net;
+using System.Text;
 
 namespace AESharp.Networking.Data
 {
-    public class Packet : IRealPacket
+    public class Packet //: IDisposable
     {
-        private byte[] _internalBuffer;
+        private readonly MemoryStream _memoryStream;
+        private readonly BinaryReader _reader;
+        private readonly BinaryWriter _writer;
 
-        public Packet()
+        public bool Disposed { get; private set; }
+        public long Length => this._memoryStream.Length;
+
+        public byte[] InternalBuffer
         {
-            this._internalBuffer = new byte[0];
-            this.BufferPosition = 0;
-        }
-
-        public Packet( byte[] data )
-        {
-            this._internalBuffer = data;
-            this.BufferPosition = 0;
-        }
-
-        public Packet( IRealPacket packet )
-        {
-            this._internalBuffer = packet.InternalBuffer;
-            this.BufferPosition = packet.BufferPosition;
-        }
-
-        public byte[] InternalBuffer => this._internalBuffer;
-
-        public int BufferPosition { get; set; }
-
-        public byte[] ReadBytes( int count )
-        {
-            byte[] buffer = new byte[count];
-
-            Array.Copy( this.InternalBuffer, this.BufferPosition, buffer, 0, count );
-            this.BufferPosition += count;
-
-            return buffer;
-        }
-
-        public void WriteBytes( byte[] val )
-        {
-            int requiredLength = this.BufferPosition + val.Length;
-            int currentLength = this.InternalBuffer.Length;
-            int lengthDifference = requiredLength - currentLength;
-
-            if ( lengthDifference > 0 )
+            get
             {
-                Array.Resize( ref this._internalBuffer, this.InternalBuffer.Length + lengthDifference );
+                this._writer.Flush();
+                this._memoryStream.Flush();
+                return this._memoryStream.ToArray();
             }
-
-            Array.Copy( val, 0, this.InternalBuffer, this.BufferPosition, val.Length );
-            this.BufferPosition += val.Length;
         }
 
-        public byte ReadByte()
+        public long BufferPosition
         {
-            return this.ReadBytes( sizeof( byte ) )[0];
+            get { return this._memoryStream.Position; }
+            set { this._memoryStream.Position = value; }
         }
 
-        public void WriteByte( byte val )
+        public Packet( Encoding encoding = null )
+            : this( new MemoryStream(), encoding ) { }
+
+        public Packet( byte[] data, Encoding encoding = null )
+            : this( new MemoryStream( data ), encoding ) { }
+
+        private Packet( MemoryStream dataStream, Encoding encoding = null )
         {
-            this.WriteBytes( new[] {val} );
+            encoding = encoding ?? Encoding.UTF8;
+            this._memoryStream = dataStream;
+            this._reader = new BinaryReader( dataStream, encoding, false );
+            this._writer = new BinaryWriter( dataStream, encoding, false );
         }
 
-        public char ReadChar()
+        public void Dispose() => this.Dispose( true );
+
+        ~Packet()
         {
-            return (char) this.ReadByte();
+            this.Dispose( false );
         }
 
-        public void WriteChar( char val )
-        {
-            this.WriteByte( (byte) val );
-        }
-
-        public bool ReadBool()
-        {
-            return BitConverter.ToBoolean( this.ReadBytes( sizeof( bool ) ), 0 );
-        }
-
-        public void WriteBool( bool val )
-        {
-            this.WriteBytes( BitConverter.GetBytes( val ) );
-        }
-
-        public short ReadShort()
-        {
-            return BitConverter.ToInt16( this.ReadBytes( sizeof( short ) ), 0 );
-        }
-
-        public void WriteShort( short val )
-        {
-            this.WriteBytes( BitConverter.GetBytes( val ) );
-        }
-
-        public ushort ReadUShort()
-        {
-            return BitConverter.ToUInt16( this.ReadBytes( sizeof( ushort ) ), 0 );
-        }
-
-        public void WriteUShort( ushort val )
-        {
-            this.WriteBytes( BitConverter.GetBytes( val ) );
-        }
-
-        public int ReadInt()
-        {
-            return BitConverter.ToInt32( this.ReadBytes( sizeof( int ) ), 0 );
-        }
-
-        public void WriteInt( int val )
-        {
-            this.WriteBytes( BitConverter.GetBytes( val ) );
-        }
-
-        public uint ReadUInt()
-        {
-            return BitConverter.ToUInt32( this.ReadBytes( sizeof( uint ) ), 0 );
-        }
-
-        public void WriteUInt( uint val )
-        {
-            this.WriteBytes( BitConverter.GetBytes( val ) );
-        }
-
-        public long ReadLong()
-        {
-            return BitConverter.ToInt64( this.ReadBytes( sizeof( long ) ), 0 );
-        }
-
-        public void WriteLong( long val )
-        {
-            this.WriteBytes( BitConverter.GetBytes( val ) );
-        }
-
-        public ulong ReadULong()
-        {
-            return BitConverter.ToUInt64( this.ReadBytes( sizeof( ulong ) ), 0 );
-        }
-
-        public void WriteULong( ulong val )
-        {
-            this.WriteBytes( BitConverter.GetBytes( val ) );
-        }
-
-        public byte[] BuildPacket()
-        {
-            return this.InternalBuffer;
-        }
+        public int Read() => this._reader.Read();
+        public bool ReadBoolean() => this._reader.ReadBoolean();
+        public byte ReadByte() => this._reader.ReadByte();
+        public sbyte ReadSByte() => this._reader.ReadSByte();
+        public char ReadChar() => this._reader.ReadChar();
+        public short ReadInt16() => this._reader.ReadInt16();
+        public ushort ReadUInt16() => this._reader.ReadUInt16();
+        public int ReadInt32() => this._reader.ReadInt32();
+        public uint ReadUInt32() => this._reader.ReadUInt32();
+        public long ReadInt64() => this._reader.ReadInt64();
+        public ulong ReadUInt64() => this._reader.ReadUInt64();
+        public float ReadSingle() => this._reader.ReadSingle();
+        public double ReadDouble() => this._reader.ReadDouble();
+        public decimal ReadDecimal() => this._reader.ReadDecimal();
+        public string ReadString() => this._reader.ReadString();
+        public int Read( char[] buffer, int index, int count ) => this._reader.Read( buffer, index, count );
+        public char[] ReadChars( int count ) => this._reader.ReadChars( count );
+        public int Read( byte[] buffer, int index, int count ) => this._reader.Read( buffer, index, count );
+        public byte[] ReadBytes( int count ) => this._reader.ReadBytes( count );
 
         public string ReadFixedString( int len )
         {
-            string s = string.Empty;
-
-            for ( int i = 0; i < len; ++i )
-            {
-                char c = this.ReadChar();
-                if ( c == '\0' )
-                {
-                    continue;
-                }
-                s += c;
-            }
-
-            return s;
+            char[] chars = this.ReadChars( len );
+            return new string( chars );
         }
 
-        public string ReadCString()
-        {
-            string s = string.Empty;
+        public string ReadByteString() => this.ReadString( StringPrefix.Byte, StringTerminator.None );
+        public string ReadShortString() => this.ReadString( StringPrefix.Byte, StringTerminator.None );
+        public string ReadInttring() => this.ReadString( StringPrefix.Byte, StringTerminator.None );
+        public string ReadCString() => this.ReadString( StringPrefix.None, StringTerminator.Null );
 
-            while ( true )
+        public Version ReadVersion()
+        {
+            return new Version(
+                               this.ReadByte(),
+                               this.ReadByte(),
+                               this.ReadByte(),
+                               this.ReadUInt16()
+                              );
+        }
+
+        // IPv4
+        public IPAddress ReadIPAddress4() => new IPAddress( this.ReadBytes( 4 ) );
+
+        private string ReadString( StringPrefix prefix, StringTerminator terminator )
+        {
+            int length;
+            switch( prefix )
             {
-                char c = this.ReadChar();
-                if ( c == '\0' )
+                case StringPrefix.None:
                 {
-                    break;
+                    char end;
+                    switch( terminator )
+                    {
+                        case StringTerminator.None:
+                            throw new InvalidOperationException(
+                                                                "String terminator cannot be none when there is no prefix" );
+
+                        case StringTerminator.Null:
+                            end = '\0';
+                            break;
+
+                        case StringTerminator.Space:
+                            end = ' ';
+                            break;
+
+                        default:
+                            throw new NotSupportedException( Enum.GetName( typeof( StringTerminator ), terminator ) );
+                    }
+
+                    StringBuilder builder = new StringBuilder();
+
+                    char c;
+                    while( ( c = this.ReadChar() ) != end )
+                        builder.Append( c );
+
+                    return builder.ToString();
                 }
 
-                s += c;
+                case StringPrefix.Byte:
+                    length = this.ReadByte();
+                    break;
+
+                case StringPrefix.Short:
+                    length = this.ReadByte();
+                    break;
+
+                case StringPrefix.Int:
+                    length = this.ReadInt16();
+                    break;
+
+                default:
+                    throw new NotSupportedException( Enum.GetName( typeof( StringPrefix ), prefix ) );
             }
 
-            return s;
+            string value = this.ReadFixedString( length );
+
+            switch( terminator )
+            {
+                case StringTerminator.None:
+                    break;
+
+                // We don't actually care about these when there's a prefix
+                case StringTerminator.Null:
+                case StringTerminator.Space:
+                    this.ReadChar();
+                    break;
+
+                default:
+                    throw new NotSupportedException( Enum.GetName( typeof( StringTerminator ), terminator ) );
+            }
+
+            return value;
+        }
+
+        public void WriteBoolean( bool value ) => this._writer.Write( value );
+        public void WriteByte( byte value ) => this._writer.Write( value );
+        public void WriteSByte( sbyte value ) => this._writer.Write( value );
+        public void WriteBytes( byte[] buffer ) => this._writer.Write( buffer );
+        public void WriteBytes( byte[] buffer, int index, int count ) => this._writer.Write( buffer, index, count );
+        public void WriteChar( char ch ) => this._writer.Write( ch );
+        public void WriteChars( char[] chars ) => this._writer.Write( chars );
+        public void WriteChars( char[] chars, int index, int count ) => this._writer.Write( chars, index, count );
+        public void WriteDouble( double value ) => this._writer.Write( value );
+        public void WriteDecimal( decimal value ) => this._writer.Write( value );
+        public void WriteInt16( short value ) => this._writer.Write( value );
+        public void WriteUInt16( ushort value ) => this._writer.Write( value );
+        public void WriteInt32( int value ) => this._writer.Write( value );
+        public void WriteUInt32( uint value ) => this._writer.Write( value );
+        public void WriteInt64( long value ) => this._writer.Write( value );
+        public void WriteUInt64( ulong value ) => this._writer.Write( value );
+        public void WriteSingle( float value ) => this._writer.Write( value );
+        public void WriteString( string value ) => this._writer.Write( value );
+
+        public void WriteByteString( string value )
+                => this.WriteString( value, StringPrefix.Byte, StringTerminator.None );
+
+        public void WriteShortString( string value )
+                => this.WriteString( value, StringPrefix.Short, StringTerminator.None );
+
+        public void WriteIntString( string value )
+                => this.WriteString( value, StringPrefix.Int, StringTerminator.None );
+
+        public void WriteCString( string value ) => this.WriteString( value, StringPrefix.None, StringTerminator.Null );
+
+        private void WriteString( string value, StringPrefix prefix, StringTerminator terminator )
+        {
+            int maxLength = 0;
+            switch( terminator )
+            {
+                case StringTerminator.None:
+                    break;
+
+                // We don't actually care about these when there's a prefix
+                case StringTerminator.Null:
+                case StringTerminator.Space:
+                    maxLength -= 1;
+                    break;
+
+                default:
+                    throw new NotSupportedException( Enum.GetName( typeof( StringTerminator ), terminator ) );
+            }
+
+            switch( prefix )
+            {
+                case StringPrefix.None:
+                    if( terminator == StringTerminator.None )
+                        throw new InvalidOperationException( "String terminator cannot be none when there is no prefix" );
+                    break;
+
+                case StringPrefix.Byte:
+                    maxLength = byte.MaxValue;
+                    this.CheckStringLength( value.Length, maxLength );
+                    this.WriteByte( (byte)value.Length );
+                    break;
+
+                case StringPrefix.Short:
+                    maxLength = short.MinValue;
+                    this.CheckStringLength( value.Length, maxLength );
+                    this.WriteInt16( (short)value.Length );
+                    break;
+
+                case StringPrefix.Int:
+                    maxLength = int.MaxValue;
+                    this.CheckStringLength( value.Length, maxLength );
+                    this.WriteInt32( value.Length );
+                    break;
+
+                default:
+                    throw new NotSupportedException( Enum.GetName( typeof( StringPrefix ), prefix ) );
+            }
+
+            this.WriteChars( value.ToCharArray() );
+        }
+
+        private void CheckStringLength( int actualLength, int maxAllowedLength )
+        {
+            if( actualLength > maxAllowedLength )
+                throw new InvalidOperationException(
+                                                    $"String length ({actualLength:#,#0}) exceeds maximum length of {maxAllowedLength:#,#0}" );
+        }
+
+        protected virtual void Dispose( bool disposeManagedResources )
+        {
+            if( this.Disposed )
+                return;
+
+            if( disposeManagedResources )
+            {
+                this._memoryStream.Dispose();
+                this._reader.Dispose();
+                this._writer.Dispose();
+            }
+
+            this.Disposed = true;
         }
     }
 }

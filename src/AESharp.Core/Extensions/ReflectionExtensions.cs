@@ -8,12 +8,10 @@ namespace AESharp.Core.Extensions
         public static bool Inherits( this Type self, Type type )
         {
             Type baseType = self.GetTypeInfo().BaseType;
-            while ( baseType != null )
+            while( baseType != null )
             {
-                if ( baseType == type )
-                {
+                if( baseType == type )
                     return true;
-                }
 
                 baseType = baseType.GetTypeInfo().BaseType;
             }
@@ -23,15 +21,13 @@ namespace AESharp.Core.Extensions
 
         public static bool Implements( this Type self, Type type )
         {
-            if ( !type.GetTypeInfo().IsInterface )
-            {
+            if( !type.GetTypeInfo().IsInterface )
                 return false;
-            }
 
             return type.IsAssignableFrom( self );
         }
 
-        public static bool Implements< T >( this Type self )
-            => self.Implements( typeof( T ) );
+        public static bool Implements<T>( this Type self )
+                => self.Implements( typeof( T ) );
     }
 }

@@ -20,7 +20,7 @@ namespace AESharp.Logon
 
             _container.Verify();
 
-            RealTcpServer server = new RealTcpServer( new IPEndPoint( IPAddress.Loopback, 3724 ) );
+            TcpServer server = new TcpServer( new IPEndPoint( IPAddress.Loopback, 3724 ) );
             server.Start( AcceptClientActionAsync );
 
             Console.WriteLine( "Listening..." );
@@ -38,16 +38,14 @@ namespace AESharp.Logon
                 clientGuid = ClientRepository.AddClient( client );
                 await client.ListenForDataTask( client.CancellationToken );
             }
-            catch ( Exception ex )
+            catch( Exception ex )
             {
                 Console.WriteLine( $"Unhandled exception in {nameof( AcceptClientActionAsync )}: {ex}" );
             }
             finally
             {
-                if ( clientGuid != Guid.Empty )
-                {
+                if( clientGuid != Guid.Empty )
                     ClientRepository.RemoveClient( clientGuid );
-                }
             }
         }
     }

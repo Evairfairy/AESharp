@@ -5,23 +5,15 @@ using System.Threading.Tasks;
 using AESharp.Core.Extensions;
 using AESharp.Networking.Exceptions;
 using AESharp.Networking.Extensions;
-using AESharp.Networking.Interfaces.ClientManagement;
 
 namespace AESharp.Networking.Data
 {
     /// <summary>
     ///     Implements most functionality needed for a remote client, but must be inherited to handle packets
     /// </summary>
-    public abstract class RemoteClient : IRemoteClient
+    public abstract class RemoteClient
     {
         private const int BufferSize = 4096;
-
-        protected RemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-        {
-            this.RawClient = rawClient;
-            this.TokenSource = tokenSource;
-            this.CancellationToken = this.TokenSource.Token;
-        }
 
         public TcpClient RawClient { get; }
 
@@ -38,26 +30,29 @@ namespace AESharp.Networking.Data
         /// </summary>
         public bool Connected => this.RawClient.Connected;
 
+        protected RemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
+        {
+            this.RawClient = rawClient;
+            this.TokenSource = tokenSource;
+            this.CancellationToken = this.TokenSource.Token;
+        }
+
         public async Task ListenForDataTask( CancellationToken token )
         {
-            if ( this.RawClient == null )
-            {
+            if( this.RawClient == null )
                 throw new NullReferenceException( $"{nameof( this.RawClient )} cannot be null" );
-            }
 
-            if ( !this.Connected )
-            {
+            if( !this.Connected )
                 throw new InvalidOperationException( "Must be connected to listen for data" );
-            }
 
             NetworkStream ns = this.RawClient.GetStream();
 
-            while ( !token.IsCancellationRequested && this.Connected )
+            while( !token.IsCancellationRequested && this.Connected )
             {
                 byte[] buffer = new byte[BufferSize];
                 int bytesRead = await ns.ReadAsync( buffer, 0, buffer.Length, token );
 
-                if ( bytesRead == 0 )
+                if( bytesRead == 0 )
                 {
                     this.DisconnectEx( 100 ).RunAsync();
                     break;
@@ -69,7 +64,7 @@ namespace AESharp.Networking.Data
                 {
                     await this.HandleDataAsync( buffer, token );
                 }
-                catch ( InvalidPacketException ex )
+                catch( InvalidPacketException ex )
                 {
                     Console.WriteLine( ex.Message );
                     this.DisconnectEx( 100 ).RunAsync();
@@ -77,9 +72,15 @@ namespace AESharp.Networking.Data
             }
         }
 
-        public async Task SendDataTask( byte[] data, CancellationToken token )
+        public async Task SendPacketAsync( Packet packet, CancellationToken token )
         {
-            await this.RawClient.GetStream().WriteAsync( data, 0, data.Length, token );
+            byte[] buffer = packet.InternalBuffer;
+            await this.RawClient.GetStream().WriteAsync( buffer, 0, buffer.Length, token );
+        }
+
+        public async Task SendPacketAsync( Packet packet )
+        {
+            await this.SendPacketAsync( packet, this.CancellationToken );
         }
 
         /// <summary>
@@ -104,19 +105,7 @@ namespace AESharp.Networking.Data
                 this.RawClient?.Client?.Shutdown( SocketShutdown.Both );
             }
             // Socket has already been closed
-            catch ( ObjectDisposedException )
-            {
-            }
-        }
-
-        /// <summary>
-        ///     Sends the byte[] specified to the client
-        /// </summary>
-        /// <param name="data">data to send to the client</param>
-        /// <returns>Task</returns>
-        public async Task SendDataTask( byte[] data )
-        {
-            await this.SendDataTask( data, this.CancellationToken );
+            catch( ObjectDisposedException ) { }
         }
 
         /// <summary>

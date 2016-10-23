@@ -1,6 +1,4 @@
 ﻿namespace AESharp.Interop.Protocol
 {
-    public class AESharpPacket
-    {
-    }
+    public class AESharpPacket { }
 }

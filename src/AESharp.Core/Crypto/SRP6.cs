@@ -2,11 +2,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using AESharp.Core.Extensions;
-using Org.BouncyCastle.Crypto.Agreement.Srp;
 using Org.BouncyCastle.Crypto.Digests;
-using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Security;
 
 namespace AESharp.Core.Crypto
 {
@@ -18,20 +15,22 @@ namespace AESharp.Core.Crypto
         public BigInteger ServerPrivateValue; // b
         public BigInteger ServerPublicValue; // B
 
-        private Sha1Digest Sha1Digest;
-        public BigInteger Verifier; // v
-
         public BigInteger SessionKey;
+
+        private readonly Sha1Digest Sha1Digest;
+        public BigInteger Verifier; // v
 
         public SRP6()
         {
             this.Sha1Digest = new Sha1Digest();
 
-            this.SafePrime = this.MakeUnsignedBigInt(new byte[]
-            {
-                0x89, 0x4B, 0x64, 0x5E, 0x89, 0xE1, 0x53, 0x5B, 0xBD, 0xAD, 0x5B, 0x8B, 0x29, 0x06, 0x50, 0x53, 0x08,
-                0x01, 0xB1, 0x8E, 0xBF, 0xBF, 0x5E, 0x8F, 0xAB, 0x3C, 0x82, 0x87, 0x2A, 0x3E, 0x9B, 0xB7
-            });
+            this.SafePrime = this.MakeUnsignedBigInt( new byte[]
+                                                      {
+                                                          0x89, 0x4B, 0x64, 0x5E, 0x89, 0xE1, 0x53, 0x5B, 0xBD, 0xAD,
+                                                          0x5B, 0x8B, 0x29, 0x06, 0x50, 0x53, 0x08,
+                                                          0x01, 0xB1, 0x8E, 0xBF, 0xBF, 0x5E, 0x8F, 0xAB, 0x3C, 0x82,
+                                                          0x87, 0x2A, 0x3E, 0x9B, 0xB7
+                                                      } );
 
             //this.SafePrime =
             //    this.MakeUnsignedBigInt(
@@ -60,7 +59,7 @@ namespace AESharp.Core.Crypto
         }
 
         public void GenerateAuthLogonChallenge( string passwordHash, out byte unk2, out byte[] b, out byte[] g,
-            out byte[] n, out byte[] s, out byte[] unk3, out byte unk4 )
+                                                out byte[] n, out byte[] s, out byte[] unk3, out byte unk4 )
         {
             byte[] sha1Bytes = this.GetSaltedPasswordHashBytes( passwordHash );
 
@@ -74,7 +73,7 @@ namespace AESharp.Core.Crypto
 
             BigInteger gmod = this.Generator.ModPow( this.ServerPrivateValue, this.SafePrime );
 
-            BigInteger v1 = this.Verifier.Multiply( this.MakeUnsignedBigInt( new[] {k} ) );
+            BigInteger v1 = this.Verifier.Multiply( this.MakeUnsignedBigInt( new[] { k } ) );
             BigInteger v2 = v1.Add( gmod );
             this.ServerPublicValue = v2.Mod( this.SafePrime );
 
@@ -82,7 +81,7 @@ namespace AESharp.Core.Crypto
 
             unk2 = 0;
             b = this.ServerPublicValue.ToByteArrayUnsigned();
-            g = new[] {this.Generator.ToByteArrayUnsigned()[0]};
+            g = new[] { this.Generator.ToByteArrayUnsigned()[0] };
             n = this.SafePrime.ToByteArrayUnsigned();
             s = this.Salt.ToByteArrayUnsigned();
             unk3 = unk.ToByteArrayUnsigned();
@@ -108,32 +107,24 @@ namespace AESharp.Core.Crypto
             byte[] t1 = new byte[16];
             byte[] vK = new byte[40];
 
-            for ( int i = 0; i < 16; ++i )
-            {
+            for( int i = 0; i < 16; ++i )
                 t1[i] = t[i * 2];
-            }
 
             this.ResetSha1Digest();
             this.UpdateDigest( t1 );
             byte[] t1Sha1 = this.GetFinalSha1Hash();
 
-            for ( int i = 0; i < 20; ++i )
-            {
+            for( int i = 0; i < 20; ++i )
                 vK[i * 2] = t1Sha1[i];
-            }
-            for ( int i = 0; i < 16; ++i )
-            {
+            for( int i = 0; i < 16; ++i )
                 t1[i] = t[i * 2 + 1];
-            }
 
             this.ResetSha1Digest();
             this.UpdateDigest( t1 );
             byte[] t1Sha2 = this.GetFinalSha1Hash();
 
-            for ( int i = 0; i < 20; ++i )
-            {
+            for( int i = 0; i < 20; ++i )
                 vK[i * 2 + 1] = t1Sha2[i];
-            }
 
             this.SessionKey = this.MakeUnsignedBigInt( vK );
 
@@ -145,10 +136,8 @@ namespace AESharp.Core.Crypto
             this.UpdateDigest( this.Generator.ToByteArrayUnsigned() );
             byte[] hash2 = this.GetFinalSha1Hash();
 
-            for ( int i = 0; i < 20; ++i )
-            {
+            for( int i = 0; i < 20; ++i )
                 hash[i] ^= hash2[i];
-            }
 
             BigInteger t3 = this.MakeUnsignedBigInt( hash );
 
@@ -171,16 +160,12 @@ namespace AESharp.Core.Crypto
             BigInteger M = this.MakeUnsignedBigInt( finalM );
 
             Console.Write( "Client M: " );
-            foreach ( byte b in packetM )
-            {
+            foreach( byte b in packetM )
                 Console.Write( $"{b:x}" );
-            }
             Console.WriteLine();
             Console.Write( "Our M: " );
-            foreach ( byte b in finalM )
-            {
+            foreach( byte b in finalM )
                 Console.Write( $"{b:x}" );
-            }
             Console.WriteLine();
         }
 
@@ -191,7 +176,7 @@ namespace AESharp.Core.Crypto
             //BigInteger bn = new BigInteger( passwordHash );
 
             byte[] passwordBytes = passwordHash.ByteRepresentationToByteArray();
-            Array.Reverse(passwordBytes);
+            Array.Reverse( passwordBytes );
 
             //byte[] passwordBytes = bn.ToByteArrayUnsigned();
             //Array.Reverse( passwordBytes );
