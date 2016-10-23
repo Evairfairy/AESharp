@@ -12,13 +12,13 @@ namespace AESharp.Router.Routing
     public sealed class MasterRouter
     {
         private static MasterRouter _instance;
-        private static readonly RemoteClientRepository ClientRepository;
+        private static readonly RemoteClientRepository<RemoteClient> ClientRepository;
 
         private readonly TcpServer _server;
 
         static MasterRouter()
         {
-            ClientRepository = new RemoteClientRepository();
+            ClientRepository = new RemoteClientRepository<RemoteClient>();
         }
 
         private MasterRouter()

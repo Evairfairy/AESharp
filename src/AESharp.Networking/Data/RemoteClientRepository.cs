@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace AESharp.Networking.Data
 {
-    public class RemoteClientRepository
+    public class RemoteClientRepository<T> where T : RemoteClient
     {
         /// <summary>
-        ///     Holds the IRemoteClient objects. All access to this Dictionary is made thread-safe.
+        ///     Holds the RemoteClient objects. All access to this Dictionary is made thread-safe.
         /// </summary>
-        private readonly Dictionary<Guid, RemoteClient> _remoteClients = new Dictionary<Guid, RemoteClient>();
+        private readonly Dictionary<Guid, T> _remoteClients = new Dictionary<Guid, T>();
 
         /// <summary>
         ///     Thread-safe access method to add a client to the repository.
         /// </summary>
         /// <param name="client">Client to add</param>
         /// <returns>The GUID used to identify the client to the repository</returns>
-        public Guid AddClient( RemoteClient client )
+        public Guid AddClient( T client )
         {
             if ( client == null )
             {
@@ -58,11 +58,11 @@ namespace AESharp.Networking.Data
         }
 
         /// <summary>
-        ///     Returns the IRemoteClient identified by clientGuid
+        ///     Returns the RemoteClient identified by clientGuid
         /// </summary>
         /// <param name="clientGuid">The GUID used to identify the client</param>
-        /// <returns>The IRemoteClient identified by clientGuid</returns>
-        public RemoteClient GetClient( Guid clientGuid )
+        /// <returns>The RemoteClient identified by clientGuid</returns>
+        public T GetClient( Guid clientGuid )
         {
             if ( clientGuid == Guid.Empty )
             {
@@ -79,13 +79,13 @@ namespace AESharp.Networking.Data
         ///     Returns all clients in the repository.
         /// </summary>
         /// <returns>An IEnumerable of all clients in the repository</returns>
-        public IEnumerable<RemoteClient> GetAllClients()
+        public List<T> GetAllClients()
         {
-            RemoteClient[] clients = new RemoteClient[this._remoteClients.Count];
+            List<T> clients = new List<T>();
 
             lock ( this._remoteClients )
             {
-                this._remoteClients.Values.CopyTo( clients, 0 );
+                clients.AddRange( this._remoteClients.Values );
             }
 
             return clients;

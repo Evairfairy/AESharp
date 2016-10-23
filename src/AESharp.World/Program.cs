@@ -25,10 +25,14 @@ namespace AESharp.World
             Console.WriteLine( "Accepting Realm Client" );
             RealmRemoteClient client = new RealmRemoteClient( rawClient, new CancellationTokenSource() );
 
+            Guid clientGuid = Guid.Empty;
+
             Console.WriteLine( $"Using realm seed: 0x{client.Seed:x}" );
 
             try
             {
+                clientGuid = RealmServices.RemoteClients.AddClient( client );
+
                 RealmPacket packet = new RealmPacket( true )
                 {
                     Opcode = 0x1ec
@@ -56,6 +60,10 @@ namespace AESharp.World
             }
             finally
             {
+                if ( clientGuid != Guid.Empty )
+                {
+                    RealmServices.RemoteClients.RemoveClient( clientGuid );
+                }
                 Console.WriteLine( $"Client disconnected" );
             }
         }

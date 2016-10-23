@@ -12,8 +12,6 @@ namespace AESharp.Logon
     {
         private static Container _container;
 
-        private static readonly RemoteClientRepository ClientRepository = new RemoteClientRepository();
-
         public static void Main( string[] args )
         {
             _container = new Container();
@@ -23,8 +21,35 @@ namespace AESharp.Logon
             TcpServer server = new TcpServer( new IPEndPoint( IPAddress.Loopback, 3724 ) );
             server.Start( AcceptClientActionAsync );
 
+            TcpServer tempInteropServer = new TcpServer( new IPEndPoint( IPAddress.Loopback, 3725 ) );
+            tempInteropServer.Start( AcceptInteropClientASync );
+
             Console.WriteLine( "Listening..." );
             Console.ReadLine();
+        }
+
+        private static async void AcceptInteropClientASync( TcpClient rawClient )
+        {
+            Console.WriteLine( "Accepted interop client" );
+            InteropRemoteClient client = new InteropRemoteClient( rawClient, new CancellationTokenSource() );
+
+            Guid interopGuid = Guid.Empty;
+            try
+            {
+                interopGuid = LogonServices.InteropClients.AddClient( client );
+                await client.ListenForDataTask( client.CancellationToken );
+            }
+            catch ( Exception ex )
+            {
+                Console.WriteLine( $"Unhandled exception in {nameof( AcceptInteropClientASync )}: {ex}" );
+            }
+            finally
+            {
+                if ( interopGuid != Guid.Empty )
+                {
+                    LogonServices.InteropClients.RemoveClient( interopGuid );
+                }
+            }
         }
 
         private static async void AcceptClientActionAsync( TcpClient rawClient )
@@ -35,7 +60,7 @@ namespace AESharp.Logon
             Guid clientGuid = Guid.Empty;
             try
             {
-                clientGuid = ClientRepository.AddClient( client );
+                clientGuid = LogonServices.LogonClients.AddClient( client );
                 await client.ListenForDataTask( client.CancellationToken );
             }
             catch ( Exception ex )
@@ -46,7 +71,7 @@ namespace AESharp.Logon
             {
                 if ( clientGuid != Guid.Empty )
                 {
-                    ClientRepository.RemoveClient( clientGuid );
+                    LogonServices.LogonClients.RemoveClient( clientGuid );
                 }
             }
         }
