@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -111,6 +112,9 @@ namespace AESharp.Logon
                     ProofPacket proofPacket = new ProofPacket( logonPacket );
 
                     bool proofValid = this.AuthData.Srp6.IsClientProofValid( proofPacket.A, proofPacket.M1 );
+
+                    Console.WriteLine( $"Authentication {( proofValid ? "successful" : "failed" )}" );
+
                     if ( !proofValid )
                     {
                         ChallengeResponsePacket response = new ChallengeResponsePacket
@@ -135,6 +139,12 @@ namespace AESharp.Logon
                 }
                 case (byte) LogonOpcodes.RealmList:
                 {
+                    List<Realm> realms = LogonServices.Realms.GetRealms();
+
+                    short realmCount = (short) realms.Count;
+
+                    Console.WriteLine( $"Sending {realmCount} realms" );
+
                     Packet realmPacket = new Packet();
                     realmPacket.WriteByte( 0x10 );
 
@@ -142,18 +152,20 @@ namespace AESharp.Logon
                     realmPacket.WriteInt16( 0 );
                     realmPacket.WriteInt32( 0 );
 
-                    realmPacket.WriteInt16( 0 );
+                    realmPacket.WriteInt16( realmCount );
 
-                    // Write realms here
-                    //realmPacket.WriteByte( 0 ); // ServerType
-                    //realmPacket.WriteByte( 0 ); // Status
-                    //realmPacket.WriteByte(0  ); // Flags
-                    //realmPacket.WriteCString( "Example Realm" );
-                    //realmPacket.WriteCString( "127.0.0.1:8085" );
-                    //realmPacket.WriteSingle( 0 ); // Population
-                    //realmPacket.WriteByte( 3 ); // Characters
-                    //realmPacket.WriteByte( 0 ); // TimeZone
-                    //realmPacket.WriteByte( 0 );
+                    foreach ( Realm realm in realms )
+                    {
+                        realmPacket.WriteByte( (byte) realm.Type );
+                        realmPacket.WriteBoolean( realm.IsLocked );
+                        realmPacket.WriteByte( (byte) realm.Flags );
+                        realmPacket.WriteCString( realm.Name );
+                        realmPacket.WriteCString( realm.Address );
+                        realmPacket.WriteSingle( realm.Population );
+                        realmPacket.WriteByte( 3 ); // Characters
+                        realmPacket.WriteByte( (byte) realm.Region );
+                        realmPacket.WriteByte( 0 ); // Unk
+                    }
 
                     realmPacket.WriteByte( 0x10 );
                     realmPacket.WriteByte( 0x0 );

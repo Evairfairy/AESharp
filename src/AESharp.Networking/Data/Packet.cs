@@ -189,18 +189,56 @@ namespace AESharp.Networking.Data
         public void WriteInt64( long value ) => this._writer.Write( value );
         public void WriteUInt64( ulong value ) => this._writer.Write( value );
         public void WriteSingle( float value ) => this._writer.Write( value );
-        public void WriteString( string value ) => this._writer.Write( value );
+
+        // TODO: Does this write a fixed string? If so, rename method
+        //public void WriteString( string value ) => this._writer.Write( value );
+
+        public void WriteFixedString( string value )
+            => this.WriteString( value, StringType.FixedString );
 
         public void WriteByteString( string value )
-            => this.WriteString( value, StringPrefix.Byte, StringTerminator.None );
+            => this.WriteString( value, StringType.ByteString );
 
         public void WriteShortString( string value )
-            => this.WriteString( value, StringPrefix.Short, StringTerminator.None );
+            => this.WriteString( value, StringType.ShortString );
 
-        public void WriteIntString( string value )
-            => this.WriteString( value, StringPrefix.Int, StringTerminator.None );
+        // Evairfairy: I don't think we ever need this
+        //public void WriteIntString( string value )
+        //    => this.WriteString( value, StringPrefix.Int, StringTerminator.None );
 
-        public void WriteCString( string value ) => this.WriteString( value, StringPrefix.None, StringTerminator.Null );
+        public void WriteCString( string value ) => this.WriteString( value, StringType.NullTerminatedString );
+
+        private void WriteString( string value, StringType type )
+        {
+            switch ( type )
+            {
+                case StringType.FixedString:
+                {
+                    this.WriteChars( value.ToCharArray() );
+                    return;
+                }
+                case StringType.NullTerminatedString:
+                {
+                    this.WriteChars( value.ToCharArray() );
+                    this.WriteByte( 0x0 );
+                    return;
+                }
+                case StringType.ByteString:
+                {
+                    this.ValidateStringLengthOrThrow( value.Length, byte.MaxValue );
+                    this.WriteByte( (byte) value.Length );
+                    this.WriteChars( value.ToCharArray() );
+                    return;
+                }
+                case StringType.ShortString:
+                {
+                    this.ValidateStringLengthOrThrow( value.Length, ushort.MaxValue );
+                    this.WriteUInt16( (ushort) value.Length );
+                    this.WriteChars( value.ToCharArray() );
+                    return;
+                }
+            }
+        }
 
         private void WriteString( string value, StringPrefix prefix, StringTerminator terminator )
         {
@@ -231,19 +269,19 @@ namespace AESharp.Networking.Data
 
                 case StringPrefix.Byte:
                     maxLength = byte.MaxValue;
-                    this.CheckStringLength( value.Length, maxLength );
+                    this.ValidateStringLengthOrThrow( value.Length, maxLength );
                     this.WriteByte( (byte) value.Length );
                     break;
 
                 case StringPrefix.Short:
                     maxLength = short.MinValue;
-                    this.CheckStringLength( value.Length, maxLength );
+                    this.ValidateStringLengthOrThrow( value.Length, maxLength );
                     this.WriteInt16( (short) value.Length );
                     break;
 
                 case StringPrefix.Int:
                     maxLength = int.MaxValue;
-                    this.CheckStringLength( value.Length, maxLength );
+                    this.ValidateStringLengthOrThrow( value.Length, maxLength );
                     this.WriteInt32( value.Length );
                     break;
 
@@ -254,7 +292,7 @@ namespace AESharp.Networking.Data
             this.WriteChars( value.ToCharArray() );
         }
 
-        private void CheckStringLength( int actualLength, int maxAllowedLength )
+        private void ValidateStringLengthOrThrow( int actualLength, int maxAllowedLength )
         {
             if ( actualLength > maxAllowedLength )
             {
