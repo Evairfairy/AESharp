@@ -1,6 +1,6 @@
-﻿namespace AESharp.Router.Routing
+﻿namespace AESharp.Interop
 {
-    internal enum RoutingPacketId : byte
+    public enum RoutingPacketId : byte
     {
         // General communication
         InitiateHandshake = 0,

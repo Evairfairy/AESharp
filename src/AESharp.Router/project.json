@@ -6,11 +6,12 @@
 
     "dependencies": {
         "AESharp.Core": "1.0.0-*",
-        "AESharp.Networking": "1.0.0-*",
-        "Microsoft.NETCore.App": {
-            "type": "platform",
-            "version": "1.0.0"
-        }
+      "AESharp.Interop": "1.0.0-*",
+      "AESharp.Networking": "1.0.0-*",
+      "Microsoft.NETCore.App": {
+        "type": "platform",
+        "version": "1.0.0"
+      }
     },
 
     "frameworks": {

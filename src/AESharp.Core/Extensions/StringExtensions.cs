@@ -7,7 +7,7 @@ namespace AESharp.Core.Extensions
 {
     public static class StringExtensions
     {
-        public static string Flip( this string s )
+        public static string Reverse( this string s )
         {
             return new string( s.Reverse().ToArray() );
         }
@@ -26,5 +26,8 @@ namespace AESharp.Core.Extensions
                 yield return source.Substring( i, Math.Min( chunkSize, len - i ) );
             }
         }
+
+        public static string Join<T>( this IEnumerable<T> collection, string delim )
+                => String.Join( delim, collection );
     }
 }

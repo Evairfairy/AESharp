@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
+using AESharp.Interop;
 using AESharp.Router.Routing;
 
 namespace AESharp.Router
@@ -12,6 +14,7 @@ namespace AESharp.Router
             MasterRouter router = new MasterRouter( IPAddress.Any );
             router.Start();
             Console.WriteLine( $"Master router listening on {IPAddress.Any}:{RoutingRemoteClient.RoutingPort}" );
+            var client = Task.Run( async () => await RoutingRemoteClient.ConnectToMasterRouter() );
             // TODO: put some kind of command loop here in future
             Console.ReadLine();
         }

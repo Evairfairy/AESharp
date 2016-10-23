@@ -21,11 +21,11 @@ namespace AESharp.Logon.Universal.Networking.Packets
         {
             this.Error = packet.ReadByte();
             this.Size = packet.ReadUInt16();
-            this.Game = packet.ReadFixedString( 4 ).Flip();
+            this.Game = packet.ReadFixedString( 4 ).Reverse();
             this.Build = packet.ReadVersion();
-            this.Platform = packet.ReadFixedString( 4 ).Flip();
-            this.OS = packet.ReadFixedString( 4 ).Flip();
-            this.Country = packet.ReadFixedString( 4 ).Flip();
+            this.Platform = packet.ReadFixedString( 4 ).Reverse();
+            this.OS = packet.ReadFixedString( 4 ).Reverse();
+            this.Country = packet.ReadFixedString( 4 ).Reverse();
             this.TimezoneBias = packet.ReadUInt32();
             this.IP = packet.ReadIPAddress4();
             this.AccountName = packet.ReadFixedString( packet.ReadByte() );

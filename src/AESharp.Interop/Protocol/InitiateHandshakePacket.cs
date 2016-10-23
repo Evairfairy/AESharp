@@ -1,22 +1,20 @@
 ﻿using AESharp.Networking.Data;
 using AESharp.Networking.Exceptions;
 
-namespace AESharp.Router.Routing.Packets
+namespace AESharp.Interop.Protocol
 {
-    internal sealed class InitiateHandshakePacket : Packet
+    public sealed class InitiateHandshakePacket : RoutingPacket
     {
         // This packet is always the same size
         private const int ExpectedSize = sizeof( byte ) + sizeof( ushort );
-
-        public RoutingPacketId PacketId { get; } = RoutingPacketId.InitiateHandshake;
+        
         public ushort ProtocolVersion { get; }
 
         // TODO: normally protocol shouldn't be specified manually. This is only for debug purposes.
-        public InitiateHandshakePacket( ushort protocolVersion )
+        public InitiateHandshakePacket( ushort protocolVersion ) : base( RoutingPacketId.InitiateHandshake )
         {
             this.ProtocolVersion = protocolVersion;
-
-            this.WriteByte( (byte) this.PacketId );
+            
             this.WriteUInt16( this.ProtocolVersion );
         }
 
@@ -26,11 +24,10 @@ namespace AESharp.Router.Routing.Packets
             if ( this.Length < ExpectedSize )
             {
                 throw new InvalidPacketException(
-                    $"Received packet with incorrect size. Expecting {ExpectedSize} bytes, " +
-                    $"but received {this.Length} bytes instead" );
+                                                 $"Received packet with incorrect size. Expecting {ExpectedSize} bytes, " +
+                                                 $"but received {this.Length} bytes instead" );
             }
-
-            this.PacketId = (RoutingPacketId) this.ReadByte();
+            
             this.ProtocolVersion = this.ReadUInt16();
         }
     }

@@ -106,10 +106,9 @@ namespace AESharp.Networking.Data
             return new string( chars ).TrimEnd( '\0' );
         }
 
-        public string ReadByteString() => this.ReadString( StringPrefix.Byte, StringTerminator.None );
-        public string ReadShortString() => this.ReadString( StringPrefix.Byte, StringTerminator.None );
-        public string ReadInttring() => this.ReadString( StringPrefix.Byte, StringTerminator.None );
-        public string ReadCString() => this.ReadString( StringPrefix.None, StringTerminator.Null );
+        public string ReadByteString() => this.ReadString( StringType.ByteString );
+        public string ReadShortString() => this.ReadString( StringType.ShortString );
+        public string ReadCString() => this.ReadString( StringType.NullTerminatedString );
 
         public Version ReadVersion()
         {
@@ -124,36 +123,44 @@ namespace AESharp.Networking.Data
         // IPv4
         public IPAddress ReadIPAddress4() => new IPAddress( this.ReadBytes( 4 ) );
 
-        private string ReadString( StringPrefix prefix, StringTerminator terminator )
+        public DateTime ReadDateTime()
         {
-            int length;
-            switch ( prefix )
+            var timestamp = this.ReadInt64();
+            return DateTimeOffset.FromUnixTimeSeconds( timestamp ).DateTime;
+        }
+
+        public Guid ReadGuid()
+        {
+            var buffer = this.ReadBytes( 16 );
+            return new Guid( buffer );
+        }
+
+        private string ReadString( StringType stringType )
+        {
+            switch ( stringType )
             {
-                case StringPrefix.None:
+                case StringType.FixedString:
+                    throw new NotSupportedException( "This method does not support reading fixed strings" );
+
+                    case StringType.ByteString:
                 {
-                    char end;
-                    switch ( terminator )
-                    {
-                        case StringTerminator.None:
-                            throw new InvalidOperationException(
-                                "String terminator cannot be none when there is no prefix" );
+                    var length = this.ReadByte();
+                    var chars = this.ReadChars( length );
+                    return new string( chars );
+                }
 
-                        case StringTerminator.Null:
-                            end = '\0';
-                            break;
+                    case StringType.ShortString:
+                {
+                    var length = this.ReadUInt16();
+                    var chars = this.ReadChars( length );
+                    return new string( chars );
+                }
 
-                        case StringTerminator.Space:
-                            end = ' ';
-                            break;
-
-                        default:
-                            throw new NotSupportedException( Enum.GetName( typeof( StringTerminator ), terminator ) );
-                    }
-
-                    StringBuilder builder = new StringBuilder();
-
+                    case StringType.NullTerminatedString:
+                {
+                    var builder = new StringBuilder();
                     char c;
-                    while ( ( c = this.ReadChar() ) != end )
+                    while ( ( c = this.ReadChar() ) != '\0' )
                     {
                         builder.Append( c );
                     }
@@ -161,40 +168,9 @@ namespace AESharp.Networking.Data
                     return builder.ToString();
                 }
 
-                case StringPrefix.Byte:
-                    length = this.ReadByte();
-                    break;
-
-                case StringPrefix.Short:
-                    length = this.ReadByte();
-                    break;
-
-                case StringPrefix.Int:
-                    length = this.ReadInt16();
-                    break;
-
                 default:
-                    throw new NotSupportedException( Enum.GetName( typeof( StringPrefix ), prefix ) );
+                    throw new NotSupportedException( Enum.GetName( typeof( StringType ), stringType ) );
             }
-
-            string value = this.ReadFixedString( length );
-
-            switch ( terminator )
-            {
-                case StringTerminator.None:
-                    break;
-
-                // We don't actually care about these when there's a prefix
-                case StringTerminator.Null:
-                case StringTerminator.Space:
-                    this.ReadChar();
-                    break;
-
-                default:
-                    throw new NotSupportedException( Enum.GetName( typeof( StringTerminator ), terminator ) );
-            }
-
-            return value;
         }
 
         public void WriteBoolean( bool value ) => this._writer.Write( value );
@@ -214,6 +190,18 @@ namespace AESharp.Networking.Data
         public void WriteInt64( long value ) => this._writer.Write( value );
         public void WriteUInt64( ulong value ) => this._writer.Write( value );
         public void WriteSingle( float value ) => this._writer.Write( value );
+
+        public void WriteDateTime( DateTime value )
+        {
+            DateTimeOffset offset = value.Kind != DateTimeKind.Utc ? value.ToUniversalTime() : value;
+            this.WriteInt64( offset.ToUnixTimeSeconds() );
+        }
+
+        public void WriteGuid( Guid guid )
+        {
+            var bytes = guid.ToByteArray();
+            this.WriteBytes( bytes );
+        }
 
         // TODO: Does this write a fixed string? If so, rename method
         //public void WriteString( string value ) => this._writer.Write( value );

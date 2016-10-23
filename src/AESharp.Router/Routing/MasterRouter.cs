@@ -3,9 +3,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using AESharp.Interop;
 using AESharp.Networking;
 using AESharp.Networking.Data;
-using AESharp.Router.Routing.Packets;
+using AESharp.Interop.Protocol;
 
 namespace AESharp.Router.Routing
 {
