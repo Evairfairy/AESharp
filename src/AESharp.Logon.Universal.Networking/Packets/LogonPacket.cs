@@ -12,10 +12,10 @@ namespace AESharp.Logon.Universal.Networking.Packets
         /// <summary>
         ///     Automatically calculated when sending
         /// </summary>
-        public new ushort Length => (ushort)( base.Length - 1 );
+        public new ushort Length => (ushort) ( base.Length - 1 );
 
         public ArraySegment<byte> Payload
-                => new ArraySegment<byte>( this.InternalBuffer, 1, this.Length );
+            => new ArraySegment<byte>( this.InternalBuffer, 1, this.Length );
 
         public LogonPacket( byte[] data ) : base( data )
         {

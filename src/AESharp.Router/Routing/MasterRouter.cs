@@ -35,7 +35,7 @@ namespace AESharp.Router.Routing
         }
 
         internal void Start()
-                => this._server.Start( AcceptClientActionAsync );
+            => this._server.Start( AcceptClientActionAsync );
 
         internal async Task Stop()
         {

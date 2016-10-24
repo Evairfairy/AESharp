@@ -7,7 +7,9 @@ namespace AESharp.Router.Routing.Components
     public abstract class Component : RoutingRemoteClient
     {
         protected Component( IPAddress remoteAddress )
-            : base( remoteAddress, new CancellationTokenSource() ) { }
+            : base( remoteAddress, new CancellationTokenSource() )
+        {
+        }
 
         public override Task HandleDataAsync( byte[] data, CancellationToken token )
         {

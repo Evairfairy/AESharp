@@ -31,10 +31,14 @@ namespace AESharp.Networking.Data
         }
 
         public Packet( Encoding encoding = null )
-            : this( new MemoryStream(), encoding ) { }
+            : this( new MemoryStream(), encoding )
+        {
+        }
 
         public Packet( byte[] data, Encoding encoding = null )
-            : this( new MemoryStream( data ), encoding ) { }
+            : this( new MemoryStream( data ), encoding )
+        {
+        }
 
         private Packet( MemoryStream dataStream, Encoding encoding = null )
         {
@@ -109,11 +113,11 @@ namespace AESharp.Networking.Data
         public Version ReadVersion()
         {
             return new Version(
-                               this.ReadByte(),
-                               this.ReadByte(),
-                               this.ReadByte(),
-                               this.ReadUInt16()
-                              );
+                this.ReadByte(),
+                this.ReadByte(),
+                this.ReadByte(),
+                this.ReadUInt16()
+            );
         }
 
         // IPv4
@@ -203,13 +207,13 @@ namespace AESharp.Networking.Data
         //public void WriteString( string value ) => this._writer.Write( value );
 
         public void WriteFixedString( string value )
-                => this.WriteString( value, StringType.FixedString );
+            => this.WriteString( value, StringType.FixedString );
 
         public void WriteByteString( string value )
-                => this.WriteString( value, StringType.ByteString );
+            => this.WriteString( value, StringType.ByteString );
 
         public void WriteShortString( string value )
-                => this.WriteString( value, StringType.ShortString );
+            => this.WriteString( value, StringType.ShortString );
 
         // Evairfairy: I don't think we ever need this
         //public void WriteIntString( string value )
@@ -235,14 +239,14 @@ namespace AESharp.Networking.Data
                 case StringType.ByteString:
                 {
                     this.ValidateStringLengthOrThrow( value.Length, byte.MaxValue );
-                    this.WriteByte( (byte)value.Length );
+                    this.WriteByte( (byte) value.Length );
                     this.WriteChars( value.ToCharArray() );
                     return;
                 }
                 case StringType.ShortString:
                 {
                     this.ValidateStringLengthOrThrow( value.Length, ushort.MaxValue );
-                    this.WriteUInt16( (ushort)value.Length );
+                    this.WriteUInt16( (ushort) value.Length );
                     this.WriteChars( value.ToCharArray() );
                     return;
                 }
@@ -279,13 +283,13 @@ namespace AESharp.Networking.Data
                 case StringPrefix.Byte:
                     maxLength = byte.MaxValue;
                     this.ValidateStringLengthOrThrow( value.Length, maxLength );
-                    this.WriteByte( (byte)value.Length );
+                    this.WriteByte( (byte) value.Length );
                     break;
 
                 case StringPrefix.Short:
                     maxLength = short.MinValue;
                     this.ValidateStringLengthOrThrow( value.Length, maxLength );
-                    this.WriteInt16( (short)value.Length );
+                    this.WriteInt16( (short) value.Length );
                     break;
 
                 case StringPrefix.Int:
@@ -306,7 +310,7 @@ namespace AESharp.Networking.Data
             if ( actualLength > maxAllowedLength )
             {
                 throw new InvalidOperationException(
-                                                    $"String length ({actualLength:#,#0}) exceeds maximum length of {maxAllowedLength:#,#0}" );
+                    $"String length ({actualLength:#,#0}) exceeds maximum length of {maxAllowedLength:#,#0}" );
             }
         }
 

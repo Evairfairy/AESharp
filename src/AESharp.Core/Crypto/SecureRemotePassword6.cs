@@ -13,7 +13,7 @@ namespace AESharp.Core.Crypto
         private static readonly BigNumber _generator = new BigNumber( 7 );
 
         private static readonly BigNumber _modulus =
-                new BigNumber( "B79B3E2A87823CAB8F5EBFBF8EB10108535006298B5BADBD5B53E1895E644B89", 16 );
+            new BigNumber( "B79B3E2A87823CAB8F5EBFBF8EB10108535006298B5BADBD5B53E1895E644B89", 16 );
 
         private BigNumber _credentialsHash;
         private BigNumber _publicEphemeralValueA;
@@ -34,15 +34,15 @@ namespace AESharp.Core.Crypto
         public BigNumber Credentials { get; set; }
 
         public BigNumber ClientSessionKeyProof
-                =>
-                this.Hash( this.Hash( this.Modulus ) ^ this.Hash( this.Generator ), this.Hash( this.Username ),
-                           this.Salt, this.PublicEphemeralValueA,
-                           this.PublicEphemeralValueB, this.SessionKey );
+            =>
+            this.Hash( this.Hash( this.Modulus ) ^ this.Hash( this.Generator ), this.Hash( this.Username ),
+                this.Salt, this.PublicEphemeralValueA,
+                this.PublicEphemeralValueB, this.SessionKey );
 
         public BigNumber ServerSessionKeyProof
-                => this.Hash( this.PublicEphemeralValueA, this.ClientSessionKeyProof, this.SessionKey );
+            => this.Hash( this.PublicEphemeralValueA, this.ClientSessionKeyProof, this.SessionKey );
 
-        public BigNumber Multiplier => (BigNumber)3;
+        public BigNumber Multiplier => (BigNumber) 3;
 
         public BigNumber Salt
         {
@@ -237,7 +237,7 @@ namespace AESharp.Core.Crypto
         public static byte[] GenerateCredentialsHash( string username, string password )
         {
             byte[] buffer =
-                    Sha1Algorithm.ComputeHash( Encoding.UTF8.GetBytes( $"{username.ToUpper()}:{password.ToUpper()}" ) );
+                Sha1Algorithm.ComputeHash( Encoding.UTF8.GetBytes( $"{username.ToUpper()}:{password.ToUpper()}" ) );
 
             return buffer;
         }

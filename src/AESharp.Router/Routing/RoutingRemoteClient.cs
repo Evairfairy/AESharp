@@ -52,7 +52,7 @@ namespace AESharp.Router.Routing
 
             RoutingPacketId id = (RoutingPacketId) data[0];
             Console.WriteLine(
-                              $"Received {Enum.GetName( typeof( RoutingPacketId ), id )} packet (opcode 0x{(byte) id:X2})" );
+                $"Received {Enum.GetName( typeof( RoutingPacketId ), id )} packet (opcode 0x{(byte) id:X2})" );
             switch ( id )
             {
                 case RoutingPacketId.InitiateHandshake:
@@ -106,7 +106,7 @@ namespace AESharp.Router.Routing
 
                 default:
                     throw new InvalidPacketException(
-                                                     $"Received unknown or unimplemented packet (opcode: 0x{(byte) id:X2})" );
+                        $"Received unknown or unimplemented packet (opcode: 0x{(byte) id:X2})" );
             }
         }
 

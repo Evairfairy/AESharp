@@ -125,7 +125,9 @@ namespace AESharp.Networking.Data
                 this.RawClient?.Client?.Shutdown( SocketShutdown.Both );
             }
             // Socket has already been closed
-            catch ( ObjectDisposedException ) { }
+            catch ( ObjectDisposedException )
+            {
+            }
         }
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
 
             this.WriteByte( 0x0 );
             this.WriteByte( 0x0 );
-            this.WriteByte( (byte)this.Error );
+            this.WriteByte( (byte) this.Error );
 
             if ( this.Error != ChallengeResponseError.Success )
             {
@@ -81,9 +81,9 @@ namespace AESharp.Logon.Universal.Networking.Packets
             }
 
             this.WriteBytes( this.B );
-            this.WriteByte( (byte)this.g.Length );
+            this.WriteByte( (byte) this.g.Length );
             this.WriteBytes( this.g );
-            this.WriteByte( (byte)this.n.Length );
+            this.WriteByte( (byte) this.n.Length );
             this.WriteBytes( this.n );
             this.WriteBytes( this.s );
             this.WriteBytes( this.unk3 );

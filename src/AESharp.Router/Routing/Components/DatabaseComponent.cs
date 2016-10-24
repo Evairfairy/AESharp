@@ -7,7 +7,6 @@ namespace AESharp.Router.Routing.Components
         protected DatabaseComponent( IPAddress remoteAddress )
             : base( remoteAddress )
         {
-            
         }
     }
 }

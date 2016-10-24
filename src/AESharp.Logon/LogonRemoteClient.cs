@@ -17,7 +17,9 @@ namespace AESharp.Logon
         public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
 
         public LogonRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-            : base( rawClient, tokenSource ) { }
+            : base( rawClient, tokenSource )
+        {
+        }
 
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )
         {
@@ -30,7 +32,7 @@ namespace AESharp.Logon
 
             switch ( logonPacket.Opcode )
             {
-                case (byte)LogonOpcodes.Challenge:
+                case (byte) LogonOpcodes.Challenge:
                 {
                     ChallengePacket packet = new ChallengePacket( logonPacket );
                     Console.WriteLine( "Received logon packet:" );
@@ -105,7 +107,7 @@ namespace AESharp.Logon
                     }
                     break;
                 }
-                case (byte)LogonOpcodes.Proof:
+                case (byte) LogonOpcodes.Proof:
                 {
                     ProofPacket proofPacket = new ProofPacket( logonPacket );
 
@@ -135,11 +137,11 @@ namespace AESharp.Logon
 
                     break;
                 }
-                case (byte)LogonOpcodes.RealmList:
+                case (byte) LogonOpcodes.RealmList:
                 {
                     List<Realm> realms = LogonServices.Realms.GetRealms();
 
-                    short realmCount = (short)realms.Count;
+                    short realmCount = (short) realms.Count;
 
                     Console.WriteLine( $"Sending {realmCount} realms" );
 
@@ -154,14 +156,14 @@ namespace AESharp.Logon
 
                     foreach ( Realm realm in realms )
                     {
-                        realmPacket.WriteByte( (byte)realm.Type );
+                        realmPacket.WriteByte( (byte) realm.Type );
                         realmPacket.WriteBoolean( realm.IsLocked );
-                        realmPacket.WriteByte( (byte)realm.Flags );
+                        realmPacket.WriteByte( (byte) realm.Flags );
                         realmPacket.WriteCString( realm.Name );
                         realmPacket.WriteCString( realm.Address );
                         realmPacket.WriteSingle( realm.Population );
                         realmPacket.WriteByte( 3 ); // Characters
-                        realmPacket.WriteByte( (byte)realm.Region );
+                        realmPacket.WriteByte( (byte) realm.Region );
                         realmPacket.WriteByte( 0 ); // Unk
                     }
 
@@ -169,7 +171,7 @@ namespace AESharp.Logon
                     realmPacket.WriteByte( 0x0 );
 
                     realmPacket.BufferPosition = oldPosition;
-                    realmPacket.WriteInt16( (short)( realmPacket.Length - 3 ) );
+                    realmPacket.WriteInt16( (short) ( realmPacket.Length - 3 ) );
 
                     await this.SendPacketAsync( realmPacket, token );
 

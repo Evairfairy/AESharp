@@ -23,8 +23,8 @@ namespace AESharp.Router.Protocol
             if ( this.Length < ExpectedSize )
             {
                 throw new InvalidPacketException(
-                                                 $"Received packet with incorrect size. Expecting {ExpectedSize} bytes, " +
-                                                 $"but received {this.Length} bytes instead" );
+                    $"Received packet with incorrect size. Expecting {ExpectedSize} bytes, " +
+                    $"but received {this.Length} bytes instead" );
             }
 
             this.ProtocolVersion = this.ReadUInt16();

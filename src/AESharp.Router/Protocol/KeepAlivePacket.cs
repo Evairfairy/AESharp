@@ -23,6 +23,6 @@ namespace AESharp.Router.Protocol
         }
 
         public KeepAlivePacket WithDateTime( DateTime newDateTime )
-                => new KeepAlivePacket( newDateTime, this.Guid );
+            => new KeepAlivePacket( newDateTime, this.Guid );
     }
 }

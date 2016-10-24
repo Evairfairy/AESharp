@@ -34,11 +34,11 @@ namespace AESharp.World.Networking
                 {
                     byte[] header = new byte[4];
 
-                    byte[] sizeBytes = BitConverter.GetBytes( (ushort)this.InternalBuffer.Length );
+                    byte[] sizeBytes = BitConverter.GetBytes( (ushort) this.InternalBuffer.Length );
                     Array.Reverse( sizeBytes );
 
 
-                    byte[] opcodeBytes = BitConverter.GetBytes( (ushort)this.Opcode );
+                    byte[] opcodeBytes = BitConverter.GetBytes( (ushort) this.Opcode );
 
                     Array.Copy( sizeBytes, 0, header, 0, 2 );
                     Array.Copy( opcodeBytes, 0, header, 2, 2 );
@@ -49,10 +49,10 @@ namespace AESharp.World.Networking
                 {
                     byte[] header = new byte[6];
 
-                    byte[] sizeBytes = BitConverter.GetBytes( (ushort)this.InternalBuffer.Length );
+                    byte[] sizeBytes = BitConverter.GetBytes( (ushort) this.InternalBuffer.Length );
                     Array.Reverse( sizeBytes );
 
-                    byte[] opcodeBytes = BitConverter.GetBytes( (uint)this.Opcode );
+                    byte[] opcodeBytes = BitConverter.GetBytes( (uint) this.Opcode );
 
                     Array.Copy( sizeBytes, 0, header, 0, 2 );
                     Array.Copy( opcodeBytes, 0, header, 2, 4 );
@@ -89,7 +89,7 @@ namespace AESharp.World.Networking
             if ( data.Length < this.HeaderSize )
             {
                 throw new InvalidPacketException(
-                                                 $"{nameof( data )} must be at least {this.HeaderSize} bytes (packet header)" );
+                    $"{nameof( data )} must be at least {this.HeaderSize} bytes (packet header)" );
             }
 
             byte[] headerBytes = new byte[this.HeaderSize];
