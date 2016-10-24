@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using AESharp.Networking.Data;
 using AESharp.Networking.Exceptions;
 using AESharp.Networking.Extensions;
-using AESharp.Realm.Networking.Packets;
+using AESharp.World.Networking.Packets;
 
-namespace AESharp.Realm.Networking
+namespace AESharp.World.Networking
 {
     public class RealmRemoteClient : RemoteClient
     {

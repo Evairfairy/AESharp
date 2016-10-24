@@ -1,4 +1,4 @@
-﻿namespace AESharp.Realm.Networking.Packets
+﻿namespace AESharp.World.Networking.Packets
 {
     public class CmsgAuthSession
     {

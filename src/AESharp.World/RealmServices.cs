@@ -1,7 +1,7 @@
 ﻿using AESharp.Networking.Data;
-using AESharp.Realm.Networking;
+using AESharp.World.Networking;
 
-namespace AESharp.Realm
+namespace AESharp.World
 {
     public static class RealmServices
     {

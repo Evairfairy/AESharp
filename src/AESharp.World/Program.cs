@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Core.Extensions;
 using AESharp.Networking;
-using AESharp.Realm.Networking;
+using AESharp.World.Networking;
 
-namespace AESharp.Realm
+namespace AESharp.World
 {
     public class Program
     {

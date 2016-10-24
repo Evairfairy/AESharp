@@ -2,7 +2,7 @@
 using AESharp.Networking.Data;
 using AESharp.Networking.Exceptions;
 
-namespace AESharp.Realm.Networking
+namespace AESharp.World.Networking
 {
     public class RealmPacket : Packet
     {
