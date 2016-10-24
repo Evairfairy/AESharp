@@ -1,8 +1,9 @@
 ﻿using System;
+using AESharp.Routing.Networking;
 
-namespace AESharp.Router.Protocol
+namespace AESharp.Routing.Protocol
 {
-    public sealed class KeepAlivePacket : RoutingPacket
+    public sealed class KeepAlivePacket : AEPacket
     {
         public DateTime TimeSent { get; }
         public Guid Guid { get; }
@@ -13,7 +14,7 @@ namespace AESharp.Router.Protocol
             this.Guid = this.ReadGuid();
         }
 
-        public KeepAlivePacket( DateTime timeSent, Guid guid ) : base( RoutingPacketId.KeepAlive )
+        public KeepAlivePacket( DateTime timeSent, Guid guid ) : base( AEPacketId.KeepAlive )
         {
             this.TimeSent = timeSent;
             this.Guid = guid;

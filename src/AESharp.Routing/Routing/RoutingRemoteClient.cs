@@ -5,9 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Networking.Data;
 using AESharp.Networking.Exceptions;
-using AESharp.Router.Protocol;
+using AESharp.Routing.Networking;
+using AESharp.Routing.Protocol;
 
-namespace AESharp.Router.Routing
+namespace AESharp.Routing.Routing
 {
     public class RoutingRemoteClient : RemoteClient
     {
@@ -50,12 +51,12 @@ namespace AESharp.Router.Routing
                 return;
             }
 
-            RoutingPacketId id = (RoutingPacketId) data[0];
+            AEPacketId id = (AEPacketId) data[0];
             Console.WriteLine(
-                $"Received {Enum.GetName( typeof( RoutingPacketId ), id )} packet (opcode 0x{(byte) id:X2})" );
+                $"Received {Enum.GetName( typeof( AEPacketId ), id )} packet (opcode 0x{(byte) id:X2})" );
             switch ( id )
             {
-                case RoutingPacketId.InitiateHandshake:
+                case AEPacketId.ClientHandshakeBegin:
                 {
                     InitiateHandshakePacket packet = new InitiateHandshakePacket( data );
                     if ( packet.ProtocolVersion != ProtocolVersion )
@@ -68,7 +69,7 @@ namespace AESharp.Router.Routing
                     break;
                 }
 
-                case RoutingPacketId.KeepAlive:
+                case AEPacketId.KeepAlive:
                 {
                     KeepAlivePacket keepAlive = new KeepAlivePacket( data );
                     if ( this.OutboundMode )
@@ -91,7 +92,7 @@ namespace AESharp.Router.Routing
                     break;
                 }
 
-                case RoutingPacketId.Disconnect:
+                case AEPacketId.Disconnect:
                 {
                     DisconnectPacket disconnect = new DisconnectPacket( data );
                     Console.WriteLine( $"Client kicked. Reason: {disconnect.Reason}" );

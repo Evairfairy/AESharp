@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Networking;
 using AESharp.Networking.Data;
-using AESharp.Router.Protocol;
-using AESharp.Router.Routing.Components;
+using AESharp.Routing.Protocol;
+using AESharp.Routing.Routing.Components;
 
-namespace AESharp.Router.Routing
+namespace AESharp.Routing.Routing
 {
     public sealed class MasterRouter
     {

@@ -1,15 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using AESharp.MasterRouter.Networking;
+using AESharp.Networking;
+using AESharp.Routing.Exceptions;
 
 namespace AESharp.MasterRouter
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main( string[] args )
         {
+            try
+            {
+                MasterRouterServices.PacketHandler.ThrowIfRequiredHandlerNotRegistered();
+            }
+            catch ( UnregisteredAEHandlerException ex )
+            {
+                Console.WriteLine( ex.Message );
+            }
 
+            TcpServer server = new TcpServer( new IPEndPoint( IPAddress.Loopback, 12000 ) );
+            server.Start( AcceptAEClientAsync );
+
+            Console.ReadLine();
+        }
+
+        private static async void AcceptAEClientAsync( TcpClient rawClient )
+        {
+            AERemoteClient client = new AERemoteClient( rawClient, new CancellationTokenSource() );
+
+            Console.WriteLine( "Got AEClient, kicking" );
+            await client.Disconnect( TimeSpan.Zero );
         }
     }
 }

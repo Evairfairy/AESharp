@@ -1,8 +1,9 @@
 ﻿using AESharp.Networking.Exceptions;
+using AESharp.Routing.Networking;
 
-namespace AESharp.Router.Protocol
+namespace AESharp.Routing.Protocol
 {
-    public sealed class InitiateHandshakePacket : RoutingPacket
+    public sealed class InitiateHandshakePacket : AEPacket
     {
         // This packet is always the same size
         private const int ExpectedSize = sizeof( byte ) + sizeof( ushort );
@@ -10,7 +11,7 @@ namespace AESharp.Router.Protocol
         public ushort ProtocolVersion { get; }
 
         // TODO: normally protocol shouldn't be specified manually. This is only for debug purposes.
-        public InitiateHandshakePacket( ushort protocolVersion ) : base( RoutingPacketId.InitiateHandshake )
+        public InitiateHandshakePacket( ushort protocolVersion ) : base( AEPacketId.ClientHandshakeBegin )
         {
             this.ProtocolVersion = protocolVersion;
 

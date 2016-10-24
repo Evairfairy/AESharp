@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
-using AESharp.Router.Routing;
+using AESharp.Routing.Routing;
 
-namespace AESharp.Router
+namespace AESharp.Routing
 {
     public class Program
     {
