@@ -45,7 +45,8 @@ namespace AESharp.Routing.Networking.Packets
             {
                 if ( id.ToString().StartsWith( "Client" ) )
                 {
-                    if ( this.IsMasterServer )
+                    // The client doesn't need to handle client-only packets
+                    if ( !this.IsMasterServer )
                     {
                         continue;
                     }
@@ -53,7 +54,8 @@ namespace AESharp.Routing.Networking.Packets
 
                 if ( id.ToString().StartsWith( "Server" ) )
                 {
-                    if ( !this.IsMasterServer )
+                    // The server doesn't need to handle server-only packets
+                    if ( this.IsMasterServer )
                     {
                         continue;
                     }
