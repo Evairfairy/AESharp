@@ -1,7 +1,9 @@
-﻿using System.Net.Sockets;
+﻿using System;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Networking.Data;
+using AESharp.Routing.Exceptions;
 using AESharp.Routing.Networking;
 
 namespace AESharp.MasterRouter.Networking
@@ -14,15 +16,29 @@ namespace AESharp.MasterRouter.Networking
 
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )
         {
-            // Read packet
-            AEPacket packet = new AEPacket(data);
-
-            if ( token.IsCancellationRequested )
+            try
             {
-                return;
-            }
+                // Read packet
+                AEPacket packet = new AEPacket( data );
 
-            // Switch opcode
+                if ( token.IsCancellationRequested )
+                {
+                    return;
+                }
+
+                await MasterRouterServices.PacketHandler.HandlePacket( packet, this );
+            }
+            // Client sent an unknown packet id
+            catch ( UnhandledAEPacketException ex )
+            {
+                Console.WriteLine(ex);
+                await this.Disconnect( TimeSpan.Zero );
+            }
+            // Client sent a known packet id but we're not handling it
+            catch ( UnregisteredAEHandlerException ex )
+            {
+                Console.WriteLine( ex );
+            }
         }
     }
 }

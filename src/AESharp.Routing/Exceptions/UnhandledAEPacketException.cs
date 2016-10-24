@@ -17,7 +17,7 @@ namespace AESharp.Routing.Exceptions
         {
         }
 
-        public UnhandledAEPacketException( int opcode ) : base( $"Unhandled AEPacket: 0x{opcode:x}" )
+        public UnhandledAEPacketException( int opcode ) : base( $"Unhandled AEPacketId: {opcode:x}" )
         {
         }
     }
