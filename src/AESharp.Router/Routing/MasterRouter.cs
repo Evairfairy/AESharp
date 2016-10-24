@@ -3,28 +3,27 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using AESharp.Interop;
-using AESharp.Interop.Protocol;
 using AESharp.Networking;
 using AESharp.Networking.Data;
+using AESharp.Router.Protocol;
+using AESharp.Router.Routing.Components;
 
 namespace AESharp.Router.Routing
 {
     public sealed class MasterRouter
     {
-        private static MasterRouter _instance;
         private static readonly RemoteClientRepository<RemoteClient> ClientRepository;
+        private static readonly RemoteClientRepository<DatabaseComponent> DatabaseRepository;
 
         private readonly TcpServer _server;
-
-        public static MasterRouter Instance => _instance ?? ( _instance = new MasterRouter() );
 
         static MasterRouter()
         {
             ClientRepository = new RemoteClientRepository<RemoteClient>();
+            DatabaseRepository = new RemoteClientRepository<DatabaseComponent>();
         }
 
-        private MasterRouter()
+        internal MasterRouter()
         {
             // Client-mode constructor
         }
