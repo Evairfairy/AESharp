@@ -12,7 +12,7 @@ namespace AESharp.Routing.Extensions
             int id = packet.ReadInt32();
             if ( !Enum.IsDefined( typeof( AEPacketId ), id ) )
             {
-                throw new UnhandledAEPacketException(id);
+                throw new UnhandledAEPacketException( id );
             }
 
             return (AEPacketId) id;

@@ -24,7 +24,7 @@ namespace AESharp.Routing.Networking
         {
             if ( data.Length < this.HeaderSize )
             {
-                throw new InvalidPacketException($"Malformed packet header: expected at least {this.HeaderSize} bytes");
+                throw new InvalidPacketException( $"Malformed packet header: expected at least {this.HeaderSize} bytes" );
             }
 
             this.PacketId = this.ReadPacketId();

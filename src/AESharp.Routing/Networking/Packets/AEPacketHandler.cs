@@ -15,7 +15,7 @@ namespace AESharp.Routing.Networking.Packets
             Func<AEPacket, TPacketContext, Task>
         >();
 
-        protected bool IsMasterServer { get; private set; }
+        protected bool IsMasterServer { get; }
 
         public AEPacketHandler( bool isMasterServer )
         {

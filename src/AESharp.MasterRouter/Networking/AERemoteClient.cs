@@ -10,7 +10,8 @@ namespace AESharp.MasterRouter.Networking
 {
     public class AERemoteClient : RemoteClient
     {
-        public AERemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource ) : base( rawClient, tokenSource )
+        public AERemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
+            : base( rawClient, tokenSource )
         {
         }
 
@@ -31,7 +32,7 @@ namespace AESharp.MasterRouter.Networking
             // Client sent an unknown packet id
             catch ( UnhandledAEPacketException ex )
             {
-                Console.WriteLine(ex);
+                Console.WriteLine( ex );
                 await this.Disconnect( TimeSpan.Zero );
             }
             // Client sent a known packet id but we're not handling it
