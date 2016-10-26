@@ -8,6 +8,7 @@ using SimpleInjector;
 
 namespace AESharp.Logon
 {
+    // ReSharper disable once UnusedMember.Global
     public static class Program
     {
         private static Container _container;
@@ -19,6 +20,7 @@ namespace AESharp.Logon
             _container.Verify();
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static void Main( string[] args )
         {
             try
