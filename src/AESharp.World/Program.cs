@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Core.Extensions;
 using AESharp.Networking;
@@ -23,7 +22,7 @@ namespace AESharp.World
         private static async void AcceptClientActionAsync( TcpClient rawClient )
         {
             Console.WriteLine( "Accepting Realm Client" );
-            RealmRemoteClient client = new RealmRemoteClient( rawClient, new CancellationTokenSource() );
+            RealmRemoteClient client = new RealmRemoteClient( rawClient );
 
             Guid clientGuid = Guid.Empty;
 
@@ -52,7 +51,7 @@ namespace AESharp.World
                         await client.SendDataAsync( packet.FinalizePacket() );
                     } ).RunAsync();
 
-                await client.ListenForDataTask( client.CancellationToken );
+                await client.ListenForDataTask();
             }
             catch ( Exception ex )
             {

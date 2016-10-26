@@ -8,7 +8,6 @@ namespace AESharp.Networking
 {
     public sealed class TcpServer
     {
-        public const int BufferSize = 4096;
         private TcpListener _listener;
 
         public bool IsListening { get; private set; }

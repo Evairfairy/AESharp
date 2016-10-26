@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Core.Crypto;
 using AESharp.Core.Extensions;
@@ -17,19 +16,33 @@ namespace AESharp.Logon
     {
         public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
 
-        public LogonRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-            : base( rawClient, tokenSource )
+        public LogonRemoteClient( TcpClient rawClient ) : base( rawClient )
         {
         }
 
-        public override async Task HandleDataAsync( byte[] data, CancellationToken token )
+        public override async Task SendDataAsync( byte[] data )
         {
-            LogonPacket logonPacket = new LogonPacket( data );
+            data = await LogonServices.OutgoingLogonMiddleware.RunMiddlewareAsync( data, this );
 
-            if ( token.IsCancellationRequested )
+            if ( data == null )
             {
+                Console.WriteLine( "Outgoing logon middleware handlers nulled outgoing data" );
                 return;
             }
+
+            await base.SendDataAsync( data );
+        }
+
+        public override async Task HandleDataAsync( byte[] data )
+        {
+            data = await LogonServices.IncomingLogonMiddleware.RunMiddlewareAsync( data, this );
+            if ( data == null )
+            {
+                Console.WriteLine( "Incoming logon middleware handlers nulled incoming data" );
+                return;
+            }
+
+            LogonPacket logonPacket = new LogonPacket( data );
 
             switch ( logonPacket.Opcode )
             {
@@ -58,7 +71,7 @@ namespace AESharp.Logon
                         {
                             Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
                         };
-                        await this.SendDataAsync( response.FinalizePacket(), token );
+                        await this.SendDataAsync( response.FinalizePacket() );
                     }
                     else
                     {
@@ -71,8 +84,8 @@ namespace AESharp.Logon
                             {
                                 Error = ChallengeResponsePacket.ChallengeResponseError.AccountClosed
                             };
-                            await this.SendDataAsync( response.FinalizePacket(), token );
-                            await this.Disconnect( TimeSpan.FromMilliseconds( 100 ) );
+                            await this.SendDataAsync( response.FinalizePacket() );
+                            this.Disconnect();
                             return;
                         }
 
@@ -104,7 +117,7 @@ namespace AESharp.Logon
 
                         pack.WriteByte( 0 );
 
-                        await this.SendDataAsync( pack.FinalizePacket(), token );
+                        await this.SendDataAsync( pack.FinalizePacket() );
                     }
                     break;
                 }
@@ -122,7 +135,7 @@ namespace AESharp.Logon
                         {
                             Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
                         };
-                        await this.SendDataAsync( response.FinalizePacket(), token );
+                        await this.SendDataAsync( response.FinalizePacket() );
                         return;
                     }
 
@@ -134,7 +147,7 @@ namespace AESharp.Logon
                     successPacket.WriteInt32( 0 );
                     successPacket.WriteInt16( 0 );
 
-                    await this.SendDataAsync( successPacket.FinalizePacket(), token );
+                    await this.SendDataAsync( successPacket.FinalizePacket() );
 
                     break;
                 }
@@ -174,7 +187,7 @@ namespace AESharp.Logon
                     realmPacket.BufferPosition = oldPosition;
                     realmPacket.WriteInt16( (short) ( realmPacket.Length - 3 ) );
 
-                    await this.SendDataAsync( realmPacket.FinalizePacket(), token );
+                    await this.SendDataAsync( realmPacket.FinalizePacket() );
 
                     break;
                 }

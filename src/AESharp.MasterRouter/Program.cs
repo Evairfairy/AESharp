@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using AESharp.Networking;
 using AESharp.Routing.Networking;
 
@@ -20,14 +19,13 @@ namespace AESharp.MasterRouter
         private static async void AcceptAEClientAsync( TcpClient rawClient )
         {
             Console.WriteLine( "Accepting AEClient" );
-            AERoutingClient client = new AERoutingClient( rawClient, MasterRouterServices.PacketHandler,
-                new CancellationTokenSource() );
+            AERoutingClient client = new AERoutingClient( rawClient, MasterRouterServices.PacketHandler );
 
             Guid clientGuid = Guid.Empty;
             try
             {
                 clientGuid = MasterRouterServices.RemoteClients.AddClient( client );
-                await client.ListenForDataTask( client.CancellationToken );
+                await client.ListenForDataTask();
             }
             catch ( Exception ex )
             {
@@ -41,7 +39,7 @@ namespace AESharp.MasterRouter
                 }
             }
 
-            await client.Disconnect( TimeSpan.Zero );
+            client.Disconnect();
         }
     }
 }

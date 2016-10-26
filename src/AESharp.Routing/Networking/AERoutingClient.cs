@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Networking.Data;
 using AESharp.Routing.Exceptions;
@@ -12,13 +11,12 @@ namespace AESharp.Routing.Networking
     {
         private readonly AEPacketHandler<AERoutingClient> _handler;
 
-        public AERoutingClient( TcpClient rawClient, AEPacketHandler<AERoutingClient> handler,
-            CancellationTokenSource tokenSource ) : base( rawClient, tokenSource )
+        public AERoutingClient( TcpClient rawClient, AEPacketHandler<AERoutingClient> handler ) : base( rawClient )
         {
             this._handler = handler;
         }
 
-        public override async Task HandleDataAsync( byte[] data, CancellationToken token )
+        public override async Task HandleDataAsync( byte[] data )
         {
             try
             {
@@ -32,7 +30,7 @@ namespace AESharp.Routing.Networking
             catch ( UnhandledAEPacketException ex )
             {
                 Console.WriteLine( ex );
-                await this.Disconnect( TimeSpan.Zero );
+                this.Disconnect();
                 throw;
             }
             // Server sent a known packet id but we're not handling it

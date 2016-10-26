@@ -27,7 +27,7 @@ namespace AESharp.Routing.Networking.Handlers
             {
                 response.Result = ServerHandshakeResultPacket.SHRPResult.Failure;
                 await context.SendDataAsync( response.FinalizePacket() );
-                await context.Disconnect( TimeSpan.FromMilliseconds( 500 ) );
+                context.Disconnect();
 
                 return;
             }

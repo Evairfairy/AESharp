@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Networking.Data;
 using AESharp.Networking.Exceptions;
-using AESharp.Networking.Extensions;
 using AESharp.World.Networking.Packets;
 
 namespace AESharp.World.Networking
@@ -30,18 +28,13 @@ namespace AESharp.World.Networking
             }
         }
 
-        public RealmRemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-            : base( rawClient, tokenSource )
+        public RealmRemoteClient( TcpClient rawClient ) : base( rawClient )
         {
         }
 
-        public override async Task HandleDataAsync( byte[] data, CancellationToken token )
+        public override async Task HandleDataAsync( byte[] data )
         {
             RealmPacket realmPacket = new RealmPacket( data, false );
-            if ( token.IsCancellationRequested )
-            {
-                return;
-            }
 
             switch ( realmPacket.Opcode )
             {
@@ -60,7 +53,7 @@ namespace AESharp.World.Networking
                     Console.WriteLine( $"\tUnk7:\t\t{packet.Unk7}" );
 
                     // Currently unhandled
-                    await this.DisconnectEx( 500 );
+                    this.Disconnect();
 
                     break;
                 }

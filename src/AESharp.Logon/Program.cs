@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Networking;
 using AESharp.Routing.Networking;
@@ -47,20 +46,19 @@ namespace AESharp.Logon
             TcpClient client = new TcpClient();
             await client.ConnectAsync( address, port );
 
-            AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler,
-                new CancellationTokenSource() );
+            AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler );
         }
 
         private static async void AcceptClientActionAsync( TcpClient rawClient )
         {
             Console.WriteLine( "Accepting client" );
-            LogonRemoteClient client = new LogonRemoteClient( rawClient, new CancellationTokenSource() );
+            LogonRemoteClient client = new LogonRemoteClient( rawClient );
 
             Guid clientGuid = Guid.Empty;
             try
             {
                 clientGuid = LogonServices.LogonClients.AddClient( client );
-                await client.ListenForDataTask( client.CancellationToken );
+                await client.ListenForDataTask();
             }
             catch ( Exception ex )
             {
