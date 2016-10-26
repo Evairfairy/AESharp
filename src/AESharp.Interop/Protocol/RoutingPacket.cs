@@ -1,5 +1,5 @@
 ﻿using AESharp.Interop.Extensions;
-using AESharp.Networking.Data;
+using AESharp.Networking.Data.Packets;
 
 namespace AESharp.Interop.Protocol
 {

@@ -1,5 +1,7 @@
 ﻿using AESharp.Logon.Repositories;
 using AESharp.Networking.Data;
+using AESharp.Routing.Networking;
+using AESharp.Routing.Networking.Packets;
 
 namespace AESharp.Logon
 {
@@ -11,7 +13,6 @@ namespace AESharp.Logon
         public static RemoteClientRepository<LogonRemoteClient> LogonClients =
             new RemoteClientRepository<LogonRemoteClient>();
 
-        public static RemoteClientRepository<InteropRemoteClient> InteropClients =
-            new RemoteClientRepository<InteropRemoteClient>();
+        public static AEPacketHandler<AERoutingClient> InteropPacketHandler = new AEPacketHandler<AERoutingClient>();
     }
 }

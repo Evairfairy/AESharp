@@ -4,15 +4,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using AESharp.Networking.Data;
 using AESharp.Routing.Exceptions;
-using AESharp.Routing.Networking;
+using AESharp.Routing.Networking.Packets;
 
-namespace AESharp.MasterRouter.Networking
+namespace AESharp.Routing.Networking
 {
-    public class AERemoteClient : RemoteClient
+    public class AERoutingClient : RemoteClient
     {
-        public AERemoteClient( TcpClient rawClient, CancellationTokenSource tokenSource )
-            : base( rawClient, tokenSource )
+        private readonly AEPacketHandler<AERoutingClient> _handler;
+
+        public AERoutingClient( TcpClient rawClient, AEPacketHandler<AERoutingClient> handler,
+            CancellationTokenSource tokenSource ) : base( rawClient, tokenSource )
         {
+            this._handler = handler;
         }
 
         public override async Task HandleDataAsync( byte[] data, CancellationToken token )
@@ -22,20 +25,17 @@ namespace AESharp.MasterRouter.Networking
                 // Read packet
                 AEPacket packet = new AEPacket( data );
 
-                if ( token.IsCancellationRequested )
-                {
-                    return;
-                }
-
-                await MasterRouterServices.PacketHandler.HandlePacket( packet, this );
+                await this._handler.HandlePacket( packet, this );
             }
-            // Client sent an unknown packet id
+            // Server sent an unknown packet id
+            // This should never happen so rethrow
             catch ( UnhandledAEPacketException ex )
             {
                 Console.WriteLine( ex );
                 await this.Disconnect( TimeSpan.Zero );
+                throw;
             }
-            // Client sent a known packet id but we're not handling it
+            // Server sent a known packet id but we're not handling it
             catch ( UnregisteredAEHandlerException ex )
             {
                 Console.WriteLine( ex );

@@ -49,7 +49,7 @@ namespace AESharp.World
                     {
                         // Give us time to start listening
                         await Task.Delay( 500 );
-                        await client.SendPacketAsync( packet );
+                        await client.SendDataAsync( packet.FinalizePacket() );
                     } ).RunAsync();
 
                 await client.ListenForDataTask( client.CancellationToken );

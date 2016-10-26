@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
 
-namespace AESharp.Networking.Data
+namespace AESharp.Networking.Data.Packets
 {
-    public class Packet //: IDisposable
+    public class Packet : IPacket
     {
         private readonly MemoryStream _memoryStream;
         private readonly BinaryReader _reader;
         private readonly BinaryWriter _writer;
+        private bool _finalized = false;
 
         public bool Disposed { get; private set; }
         public long Length => this._memoryStream.Length;
@@ -30,6 +31,8 @@ namespace AESharp.Networking.Data
             set { this._memoryStream.Position = value; }
         }
 
+        public int BufferLength => this.InternalBuffer.Length;
+
         public Packet( Encoding encoding = null )
             : this( new MemoryStream(), encoding )
         {
@@ -49,6 +52,15 @@ namespace AESharp.Networking.Data
         }
 
         /// <summary>
+        ///     Returns the byte[] representation of the current packet
+        /// </summary>
+        /// <returns>The byte[] representation of the current packet</returns>
+        public virtual byte[] FinalizePacket()
+        {
+            return this.InternalBuffer;
+        }
+
+        /// <summary>
         ///     Seeks to the beginning of the packet
         /// </summary>
         public void SeekToBegin()
@@ -62,15 +74,6 @@ namespace AESharp.Networking.Data
         public void SeekToEnd()
         {
             this._memoryStream.Seek( 0, SeekOrigin.End );
-        }
-
-        /// <summary>
-        ///     Returns the byte[] representation of the current packet
-        /// </summary>
-        /// <returns>The byte[] representation of the current packet</returns>
-        public virtual byte[] BuildPacket()
-        {
-            return this.InternalBuffer;
         }
 
         public void Dispose() => this.Dispose( true );
@@ -203,9 +206,6 @@ namespace AESharp.Networking.Data
             this.WriteBytes( bytes );
         }
 
-        // TODO: Does this write a fixed string? If so, rename method
-        //public void WriteString( string value ) => this._writer.Write( value );
-
         public void WriteFixedString( string value )
             => this.WriteString( value, StringType.FixedString );
 
@@ -214,10 +214,6 @@ namespace AESharp.Networking.Data
 
         public void WriteShortString( string value )
             => this.WriteString( value, StringType.ShortString );
-
-        // Evairfairy: I don't think we ever need this
-        //public void WriteIntString( string value )
-        //    => this.WriteString( value, StringPrefix.Int, StringTerminator.None );
 
         public void WriteCString( string value ) => this.WriteString( value, StringType.NullTerminatedString );
 

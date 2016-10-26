@@ -8,6 +8,7 @@ using AESharp.Core.Extensions;
 using AESharp.Logon.Accounts;
 using AESharp.Logon.Universal.Networking.Packets;
 using AESharp.Networking.Data;
+using AESharp.Networking.Data.Packets;
 using AESharp.Networking.Exceptions;
 
 namespace AESharp.Logon
@@ -57,7 +58,7 @@ namespace AESharp.Logon
                         {
                             Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
                         };
-                        await this.SendPacketAsync( response.Build(), token );
+                        await this.SendDataAsync( response.FinalizePacket(), token );
                     }
                     else
                     {
@@ -70,7 +71,7 @@ namespace AESharp.Logon
                             {
                                 Error = ChallengeResponsePacket.ChallengeResponseError.AccountClosed
                             };
-                            await this.SendPacketAsync( response.Build(), token );
+                            await this.SendDataAsync( response.FinalizePacket(), token );
                             await this.Disconnect( TimeSpan.FromMilliseconds( 100 ) );
                             return;
                         }
@@ -103,7 +104,7 @@ namespace AESharp.Logon
 
                         pack.WriteByte( 0 );
 
-                        await this.SendPacketAsync( pack, token );
+                        await this.SendDataAsync( pack.FinalizePacket(), token );
                     }
                     break;
                 }
@@ -121,7 +122,7 @@ namespace AESharp.Logon
                         {
                             Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
                         };
-                        await this.SendPacketAsync( response.Build(), token );
+                        await this.SendDataAsync( response.FinalizePacket(), token );
                         return;
                     }
 
@@ -133,7 +134,7 @@ namespace AESharp.Logon
                     successPacket.WriteInt32( 0 );
                     successPacket.WriteInt16( 0 );
 
-                    await this.SendPacketAsync( successPacket, token );
+                    await this.SendDataAsync( successPacket.FinalizePacket(), token );
 
                     break;
                 }
@@ -173,7 +174,7 @@ namespace AESharp.Logon
                     realmPacket.BufferPosition = oldPosition;
                     realmPacket.WriteInt16( (short) ( realmPacket.Length - 3 ) );
 
-                    await this.SendPacketAsync( realmPacket, token );
+                    await this.SendDataAsync( realmPacket.FinalizePacket(), token );
 
                     break;
                 }

@@ -2,9 +2,8 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using AESharp.MasterRouter.Networking;
 using AESharp.Networking;
-using AESharp.Routing.Exceptions;
+using AESharp.Routing.Networking;
 
 namespace AESharp.MasterRouter
 {
@@ -12,15 +11,6 @@ namespace AESharp.MasterRouter
     {
         public static void Main( string[] args )
         {
-            try
-            {
-                MasterRouterServices.PacketHandler.ThrowIfRequiredHandlerNotRegistered();
-            }
-            catch ( UnregisteredAEHandlerException ex )
-            {
-                Console.WriteLine( ex.Message );
-            }
-
             TcpServer server = new TcpServer( new IPEndPoint( IPAddress.Loopback, 12000 ) );
             server.Start( AcceptAEClientAsync );
 
@@ -30,7 +20,8 @@ namespace AESharp.MasterRouter
         private static async void AcceptAEClientAsync( TcpClient rawClient )
         {
             Console.WriteLine( "Accepting AEClient" );
-            AERemoteClient client = new AERemoteClient( rawClient, new CancellationTokenSource() );
+            AERoutingClient client = new AERoutingClient( rawClient, MasterRouterServices.PacketHandler,
+                new CancellationTokenSource() );
 
             Guid clientGuid = Guid.Empty;
             try

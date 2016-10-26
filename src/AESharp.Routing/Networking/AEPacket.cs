@@ -1,47 +1,48 @@
-﻿using AESharp.Networking.Data;
+﻿using System;
+using AESharp.Networking.Data.Packets;
 using AESharp.Networking.Exceptions;
 using AESharp.Routing.Extensions;
 
 namespace AESharp.Routing.Networking
 {
-    public class AEPacket : Packet
+    public class AEPacket : ManagedPacket
     {
-        public AEPacketId PacketId { get; }
-        public ushort Size { get; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        private bool _finalized = false;
 
-        public ushort HeaderSize => sizeof( int ) + sizeof( ushort );
+        public AEPacketId PacketId { get; }
 
         public AEPacket( AEPacketId packetId )
         {
             this.PacketId = packetId;
-
-            this.WritePacketId( packetId );
-            this.WriteUInt16( 0 );
         }
 
         public AEPacket( byte[] data )
             : base( data )
         {
-            if ( data.Length < this.HeaderSize )
+            if ( data.Length < sizeof( AEPacketId ) )
             {
-                throw new InvalidPacketException( $"Malformed packet header: expected at least {this.HeaderSize} bytes" );
+                throw new InvalidPacketException(
+                    $"Malformed packet header: expected at least {sizeof( AEPacketId )} bytes" );
             }
 
-            this.PacketId = this.ReadPacketId();
-            this.Size = this.ReadUInt16();
+            this.PacketId = this.InternalPacket.ReadPacketId();
         }
 
-        public AEPacket()
+        public override byte[] FinalizePacket()
         {
-            this.WriteInt32( 0 );
-            this.WriteInt16( 0 );
-        }
+            if ( this._finalized )
+            {
+                throw new InvalidOperationException( "A packet may only be finalized once." );
+            }
+            this._finalized = true;
 
-        public override byte[] BuildPacket()
-        {
-            byte[] buffer = new byte[this.HeaderSize + this.InternalBuffer.Length];
+            Packet myLittlePacket = new Packet();
 
-            return buffer;
+            myLittlePacket.WriteInt32( (int) this.PacketId );
+            myLittlePacket.WriteBytes( this.InternalPacket.FinalizePacket() );
+
+            return myLittlePacket.FinalizePacket();
         }
     }
 }

@@ -2,7 +2,9 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using AESharp.Networking;
+using AESharp.Routing.Networking;
 using SimpleInjector;
 
 namespace AESharp.Logon
@@ -11,44 +13,42 @@ namespace AESharp.Logon
     {
         private static Container _container;
 
-        public static void Main( string[] args )
+        private static void Setup()
         {
             _container = new Container();
 
             _container.Verify();
+        }
+
+        public static void Main( string[] args )
+        {
+            try
+            {
+                Setup();
+            }
+            catch ( Exception ex )
+            {
+                Console.WriteLine( ex );
+                Console.ReadLine();
+                return;
+            }
+
+            //ConnectToMasterRouterAsync( IPAddress.Loopback, 12000 ).Wait();
 
             TcpServer server = new TcpServer( new IPEndPoint( IPAddress.Loopback, 3724 ) );
             server.Start( AcceptClientActionAsync );
-
-            TcpServer tempInteropServer = new TcpServer( new IPEndPoint( IPAddress.Loopback, 3725 ) );
-            tempInteropServer.Start( AcceptInteropClientASync );
 
             Console.WriteLine( "Listening..." );
             Console.ReadLine();
         }
 
-        private static async void AcceptInteropClientASync( TcpClient rawClient )
+        private static async Task ConnectToMasterRouterAsync( IPAddress address, int port )
         {
-            Console.WriteLine( "Accepted interop client" );
-            InteropRemoteClient client = new InteropRemoteClient( rawClient, new CancellationTokenSource() );
+            TcpClient client = new TcpClient();
+            await client.ConnectAsync( address, port );
 
-            Guid interopGuid = Guid.Empty;
-            try
-            {
-                interopGuid = LogonServices.InteropClients.AddClient( client );
-                await client.ListenForDataTask( client.CancellationToken );
-            }
-            catch ( Exception ex )
-            {
-                Console.WriteLine( $"Unhandled exception in {nameof( AcceptInteropClientASync )}: {ex}" );
-            }
-            finally
-            {
-                if ( interopGuid != Guid.Empty )
-                {
-                    LogonServices.InteropClients.RemoveClient( interopGuid );
-                }
-            }
+            AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler,
+                new CancellationTokenSource() );
         }
 
         private static async void AcceptClientActionAsync( TcpClient rawClient )

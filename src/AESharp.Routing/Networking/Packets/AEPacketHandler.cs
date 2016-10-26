@@ -1,75 +1,30 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AESharp.Core.Container;
 using AESharp.Routing.Exceptions;
+using AESharp.Routing.Networking.Packets.Handshaking;
 
 namespace AESharp.Routing.Networking.Packets
 {
-    public class AEPacketHandler<TPacketContext>
+    public class AEPacketHandler<TPacketContext> where TPacketContext : AERoutingClient
     {
-        private readonly ThreadSafeDictionary<
-            AEPacketId,
-            Func<AEPacket, TPacketContext, Task>
-        > _handlers = new ThreadSafeDictionary<
-            AEPacketId,
-            Func<AEPacket, TPacketContext, Task>
-        >();
+        private static readonly Func<AEPacket, TPacketContext, Task> NullHandler =
+            ( packet, context ) => { throw new UnhandledAEPacketException( (int) packet.PacketId ); };
 
-        protected bool IsMasterServer { get; }
-
-        public AEPacketHandler( bool isMasterServer )
-        {
-            this.IsMasterServer = isMasterServer;
-        }
-
-        public void RegisterHandler( AEPacketId id, Func<AEPacket, TPacketContext, Task> handler )
-        {
-            this._handlers.ReplaceOrAdd( id, handler );
-        }
+        public Func<ClientHandshakeBeginPacket, TPacketContext, Task> ClientHandshakeBeginHandler = NullHandler;
+        public Func<ServerHandshakeResultPacket, TPacketContext, Task> ServerHandshakeResultHandler = NullHandler;
 
         public async Task HandlePacket( AEPacket packet, TPacketContext context )
         {
-            if ( !this._handlers.ContainsKey( packet.PacketId ) )
+            byte[] data = packet.FinalizePacket();
+
+            switch ( packet.PacketId )
             {
-                throw new UnhandledAEPacketException( (int) packet.PacketId );
-            }
-
-            Func<AEPacket, TPacketContext, Task> handler = this._handlers.Get( packet.PacketId );
-
-            await handler( packet, context );
-        }
-
-        public void ThrowIfRequiredHandlerNotRegistered()
-        {
-            foreach ( AEPacketId id in Enum.GetValues( typeof( AEPacketId ) ) )
-            {
-                if ( id.ToString().StartsWith( "Client" ) )
-                {
-                    // The client doesn't need to handle client-only packets
-                    if ( !this.IsMasterServer )
-                    {
-                        continue;
-                    }
-                }
-
-                if ( id.ToString().StartsWith( "Server" ) )
-                {
-                    // The server doesn't need to handle server-only packets
-                    if ( this.IsMasterServer )
-                    {
-                        continue;
-                    }
-                }
-
-                this.ThrowIfHandlerNotRegistered( id );
-            }
-        }
-
-        private void ThrowIfHandlerNotRegistered( AEPacketId id )
-        {
-            if ( !this._handlers.ContainsKey( id ) )
-            {
-                throw new UnregisteredAEHandlerException( $"Unregistered handler for AEPacket {id} ({id:x})" );
+                case AEPacketId.ClientHandshakeBegin:
+                    await this.ClientHandshakeBeginHandler( new ClientHandshakeBeginPacket( data ), context );
+                    break;
+                case AEPacketId.ServerHandshakeResult:
+                    await this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( data ), context );
+                    break;
             }
         }
     }

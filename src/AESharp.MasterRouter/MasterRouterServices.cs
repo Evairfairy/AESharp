@@ -1,14 +1,14 @@
-﻿using AESharp.MasterRouter.Networking;
-using AESharp.Networking.Data;
+﻿using AESharp.Networking.Data;
+using AESharp.Routing.Networking;
 using AESharp.Routing.Networking.Packets;
 
 namespace AESharp.MasterRouter
 {
     public static class MasterRouterServices
     {
-        public static AEPacketHandler<AERemoteClient> PacketHandler = new AEPacketHandler<AERemoteClient>( true );
+        public static AEPacketHandler<AERoutingClient> PacketHandler = new AEPacketHandler<AERoutingClient>();
 
-        public static RemoteClientRepository<AERemoteClient> RemoteClients =
-            new RemoteClientRepository<AERemoteClient>();
+        public static RemoteClientRepository<AERoutingClient> RemoteClients =
+            new RemoteClientRepository<AERoutingClient>();
     }
 }

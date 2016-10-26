@@ -1,4 +1,4 @@
-﻿using AESharp.Networking.Data;
+﻿using AESharp.Networking.Data.Packets;
 
 namespace AESharp.Interop.Extensions
 {

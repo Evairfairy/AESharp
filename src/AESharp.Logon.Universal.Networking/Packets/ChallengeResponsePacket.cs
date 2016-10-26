@@ -1,4 +1,4 @@
-﻿using AESharp.Networking.Data;
+﻿using AESharp.Networking.Data.Packets;
 using AESharp.Networking.Exceptions;
 
 namespace AESharp.Logon.Universal.Networking.Packets
@@ -39,7 +39,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
             this.unk4 = unk4;
         }
 
-        public Packet Build()
+        public override byte[] FinalizePacket()
         {
             if ( this.Error == ChallengeResponseError.Invalid )
             {
@@ -52,7 +52,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
 
             if ( this.Error != ChallengeResponseError.Success )
             {
-                return this;
+                return base.FinalizePacket();
             }
 
             if ( this.B.Length != 32 )
@@ -89,7 +89,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
             this.WriteBytes( this.unk3 );
             this.WriteByte( this.unk4 );
 
-            return this;
+            return base.FinalizePacket();
         }
     }
 }

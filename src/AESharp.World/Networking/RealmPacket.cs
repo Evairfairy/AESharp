@@ -1,5 +1,5 @@
 ﻿using System;
-using AESharp.Networking.Data;
+using AESharp.Networking.Data.Packets;
 using AESharp.Networking.Exceptions;
 
 namespace AESharp.World.Networking
@@ -118,7 +118,7 @@ namespace AESharp.World.Networking
         ///     Constructs the packet header and returns the final byte[] representation of the packet
         /// </summary>
         /// <returns>The byte[] representation of the packet before crypto operations</returns>
-        public override byte[] BuildPacket()
+        public override byte[] FinalizePacket()
         {
             byte[] buffer = new byte[this.HeaderSize + this.InternalBuffer.Length];
 
