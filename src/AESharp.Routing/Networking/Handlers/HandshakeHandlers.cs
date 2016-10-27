@@ -36,6 +36,7 @@ namespace AESharp.Routing.Networking.Handlers
             }
 
             context.ClientGuid = Guid.NewGuid();
+            context.Authenticated = true;
 
             Console.WriteLine( $"Password matched, allocating guid: {context.ClientGuid}" );
             response.Result = ServerHandshakeResultPacket.SHRPResult.Success;

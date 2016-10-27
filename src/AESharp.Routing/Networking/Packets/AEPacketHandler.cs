@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AESharp.Networking.Exceptions;
 using AESharp.Routing.Exceptions;
 using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking.Packets.Handshaking;
@@ -19,14 +20,34 @@ namespace AESharp.Routing.Networking.Packets
         {
             AEPacket packet = new AEPacket( metaPacket );
 
-            switch ( packet.PacketId )
+            // If authentication doesn't matter, handle packet here and return
+
+            if ( !context.Authenticated )
             {
-                case AEPacketId.ClientHandshakeBegin:
-                    await this.ClientHandshakeBeginHandler( new ClientHandshakeBeginPacket( metaPacket ), context );
-                    break;
-                case AEPacketId.ServerHandshakeResult:
-                    await this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( metaPacket ), context );
-                    break;
+                // We must be unauthenticated
+                switch ( packet.PacketId )
+                {
+                    case AEPacketId.ClientHandshakeBegin:
+                        await this.ClientHandshakeBeginHandler( new ClientHandshakeBeginPacket( metaPacket ), context );
+                        break;
+                    case AEPacketId.ServerHandshakeResult:
+                        await
+                            this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( metaPacket ), context );
+                        break;
+                    default:
+                        throw new InvalidPacketException(
+                            $"Received ({packet.PacketId}) requiring context to be unauthenticated but we are authenticated" );
+                }
+            }
+            else
+            {
+                // We must be authenticated
+                switch ( packet.PacketId )
+                {
+                    default:
+                        throw new InvalidPacketException(
+                            $"Received ({packet.PacketId}) requiring context to be authenticated but we are unauthenticated" );
+                }
             }
         }
     }
