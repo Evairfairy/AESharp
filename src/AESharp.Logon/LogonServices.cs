@@ -2,6 +2,7 @@
 using AESharp.Logon.Universal.Networking.Middleware;
 using AESharp.Networking.Data;
 using AESharp.Networking.Middleware;
+using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking;
 using AESharp.Routing.Networking.Packets;
 
@@ -22,5 +23,12 @@ namespace AESharp.Logon
 
         public static MiddlewareHandler<LogonMetaPacket, LogonRemoteClient> OutgoingLogonMiddleware =
             new MiddlewareHandler<LogonMetaPacket, LogonRemoteClient>();
+
+
+        public static MiddlewareHandler<RoutingMetaPacket, AERoutingClient> IncomingRoutingMiddlewareHandler =
+            new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
+
+        public static MiddlewareHandler<RoutingMetaPacket, AERoutingClient> OutgoingRoutingMiddlewareHandler =
+            new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
     }
 }

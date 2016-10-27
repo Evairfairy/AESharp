@@ -2,8 +2,14 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using AESharp.Core.Extensions;
 using AESharp.Logon.Middleware;
 using AESharp.Networking;
+using AESharp.Routing.Core;
+using AESharp.Routing.Middleware;
+using AESharp.Routing.Networking;
+using AESharp.Routing.Networking.Handlers;
+using AESharp.Routing.Networking.Packets.Handshaking;
 using SimpleInjector;
 
 namespace AESharp.Logon
@@ -26,6 +32,15 @@ namespace AESharp.Logon
 
             // Register outgoing middleware
             LogonServices.OutgoingLogonMiddleware.RegisterMiddleware( new TestMiddleware() );
+
+            // This must be second (after decryption)
+            LogonServices.IncomingRoutingMiddlewareHandler.RegisterMiddleware( new AEPacketReaderMiddleware() );
+
+            // This must be second-to-last (before encryption)
+            LogonServices.OutgoingRoutingMiddlewareHandler.RegisterMiddleware( new AEPacketBuilderMiddleware() );
+
+            LogonServices.InteropPacketHandler.ServerHandshakeResultHandler =
+                HandshakeHandlers.ServerHandshakeResultHandler;
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -42,7 +57,7 @@ namespace AESharp.Logon
                 return;
             }
 
-            //ConnectToMasterRouterAsync( IPAddress.Loopback, 12000 ).Wait();
+            ConnectToMasterRouterAsync( IPAddress.Loopback, 12000 ).RunAsync();
 
             TcpServer server = new TcpServer( new IPEndPoint( IPAddress.Loopback, 3724 ) );
             server.Start( AcceptClientActionAsync );
@@ -53,10 +68,23 @@ namespace AESharp.Logon
 
         private static async Task ConnectToMasterRouterAsync( IPAddress address, int port )
         {
+            // Give router time to start up (debug)
+            await Task.Delay( 2000 );
+
             TcpClient client = new TcpClient();
             await client.ConnectAsync( address, port );
 
-            //AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler );
+            AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler,
+                LogonServices.IncomingRoutingMiddlewareHandler, LogonServices.OutgoingRoutingMiddlewareHandler );
+
+            ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket();
+            chbp.Protocol = Constants.LatestAEProtocolVersion;
+            chbp.Password = "aesharp";
+            chbp.ComponentType = ComponentType.UniversalAuthServer;
+
+            await routingClient.SendDataAsync( chbp.FinalizePacket() );
+
+            await routingClient.ListenForDataTask();
         }
 
         private static async void AcceptClientActionAsync( TcpClient rawClient )

@@ -16,6 +16,7 @@ namespace AESharp.Routing.Networking.Handlers
         /// <returns>Task</returns>
         public static async Task ClientHandshakeBeginHandler( ClientHandshakeBeginPacket packet, AERoutingClient context )
         {
+            Console.WriteLine( "Received AE# handshake" );
             if ( packet.Protocol != Constants.LatestAEProtocolVersion )
             {
                 throw new InvalidPacketException(
@@ -25,6 +26,8 @@ namespace AESharp.Routing.Networking.Handlers
             ServerHandshakeResultPacket response = new ServerHandshakeResultPacket();
             if ( packet.Password != Constants._TEMP_RouterAuthPassword )
             {
+                Console.WriteLine(
+                    $"Password does not match (expected: {Constants._TEMP_RouterAuthPassword}) (got: {packet.Password})" );
                 response.Result = ServerHandshakeResultPacket.SHRPResult.Failure;
                 await context.SendDataAsync( response.FinalizePacket() );
                 context.Disconnect();
@@ -34,8 +37,9 @@ namespace AESharp.Routing.Networking.Handlers
 
             context.ClientGuid = Guid.NewGuid();
 
+            Console.WriteLine( $"Password matched, allocating guid: {context.ClientGuid}" );
             response.Result = ServerHandshakeResultPacket.SHRPResult.Success;
-            response.AssignedGuid = Guid.NewGuid();
+            response.AssignedGuid = context.ClientGuid;
 
             await context.SendDataAsync( response.FinalizePacket() );
         }
@@ -43,6 +47,7 @@ namespace AESharp.Routing.Networking.Handlers
         public static async Task ServerHandshakeResultHandler( ServerHandshakeResultPacket packet,
             AERoutingClient context )
         {
+            Console.WriteLine( "Received AE# handshake result" );
             if ( packet.Result == ServerHandshakeResultPacket.SHRPResult.Failure )
             {
                 Console.WriteLine( $"Failed to authenticate with master router (reason: generic failure)" );
@@ -55,7 +60,7 @@ namespace AESharp.Routing.Networking.Handlers
                 // Authenticated
                 context.ClientGuid = packet.AssignedGuid;
                 context.Authenticated = true;
-                Console.WriteLine( "Authenticated successfully" );
+                Console.WriteLine( $"Authenticated successfully, we have guid: {context.ClientGuid}" );
             }
         }
     }
