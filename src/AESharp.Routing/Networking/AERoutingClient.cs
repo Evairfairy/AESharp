@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using AESharp.Networking.Data;
@@ -36,6 +37,32 @@ namespace AESharp.Routing.Networking
             this._incomingMiddlewareHandler = incomingMiddlewareHandler;
             this._outgoingMiddlewareHandler = outgoingMiddlewareHandler;
             this.ObjectRepository = objectRepository;
+        }
+
+        public async Task SendPayloadToComponents( IEnumerable<AERoutingClient> clients, AEPacketId id, byte[] payload )
+        {
+            foreach ( AERoutingClient client in clients )
+            {
+                // Sending packets to ourself is not valid
+                if ( client.ComponentData.Guid == this.ComponentData.Guid )
+                {
+                    continue;
+                }
+
+                // Copy this in case middleware modifies the payload (todo: change model to preserve payload)
+                byte[] payloadCopy = new byte[payload.Length];
+                Array.Copy( payload, payloadCopy, payloadCopy.Length );
+
+                RoutingMetaPacket metaPacket = new RoutingMetaPacket
+                {
+                    PacketId = id,
+                    Payload = payloadCopy,
+                    Sender = this.ComponentData.Guid,
+                    Target = client.ComponentData.Guid
+                };
+
+                await this.SendDataAsync( metaPacket );
+            }
         }
 
         public override async Task SendDataAsync( RoutingMetaPacket metaPacket )

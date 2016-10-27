@@ -5,8 +5,6 @@
         // General communication
         ClientHandshakeBegin,
         ServerHandshakeResult,
-        //ClientHandshakeResult,
-        UnusedDisconnect,
-        UnusedKeepAlive
+        ServerNewObjectAvailable
     }
 }

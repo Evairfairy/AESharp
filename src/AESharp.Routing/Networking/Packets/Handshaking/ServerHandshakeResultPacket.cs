@@ -1,5 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using AESharp.Core.Extensions;
+using AESharp.Routing.Core;
+using AESharp.Routing.Extensions;
 using AESharp.Routing.Middleware;
 
 namespace AESharp.Routing.Networking.Packets.Handshaking
@@ -12,7 +14,8 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
             Failure
         }
 
-        public Guid AssignedGuid;
+        public List<RoutingComponent> OtherAvailableComponents = new List<RoutingComponent>();
+        public RoutingComponent OurComponent = new RoutingComponent();
 
         public SHRPResult Result;
 
@@ -25,13 +28,23 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
             this.InternalMetaPacket.PacketId = AEPacketId.ServerHandshakeResult;
 
             this.Result = this.ReadSHRPResult();
-            this.AssignedGuid = this.InternalPacket.ReadGuid();
+
+            if ( this.Result == SHRPResult.Success )
+            {
+                this.OurComponent = this.InternalPacket.ReadRoutingComponent();
+                this.OtherAvailableComponents = this.InternalPacket.ReadList( PacketExtensions.ReadRoutingComponent );
+            }
         }
 
         public override RoutingMetaPacket FinalizePacket()
         {
             this.WriteSHRPResult( this.Result );
-            this.InternalPacket.WriteGuid( this.AssignedGuid );
+
+            if ( this.Result == SHRPResult.Success )
+            {
+                this.InternalPacket.WriteRoutingComponent( this.OurComponent );
+                this.InternalPacket.WriteList( this.OtherAvailableComponents, PacketExtensions.WriteRoutingComponent );
+            }
 
             return base.FinalizePacket();
         }

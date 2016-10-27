@@ -8,6 +8,16 @@ namespace AESharp.Routing.Networking.Handlers
 {
     public static class HandshakeHandlers
     {
+        public static bool ValidateHandshakeProtocol( ClientHandshakeBeginPacket packet )
+        {
+            return packet.Protocol == Constants.LatestAEProtocolVersion;
+        }
+
+        public static bool ValidateHandshakeAuthentication( ClientHandshakeBeginPacket packet )
+        {
+            return packet.Password == Constants._TEMP_RouterAuthPassword;
+        }
+
         /// <summary>
         ///     Default handler called when a ClientHandshakeBegin packet is received
         /// </summary>
@@ -17,14 +27,14 @@ namespace AESharp.Routing.Networking.Handlers
         public static async Task ClientHandshakeBeginHandler( ClientHandshakeBeginPacket packet, AERoutingClient context )
         {
             Console.WriteLine( "Received AE# handshake" );
-            if ( packet.Protocol != Constants.LatestAEProtocolVersion )
+            if ( !ValidateHandshakeProtocol( packet ) )
             {
                 throw new InvalidPacketException(
                     $"Received handshake with protocol version {packet.Protocol} but version {Constants.LatestAEProtocolVersion} is required" );
             }
 
             ServerHandshakeResultPacket response = new ServerHandshakeResultPacket();
-            if ( packet.Password != Constants._TEMP_RouterAuthPassword )
+            if ( !ValidateHandshakeAuthentication( packet ) )
             {
                 Console.WriteLine(
                     $"Password does not match (expected: {Constants._TEMP_RouterAuthPassword}) (got: {packet.Password})" );
@@ -45,10 +55,11 @@ namespace AESharp.Routing.Networking.Handlers
             Console.WriteLine( $"Got component of type {context.ComponentData.Type}" );
             Console.WriteLine( $"Component owns {context.ComponentData.OwnedObjects.Count} objects" );
 
-            context.ObjectRepository.AddObject( context.ComponentData );
-
             response.Result = ServerHandshakeResultPacket.SHRPResult.Success;
-            response.AssignedGuid = context.ClientGuid;
+            response.OurComponent = context.ComponentData;
+            response.OtherAvailableComponents = context.ObjectRepository.GetAllObjects();
+
+            context.ObjectRepository.AddObject( context.ComponentData );
 
             await context.SendDataAsync( response.FinalizePacket() );
         }
@@ -67,7 +78,13 @@ namespace AESharp.Routing.Networking.Handlers
             if ( packet.Result == ServerHandshakeResultPacket.SHRPResult.Success )
             {
                 // Authenticated
-                context.ClientGuid = packet.AssignedGuid;
+                context.ComponentData = packet.OurComponent;
+
+                foreach ( RoutingComponent component in packet.OtherAvailableComponents )
+                {
+                    context.ObjectRepository.AddObject( component );
+                }
+
                 context.Authenticated = true;
                 Console.WriteLine( $"Authenticated successfully, we have guid: {context.ClientGuid}" );
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AESharp.Networking.Data.Packets;
 using AESharp.Networking.Exceptions;
 using AESharp.Routing.Core;
@@ -9,6 +10,35 @@ namespace AESharp.Routing.Extensions
 {
     internal static class PacketExtensions
     {
+        public static List<T> ReadList<T>( this Packet packet, Func<Packet, T> readObjectFunc )
+        {
+            List<T> returnList = new List<T>();
+
+            ushort listSize = packet.ReadUInt16();
+
+            for ( ushort i = 0; i < listSize; ++i )
+            {
+                returnList.Add( readObjectFunc( packet ) );
+            }
+
+            return returnList;
+        }
+
+        public static void WriteList<T>( this Packet packet, List<T> list, Action<Packet, T> writeObjectFunc )
+        {
+            if ( list.Count > ushort.MaxValue )
+            {
+                throw new InvalidOperationException(
+                    $"You may only write lists containing a maximum of {ushort.MaxValue} elements" );
+            }
+
+            packet.WriteUInt16( (ushort) list.Count );
+            foreach ( T value in list )
+            {
+                writeObjectFunc( packet, value );
+            }
+        }
+
         public static RoutingComponent ReadRoutingComponent( this Packet packet )
         {
             return new RoutingComponent

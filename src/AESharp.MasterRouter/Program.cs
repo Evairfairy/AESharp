@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using AESharp.MasterRouter.PacketHandlers;
 using AESharp.Networking;
 using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking;
-using AESharp.Routing.Networking.Handlers;
 
 namespace AESharp.MasterRouter
 {
@@ -20,7 +20,7 @@ namespace AESharp.MasterRouter
 
             // Packet handlers
             MasterRouterServices.PacketHandler.ClientHandshakeBeginHandler =
-                HandshakeHandlers.ClientHandshakeBeginHandler;
+                ClientHandshakeBeginHandler.HandleClientHandshakeBegin;
         }
 
         public static void Main( string[] args )

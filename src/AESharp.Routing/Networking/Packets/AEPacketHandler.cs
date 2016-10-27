@@ -4,6 +4,7 @@ using AESharp.Networking.Exceptions;
 using AESharp.Routing.Exceptions;
 using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking.Packets.Handshaking;
+using AESharp.Routing.Networking.Packets.Objects;
 
 namespace AESharp.Routing.Networking.Packets
 {
@@ -15,6 +16,7 @@ namespace AESharp.Routing.Networking.Packets
 
         public Func<ClientHandshakeBeginPacket, TPacketContext, Task> ClientHandshakeBeginHandler = NullHandler;
         public Func<ServerHandshakeResultPacket, TPacketContext, Task> ServerHandshakeResultHandler = NullHandler;
+        public Func<ServerObjectAvailabilityChanged, TPacketContext, Task> ServerNewObjectAvailableHandler = NullHandler;
 
         public async Task HandlePacket( RoutingMetaPacket metaPacket, TPacketContext context )
         {
@@ -44,6 +46,11 @@ namespace AESharp.Routing.Networking.Packets
                 // We must be authenticated
                 switch ( packet.PacketId )
                 {
+                    case AEPacketId.ServerNewObjectAvailable:
+                        await
+                            this.ServerNewObjectAvailableHandler( new ServerObjectAvailabilityChanged( metaPacket ),
+                                context );
+                        break;
                     default:
                         throw new InvalidPacketException(
                             $"Received ({packet.PacketId}) requiring context to be authenticated but we are unauthenticated" );

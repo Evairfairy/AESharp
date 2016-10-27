@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AESharp.Networking.Middleware;
 
 namespace AESharp.Networking.Data
@@ -81,13 +82,18 @@ namespace AESharp.Networking.Data
         ///     Returns all clients in the repository.
         /// </summary>
         /// <returns>An IEnumerable of all clients in the repository</returns>
-        public List<T> GetAllClients()
+        public List<T> GetClients( Func<T, bool> predicate = null )
         {
+            if ( predicate == null )
+            {
+                predicate = item => true;
+            }
+
             List<T> clients = new List<T>();
 
             lock ( this._remoteClients )
             {
-                clients.AddRange( this._remoteClients.Values );
+                clients.AddRange( this._remoteClients.Values.Where( predicate ) );
             }
 
             return clients;

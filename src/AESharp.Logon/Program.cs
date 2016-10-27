@@ -41,6 +41,9 @@ namespace AESharp.Logon
 
             LogonServices.InteropPacketHandler.ServerHandshakeResultHandler =
                 HandshakeHandlers.ServerHandshakeResultHandler;
+
+            LogonServices.InteropPacketHandler.ServerNewObjectAvailableHandler =
+                ObjectHandlers.HandleServerNewObjectAvailable;
         }
 
         // ReSharper disable once UnusedMember.Global
