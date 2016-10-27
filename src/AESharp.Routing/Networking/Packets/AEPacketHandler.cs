@@ -9,10 +9,10 @@ using AESharp.Routing.Networking.Packets.Objects;
 namespace AESharp.Routing.Networking.Packets
 {
     public class AEPacketHandler<TPacketContext>
-        where TPacketContext : AERoutingClient
+            where TPacketContext : AERoutingClient
     {
         private static readonly Func<AEPacket, TPacketContext, Task> NullHandler =
-            ( packet, context ) => { throw new UnhandledAEPacketException( (int) packet.PacketId ); };
+                ( packet, context ) => { throw new UnhandledAEPacketException( (int) packet.PacketId ); };
 
         public Func<ClientHandshakeBeginPacket, TPacketContext, Task> ClientHandshakeBeginHandler = NullHandler;
         public Func<ServerHandshakeResultPacket, TPacketContext, Task> ServerHandshakeResultHandler = NullHandler;
@@ -34,11 +34,12 @@ namespace AESharp.Routing.Networking.Packets
                         break;
                     case AEPacketId.ServerHandshakeResult:
                         await
-                            this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( metaPacket ), context );
+                                this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( metaPacket ),
+                                                                   context );
                         break;
                     default:
                         throw new InvalidPacketException(
-                            $"Received ({packet.PacketId}) requiring context to be unauthenticated but we are authenticated" );
+                                                         $"Received ({packet.PacketId}) requiring context to be unauthenticated but we are authenticated" );
                 }
             }
             else
@@ -48,12 +49,12 @@ namespace AESharp.Routing.Networking.Packets
                 {
                     case AEPacketId.ServerNewObjectAvailable:
                         await
-                            this.ServerNewObjectAvailableHandler( new ServerObjectAvailabilityChanged( metaPacket ),
-                                context );
+                                this.ServerNewObjectAvailableHandler( new ServerObjectAvailabilityChanged( metaPacket ),
+                                                                      context );
                         break;
                     default:
                         throw new InvalidPacketException(
-                            $"Received ({packet.PacketId}) requiring context to be authenticated but we are unauthenticated" );
+                                                         $"Received ({packet.PacketId}) requiring context to be authenticated but we are unauthenticated" );
                 }
             }
         }

@@ -34,14 +34,10 @@ namespace AESharp.Networking.Data.Packets
         public int BufferLength => this.InternalBuffer.Length;
 
         public Packet( Encoding encoding = null )
-            : this( new MemoryStream(), encoding )
-        {
-        }
+            : this( new MemoryStream(), encoding ) { }
 
         public Packet( byte[] data, Encoding encoding = null )
-            : this( new MemoryStream( data ), encoding )
-        {
-        }
+            : this( new MemoryStream( data ), encoding ) { }
 
         private Packet( MemoryStream dataStream, Encoding encoding = null )
         {
@@ -110,7 +106,7 @@ namespace AESharp.Networking.Data.Packets
             if ( remainingBytes < 0 )
             {
                 throw new InvalidOperationException(
-                    $"Internal error in Packet->{nameof( this.ReadRemainingBytes )}: {nameof( remainingBytes )} was {remainingBytes}" );
+                                                    $"Internal error in Packet->{nameof( this.ReadRemainingBytes )}: {nameof( remainingBytes )} was {remainingBytes}" );
             }
 
             if ( remainingBytes == 0 )
@@ -134,11 +130,11 @@ namespace AESharp.Networking.Data.Packets
         public Version ReadVersion()
         {
             return new Version(
-                this.ReadByte(),
-                this.ReadByte(),
-                this.ReadByte(),
-                this.ReadUInt16()
-            );
+                               this.ReadByte(),
+                               this.ReadByte(),
+                               this.ReadByte(),
+                               this.ReadUInt16()
+                              );
         }
 
         // IPv4
@@ -225,13 +221,13 @@ namespace AESharp.Networking.Data.Packets
         }
 
         public void WriteFixedString( string value )
-            => this.WriteString( value, StringType.FixedString );
+                => this.WriteString( value, StringType.FixedString );
 
         public void WriteByteString( string value )
-            => this.WriteString( value, StringType.ByteString );
+                => this.WriteString( value, StringType.ByteString );
 
         public void WriteShortString( string value )
-            => this.WriteString( value, StringType.ShortString );
+                => this.WriteString( value, StringType.ShortString );
 
         public void WriteCString( string value ) => this.WriteString( value, StringType.NullTerminatedString );
 
@@ -324,7 +320,7 @@ namespace AESharp.Networking.Data.Packets
             if ( actualLength > maxAllowedLength )
             {
                 throw new InvalidOperationException(
-                    $"String length ({actualLength:#,#0}) exceeds maximum length of {maxAllowedLength:#,#0}" );
+                                                    $"String length ({actualLength:#,#0}) exceeds maximum length of {maxAllowedLength:#,#0}" );
             }
         }
 

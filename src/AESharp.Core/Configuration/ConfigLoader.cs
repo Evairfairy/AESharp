@@ -14,5 +14,6 @@ namespace AESharp.Core.Configuration
         }
 
         public abstract T Load<T>( string fileName, Encoding encoding = null );
+        public abstract void CreateDefault<T>( string fileName, T defaultValue, Encoding encoding = null );
     }
 }

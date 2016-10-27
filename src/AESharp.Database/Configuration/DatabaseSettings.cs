@@ -4,25 +4,24 @@ using Newtonsoft.Json.Converters;
 namespace AESharp.Database.Configuration
 {
     [JsonObject( MemberSerialization.OptIn )]
-    public sealed class DatabaseSettings
+    internal sealed class DatabaseSettings
     {
-        [JsonProperty( "driver" )]
-        [JsonConverter( typeof( StringEnumConverter ) )]
-        public DatabaseDriver Driver { get; private set; }
+        [JsonProperty( "driver", Required = Required.Always ), JsonConverter( typeof( StringEnumConverter ) )]
+        public DatabaseDriver Driver { get; set; }
 
-        [JsonProperty( "hostname" )]
-        public string Hostname { get; private set; }
+        [JsonProperty( "hostname", Required = Required.Always )]
+        public string Hostname { get; set; }
 
-        [JsonProperty( "port" )]
-        public ushort Port { get; private set; }
+        [JsonProperty( "port", Required = Required.Always )]
+        public ushort Port { get; set; }
 
-        [JsonProperty( "database" )]
-        public string Database { get; private set; }
+        [JsonProperty( "databases", Required = Required.Always )]
+        public DatabasesSection Databases { get; set; }
 
-        [JsonProperty( "username" )]
-        public string Username { get; private set; }
+        [JsonProperty( "username", Required = Required.Always )]
+        public string Username { get; set; }
 
-        [JsonProperty( "password" )]
-        public string Password { get; private set; }
+        [JsonProperty( "password", Required = Required.Always )]
+        public string Password { get; set; }
     }
 }

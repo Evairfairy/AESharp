@@ -4,12 +4,8 @@ namespace AESharp.Logon.Universal.Networking.Middleware
 {
     public class LogonMetaPacket : MetaPacket
     {
-        public LogonMetaPacket()
-        {
-        }
+        public LogonMetaPacket() { }
 
-        public LogonMetaPacket( byte[] payload ) : base( payload )
-        {
-        }
+        public LogonMetaPacket( byte[] payload ) : base( payload ) { }
     }
 }

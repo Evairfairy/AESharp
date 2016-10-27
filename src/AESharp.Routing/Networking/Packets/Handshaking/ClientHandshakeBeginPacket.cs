@@ -10,9 +10,7 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
         public string Password;
         public uint Protocol;
 
-        public ClientHandshakeBeginPacket() : base( AEPacketId.ClientHandshakeBegin )
-        {
-        }
+        public ClientHandshakeBeginPacket() : base( AEPacketId.ClientHandshakeBegin ) { }
 
         public ClientHandshakeBeginPacket( RoutingMetaPacket metaPacket ) : base( metaPacket )
         {

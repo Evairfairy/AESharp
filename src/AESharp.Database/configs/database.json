@@ -1,0 +1,12 @@
+﻿{
+	"driver": "MySql",
+	"hostname": "127.0.0.1",
+	"port": 3306,
+	"databases": {
+		"logon": "logon",
+		"chars": "chars",
+		"world": "world"
+	},
+	"username": "ascemu",
+	"password": ""
+}

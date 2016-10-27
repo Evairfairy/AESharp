@@ -29,9 +29,7 @@ namespace AESharp.World.Networking
             }
         }
 
-        public RealmRemoteClient( TcpClient rawClient ) : base( rawClient )
-        {
-        }
+        public RealmRemoteClient( TcpClient rawClient ) : base( rawClient ) { }
 
         public override async Task HandleDataAsync( RealmMetaPacket metaPacket )
         {

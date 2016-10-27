@@ -35,9 +35,7 @@ namespace AESharp.Routing.Core
             List<RoutingComponent> ret = new List<RoutingComponent>();
 
             lock ( this._components )
-            {
                 ret.AddRange( this._components );
-            }
 
             return ret;
         }

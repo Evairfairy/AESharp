@@ -20,7 +20,7 @@ namespace AESharp.MasterRouter
 
             // Packet handlers
             MasterRouterServices.PacketHandler.ClientHandshakeBeginHandler =
-                ClientHandshakeBeginHandler.HandleClientHandshakeBegin;
+                    ClientHandshakeBeginHandler.HandleClientHandshakeBegin;
         }
 
         public static void Main( string[] args )
@@ -35,8 +35,9 @@ namespace AESharp.MasterRouter
         {
             Console.WriteLine( "Accepting AEClient" );
             AERoutingClient client = new AERoutingClient( rawClient, MasterRouterServices.PacketHandler,
-                MasterRouterServices.IncomingMiddlewareHandler, MasterRouterServices.OutgoingMiddlewareHandler,
-                MasterRouterServices.ObjectRepository );
+                                                          MasterRouterServices.IncomingMiddlewareHandler,
+                                                          MasterRouterServices.OutgoingMiddlewareHandler,
+                                                          MasterRouterServices.ObjectRepository );
 
             try
             {

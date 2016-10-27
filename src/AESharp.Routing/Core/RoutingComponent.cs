@@ -18,6 +18,7 @@ namespace AESharp.Routing.Core
                     case ComponentType.MasterRouter:
                     case ComponentType.UniversalAuthServer:
                     case ComponentType.UniversalWorldServer:
+                    case ComponentType.DatabaseComponent:
                         return true;
                     default:
                         return false;

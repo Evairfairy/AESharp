@@ -24,7 +24,7 @@ namespace AESharp.MasterRouter.PacketHandlers
             if ( !HandshakeHandlers.ValidateHandshakeProtocol( packet ) )
             {
                 Console.WriteLine(
-                    $"Invalid protocol (got: {packet.Protocol}) (exp: {Constants.LatestAEProtocolVersion})" );
+                                  $"Invalid protocol (got: {packet.Protocol}) (exp: {Constants.LatestAEProtocolVersion})" );
                 context.Disconnect();
                 return;
             }
@@ -32,7 +32,7 @@ namespace AESharp.MasterRouter.PacketHandlers
             if ( !HandshakeHandlers.ValidateHandshakeAuthentication( packet ) )
             {
                 Console.WriteLine(
-                    $"Authentication failure (got: {packet.Password}) (exp: {Constants._TEMP_RouterAuthPassword})" );
+                                  $"Authentication failure (got: {packet.Password}) (exp: {Constants._TEMP_RouterAuthPassword})" );
                 context.Disconnect();
                 return;
             }
@@ -44,7 +44,10 @@ namespace AESharp.MasterRouter.PacketHandlers
             Console.WriteLine( $"Successfully authenticated {context.ComponentData.Guid}" );
 
             List<AERoutingClient> clients =
-                MasterRouterServices.RemoteClients.GetClients( item => SendToOtherComponentsPredicate( context, item ) );
+                    MasterRouterServices.RemoteClients.GetClients(
+                                                                  item =>
+                                                                      SendToOtherComponentsPredicate( context,
+                                                                                                      item ) );
 
             ServerObjectAvailabilityChanged snoap = new ServerObjectAvailabilityChanged
             {

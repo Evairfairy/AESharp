@@ -2,9 +2,7 @@
 
 namespace AESharp.Core.Extensions
 {
-    public static class EnumExtensions
-    {
-    }
+    public static class EnumExtensions { }
 
     public static class EnumHelpers
     {

@@ -26,9 +26,7 @@ namespace AESharp.Networking.Data
             }
 
             lock ( this._remoteClients )
-            {
                 this._remoteClients.Add( client.ClientGuid, client );
-            }
             return client.ClientGuid;
         }
 
@@ -55,9 +53,7 @@ namespace AESharp.Networking.Data
         public void RemoveAllClients()
         {
             lock ( this._remoteClients )
-            {
                 this._remoteClients.Clear();
-            }
         }
 
         /// <summary>
@@ -73,9 +69,7 @@ namespace AESharp.Networking.Data
             }
 
             lock ( this._remoteClients )
-            {
                 return this._remoteClients[clientGuid];
-            }
         }
 
         /// <summary>
@@ -92,9 +86,7 @@ namespace AESharp.Networking.Data
             List<T> clients = new List<T>();
 
             lock ( this._remoteClients )
-            {
                 clients.AddRange( this._remoteClients.Values.Where( predicate ) );
-            }
 
             return clients;
         }

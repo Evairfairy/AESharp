@@ -33,7 +33,7 @@ namespace AESharp.Networking.Data
                 if ( value == Guid.Empty )
                 {
                     throw new InvalidOperationException(
-                        $"Guid.Empty is not a valid value for property {nameof( this.ClientGuid )}" );
+                                                        $"Guid.Empty is not a valid value for property {nameof( this.ClientGuid )}" );
                 }
 
                 this._clientGuid = value;
@@ -130,9 +130,7 @@ namespace AESharp.Networking.Data
                 this.RawClient?.Client?.Shutdown( SocketShutdown.Both );
             }
             // Socket has already been closed
-            catch ( ObjectDisposedException )
-            {
-            }
+            catch ( ObjectDisposedException ) { }
         }
 
         ~RemoteClient()

@@ -7,6 +7,6 @@ namespace AESharp.World
     public static class RealmServices
     {
         public static RemoteClientRepository<RealmMetaPacket, RealmRemoteClient> RemoteClients =
-            new RemoteClientRepository<RealmMetaPacket, RealmRemoteClient>();
+                new RemoteClientRepository<RealmMetaPacket, RealmRemoteClient>();
     }
 }

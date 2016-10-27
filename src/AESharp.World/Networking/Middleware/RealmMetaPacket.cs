@@ -4,12 +4,8 @@ namespace AESharp.World.Networking.Middleware
 {
     public class RealmMetaPacket : MetaPacket
     {
-        public RealmMetaPacket()
-        {
-        }
+        public RealmMetaPacket() { }
 
-        public RealmMetaPacket( byte[] payload ) : base( payload )
-        {
-        }
+        public RealmMetaPacket( byte[] payload ) : base( payload ) { }
     }
 }

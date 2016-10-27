@@ -16,7 +16,7 @@ namespace AESharp.Core.Extensions
         }
 
         public static string Join<T>( this IEnumerable<T> collection, string delim )
-            => string.Join( delim, collection );
+                => string.Join( delim, collection );
 
         private static IEnumerable<T> SelectChunk<T>( this IEnumerator<T> enumerator, int chunkSize )
         {

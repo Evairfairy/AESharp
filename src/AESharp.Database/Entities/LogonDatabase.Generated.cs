@@ -8,7 +8,7 @@ using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace AESharp.Database.Entities
 {
-    public sealed class LogonDatabase : DbContext
+    internal sealed class LogonDatabase : DbContext
     {
         private readonly DatabaseSettings Settings;
 
@@ -32,7 +32,7 @@ namespace AESharp.Database.Entities
                     MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
                     {
                         Server = this.Settings.Hostname,
-                        Database = this.Settings.Database,
+                        Database = this.Settings.Databases.LogonDatabase,
                         Port = this.Settings.Port,
                         UserID = this.Settings.Username,
                         Password = this.Settings.Password

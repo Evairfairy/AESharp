@@ -5,6 +5,7 @@
         Invalid,
         MasterRouter,
         UniversalAuthServer,
-        UniversalWorldServer
+        UniversalWorldServer,
+        DatabaseComponent
     }
 }

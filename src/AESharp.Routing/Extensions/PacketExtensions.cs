@@ -29,7 +29,7 @@ namespace AESharp.Routing.Extensions
             if ( list.Count > ushort.MaxValue )
             {
                 throw new InvalidOperationException(
-                    $"You may only write lists containing a maximum of {ushort.MaxValue} elements" );
+                                                    $"You may only write lists containing a maximum of {ushort.MaxValue} elements" );
             }
 
             packet.WriteUInt16( (ushort) list.Count );
@@ -68,7 +68,7 @@ namespace AESharp.Routing.Extensions
         }
 
         public static void WritePacketId( this Packet packet, AEPacketId packetId )
-            => packet.WriteInt32( (int) packetId );
+                => packet.WriteInt32( (int) packetId );
 
         public static ComponentType ReadComponentType( this Packet packet )
         {

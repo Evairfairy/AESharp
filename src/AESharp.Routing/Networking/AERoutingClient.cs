@@ -29,9 +29,9 @@ namespace AESharp.Routing.Networking
         }
 
         public AERoutingClient( TcpClient rawClient, AEPacketHandler<AERoutingClient> handler,
-            MiddlewareHandler<RoutingMetaPacket, AERoutingClient> incomingMiddlewareHandler,
-            MiddlewareHandler<RoutingMetaPacket, AERoutingClient> outgoingMiddlewareHandler,
-            ComponentRepository objectRepository ) : base( rawClient )
+                                MiddlewareHandler<RoutingMetaPacket, AERoutingClient> incomingMiddlewareHandler,
+                                MiddlewareHandler<RoutingMetaPacket, AERoutingClient> outgoingMiddlewareHandler,
+                                ComponentRepository objectRepository ) : base( rawClient )
         {
             this._handler = handler;
             this._incomingMiddlewareHandler = incomingMiddlewareHandler;

@@ -2,7 +2,7 @@
 {
     public enum DatabaseDriver
     {
-        MySql,
+        MySql
         //PostgresSql,
         //SqlServer,
         //SqlLite,

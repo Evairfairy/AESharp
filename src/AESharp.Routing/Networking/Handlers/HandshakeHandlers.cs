@@ -30,14 +30,14 @@ namespace AESharp.Routing.Networking.Handlers
             if ( !ValidateHandshakeProtocol( packet ) )
             {
                 throw new InvalidPacketException(
-                    $"Received handshake with protocol version {packet.Protocol} but version {Constants.LatestAEProtocolVersion} is required" );
+                                                 $"Received handshake with protocol version {packet.Protocol} but version {Constants.LatestAEProtocolVersion} is required" );
             }
 
             ServerHandshakeResultPacket response = new ServerHandshakeResultPacket();
             if ( !ValidateHandshakeAuthentication( packet ) )
             {
                 Console.WriteLine(
-                    $"Password does not match (expected: {Constants._TEMP_RouterAuthPassword}) (got: {packet.Password})" );
+                                  $"Password does not match (expected: {Constants._TEMP_RouterAuthPassword}) (got: {packet.Password})" );
                 response.Result = ServerHandshakeResultPacket.SHRPResult.Failure;
                 await context.SendDataAsync( response.FinalizePacket() );
                 context.Disconnect();
@@ -65,7 +65,7 @@ namespace AESharp.Routing.Networking.Handlers
         }
 
         public static async Task ServerHandshakeResultHandler( ServerHandshakeResultPacket packet,
-            AERoutingClient context )
+                                                               AERoutingClient context )
         {
             Console.WriteLine( "Received AE# handshake result" );
             if ( packet.Result == ServerHandshakeResultPacket.SHRPResult.Failure )
