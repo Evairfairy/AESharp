@@ -10,7 +10,7 @@ namespace AESharp.MasterRouter
 {
     public class Program
     {
-        private static void Setup()
+        static Program()
         {
             // This must be second (after decryption)
             MasterRouterServices.IncomingMiddlewareHandler.RegisterMiddleware( new AEPacketReaderMiddleware() );
@@ -25,8 +25,6 @@ namespace AESharp.MasterRouter
 
         public static void Main( string[] args )
         {
-            Setup();
-
             TcpServer server = new TcpServer( new IPEndPoint( IPAddress.Loopback, 12000 ) );
             server.Start( AcceptAEClientAsync );
 

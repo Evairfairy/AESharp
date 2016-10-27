@@ -1,0 +1,21 @@
+﻿{
+	"version": "1.0.0-*",
+	"buildOptions": {
+		"emitEntryPoint": true
+	},
+
+	"dependencies": {
+		"Microsoft.EntityFrameworkCore": "1.0.1",
+		"MySql.Data.EntityFrameworkCore": "7.0.5-IR21",
+		"Microsoft.NETCore.App": {
+			"type": "platform",
+			"version": "1.0.1"
+		}
+	},
+
+	"frameworks": {
+		"netcoreapp1.0": {
+			"imports": "dnxcore50"
+		}
+	}
+}

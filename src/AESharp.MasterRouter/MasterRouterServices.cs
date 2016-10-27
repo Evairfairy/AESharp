@@ -9,17 +9,17 @@ namespace AESharp.MasterRouter
 {
     public static class MasterRouterServices
     {
-        public static AEPacketHandler<AERoutingClient> PacketHandler = new AEPacketHandler<AERoutingClient>();
+        public static readonly AEPacketHandler<AERoutingClient> PacketHandler = new AEPacketHandler<AERoutingClient>();
 
-        public static RemoteClientRepository<RoutingMetaPacket, AERoutingClient> RemoteClients =
+        public static readonly RemoteClientRepository<RoutingMetaPacket, AERoutingClient> RemoteClients =
             new RemoteClientRepository<RoutingMetaPacket, AERoutingClient>();
 
-        public static MiddlewareHandler<RoutingMetaPacket, AERoutingClient> IncomingMiddlewareHandler =
+        public static readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> IncomingMiddlewareHandler =
             new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
 
-        public static MiddlewareHandler<RoutingMetaPacket, AERoutingClient> OutgoingMiddlewareHandler =
+        public static readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> OutgoingMiddlewareHandler =
             new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
 
-        public static ComponentRepository ObjectRepository = new ComponentRepository();
+        public static readonly ComponentRepository ObjectRepository = new ComponentRepository();
     }
 }
