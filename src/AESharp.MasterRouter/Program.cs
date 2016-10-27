@@ -37,12 +37,11 @@ namespace AESharp.MasterRouter
         {
             Console.WriteLine( "Accepting AEClient" );
             AERoutingClient client = new AERoutingClient( rawClient, MasterRouterServices.PacketHandler,
-                MasterRouterServices.IncomingMiddlewareHandler, MasterRouterServices.OutgoingMiddlewareHandler );
+                MasterRouterServices.IncomingMiddlewareHandler, MasterRouterServices.OutgoingMiddlewareHandler,
+                MasterRouterServices.ObjectRepository );
 
-            Guid clientGuid = Guid.Empty;
             try
             {
-                clientGuid = MasterRouterServices.RemoteClients.AddClient( client );
                 await client.ListenForDataTask();
             }
             catch ( Exception ex )
@@ -51,9 +50,10 @@ namespace AESharp.MasterRouter
             }
             finally
             {
-                if ( clientGuid != Guid.Empty )
+                if ( client.ClientGuid != Guid.Empty )
                 {
-                    MasterRouterServices.RemoteClients.RemoveClient( clientGuid );
+                    MasterRouterServices.ObjectRepository.RemoveObject( client.ClientGuid );
+                    MasterRouterServices.RemoteClients.RemoveClient( client.ClientGuid );
                 }
             }
 

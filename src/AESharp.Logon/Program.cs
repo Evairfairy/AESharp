@@ -75,16 +75,22 @@ namespace AESharp.Logon
             await client.ConnectAsync( address, port );
 
             AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler,
-                LogonServices.IncomingRoutingMiddlewareHandler, LogonServices.OutgoingRoutingMiddlewareHandler );
+                LogonServices.IncomingRoutingMiddlewareHandler, LogonServices.OutgoingRoutingMiddlewareHandler,
+                LogonServices.ObjectRepository );
 
             ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket();
             chbp.Protocol = Constants.LatestAEProtocolVersion;
             chbp.Password = "aesharp";
-            chbp.ComponentType = ComponentType.UniversalAuthServer;
+            chbp.Component = new RoutingComponent
+            {
+                Type = ComponentType.UniversalAuthServer
+            };
 
             await routingClient.SendDataAsync( chbp.FinalizePacket() );
 
             await routingClient.ListenForDataTask();
+
+            LogonServices.ObjectRepository.RemoveObject( routingClient.ClientGuid );
         }
 
         private static async void AcceptClientActionAsync( TcpClient rawClient )

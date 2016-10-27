@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using AESharp.Networking.Data;
 using AESharp.Networking.Middleware;
+using AESharp.Routing.Core;
 using AESharp.Routing.Exceptions;
 using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking.Packets;
@@ -15,15 +16,26 @@ namespace AESharp.Routing.Networking
         private readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> _incomingMiddlewareHandler;
         private readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> _outgoingMiddlewareHandler;
 
+        public readonly ComponentRepository ObjectRepository;
+
         public bool Authenticated = false;
+        public RoutingComponent ComponentData = new RoutingComponent();
+
+        public new Guid ClientGuid
+        {
+            get { return this.ComponentData.Guid; }
+            set { this.ComponentData.Guid = value; }
+        }
 
         public AERoutingClient( TcpClient rawClient, AEPacketHandler<AERoutingClient> handler,
             MiddlewareHandler<RoutingMetaPacket, AERoutingClient> incomingMiddlewareHandler,
-            MiddlewareHandler<RoutingMetaPacket, AERoutingClient> outgoingMiddlewareHandler ) : base( rawClient )
+            MiddlewareHandler<RoutingMetaPacket, AERoutingClient> outgoingMiddlewareHandler,
+            ComponentRepository objectRepository ) : base( rawClient )
         {
             this._handler = handler;
             this._incomingMiddlewareHandler = incomingMiddlewareHandler;
             this._outgoingMiddlewareHandler = outgoingMiddlewareHandler;
+            this.ObjectRepository = objectRepository;
         }
 
         public override async Task SendDataAsync( RoutingMetaPacket metaPacket )

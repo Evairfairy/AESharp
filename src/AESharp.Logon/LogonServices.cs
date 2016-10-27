@@ -2,6 +2,7 @@
 using AESharp.Logon.Universal.Networking.Middleware;
 using AESharp.Networking.Data;
 using AESharp.Networking.Middleware;
+using AESharp.Routing.Core;
 using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking;
 using AESharp.Routing.Networking.Packets;
@@ -10,25 +11,28 @@ namespace AESharp.Logon
 {
     public static class LogonServices
     {
-        public static AccountRepository Accounts = new AccountRepository();
-        public static RealmRepository Realms = new RealmRepository();
+        public static readonly AccountRepository Accounts = new AccountRepository();
+        public static readonly RealmRepository Realms = new RealmRepository();
 
-        public static RemoteClientRepository<LogonMetaPacket, LogonRemoteClient> LogonClients =
+        public static readonly RemoteClientRepository<LogonMetaPacket, LogonRemoteClient> LogonClients =
             new RemoteClientRepository<LogonMetaPacket, LogonRemoteClient>();
 
-        public static AEPacketHandler<AERoutingClient> InteropPacketHandler = new AEPacketHandler<AERoutingClient>();
+        public static readonly AEPacketHandler<AERoutingClient> InteropPacketHandler =
+            new AEPacketHandler<AERoutingClient>();
 
-        public static MiddlewareHandler<LogonMetaPacket, LogonRemoteClient> IncomingLogonMiddleware =
+        public static readonly MiddlewareHandler<LogonMetaPacket, LogonRemoteClient> IncomingLogonMiddleware =
             new MiddlewareHandler<LogonMetaPacket, LogonRemoteClient>();
 
-        public static MiddlewareHandler<LogonMetaPacket, LogonRemoteClient> OutgoingLogonMiddleware =
+        public static readonly MiddlewareHandler<LogonMetaPacket, LogonRemoteClient> OutgoingLogonMiddleware =
             new MiddlewareHandler<LogonMetaPacket, LogonRemoteClient>();
 
 
-        public static MiddlewareHandler<RoutingMetaPacket, AERoutingClient> IncomingRoutingMiddlewareHandler =
+        public static readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> IncomingRoutingMiddlewareHandler =
             new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
 
-        public static MiddlewareHandler<RoutingMetaPacket, AERoutingClient> OutgoingRoutingMiddlewareHandler =
+        public static readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> OutgoingRoutingMiddlewareHandler =
             new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
+
+        public static readonly ComponentRepository ObjectRepository = new ComponentRepository();
     }
 }

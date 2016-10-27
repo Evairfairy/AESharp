@@ -9,6 +9,23 @@ namespace AESharp.Routing.Extensions
 {
     internal static class PacketExtensions
     {
+        public static RoutingComponent ReadRoutingComponent( this Packet packet )
+        {
+            return new RoutingComponent
+            {
+                Guid = packet.ReadGuid(),
+                Type = packet.ReadComponentType(),
+                OwnedObjects = packet.ReadList( ReadRoutingComponent )
+            };
+        }
+
+        public static void WriteRoutingComponent( this Packet packet, RoutingComponent component )
+        {
+            packet.WriteGuid( component.Guid );
+            packet.WriteComponentType( component.Type );
+            packet.WriteList( component.OwnedObjects, WriteRoutingComponent );
+        }
+
         public static AEPacketId ReadPacketId( this Packet packet )
         {
             int id = packet.ReadInt32();

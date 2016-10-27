@@ -35,10 +35,18 @@ namespace AESharp.Routing.Networking.Handlers
                 return;
             }
 
-            context.ClientGuid = Guid.NewGuid();
             context.Authenticated = true;
+            context.ComponentData = packet.Component;
 
-            Console.WriteLine( $"Password matched, allocating guid: {context.ClientGuid}" );
+            // Overwrite any existing guid - master router should dictate this
+            context.ComponentData.Guid = Guid.NewGuid();
+
+            Console.WriteLine( $"Password matched, allocating guid: {context.ComponentData.Guid}" );
+            Console.WriteLine( $"Got component of type {context.ComponentData.Type}" );
+            Console.WriteLine( $"Component owns {context.ComponentData.OwnedObjects.Count} objects" );
+
+            context.ObjectRepository.AddObject( context.ComponentData );
+
             response.Result = ServerHandshakeResultPacket.SHRPResult.Success;
             response.AssignedGuid = context.ClientGuid;
 
@@ -62,6 +70,8 @@ namespace AESharp.Routing.Networking.Handlers
                 context.ClientGuid = packet.AssignedGuid;
                 context.Authenticated = true;
                 Console.WriteLine( $"Authenticated successfully, we have guid: {context.ClientGuid}" );
+
+                context.ObjectRepository.AddObject( context.ComponentData );
             }
         }
     }

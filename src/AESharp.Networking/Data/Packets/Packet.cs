@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -130,6 +131,35 @@ namespace AESharp.Networking.Data.Packets
         public string ReadByteString() => this.ReadString( StringType.ByteString );
         public string ReadShortString() => this.ReadString( StringType.ShortString );
         public string ReadCString() => this.ReadString( StringType.NullTerminatedString );
+
+        public List<T> ReadList<T>( Func<Packet, T> readObjectFunc )
+        {
+            List<T> returnList = new List<T>();
+
+            ushort listSize = this.ReadUInt16();
+
+            for ( ushort i = 0; i < listSize; ++i )
+            {
+                returnList.Add( readObjectFunc( this ) );
+            }
+
+            return returnList;
+        }
+
+        public void WriteList<T>( List<T> list, Action<Packet, T> writeObjectFunc )
+        {
+            if ( list.Count > ushort.MaxValue )
+            {
+                throw new InvalidOperationException(
+                    $"You may only write lists containing a maximum of {ushort.MaxValue} elements" );
+            }
+
+            this.WriteUInt16( (ushort) list.Count );
+            foreach ( T value in list )
+            {
+                writeObjectFunc( this, value );
+            }
+        }
 
         public Version ReadVersion()
         {
