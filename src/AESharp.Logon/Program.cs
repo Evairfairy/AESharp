@@ -4,7 +4,6 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using AESharp.Logon.Middleware;
 using AESharp.Networking;
-using AESharp.Routing.Networking;
 using SimpleInjector;
 
 namespace AESharp.Logon
@@ -57,7 +56,7 @@ namespace AESharp.Logon
             TcpClient client = new TcpClient();
             await client.ConnectAsync( address, port );
 
-            AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler );
+            //AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler );
         }
 
         private static async void AcceptClientActionAsync( TcpClient rawClient )

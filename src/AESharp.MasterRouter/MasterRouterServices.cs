@@ -1,4 +1,6 @@
 ﻿using AESharp.Networking.Data;
+using AESharp.Networking.Middleware;
+using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking;
 using AESharp.Routing.Networking.Packets;
 
@@ -8,7 +10,13 @@ namespace AESharp.MasterRouter
     {
         public static AEPacketHandler<AERoutingClient> PacketHandler = new AEPacketHandler<AERoutingClient>();
 
-        public static RemoteClientRepository<AERoutingClient> RemoteClients =
-            new RemoteClientRepository<AERoutingClient>();
+        public static RemoteClientRepository<RoutingMetaPacket, AERoutingClient> RemoteClients =
+            new RemoteClientRepository<RoutingMetaPacket, AERoutingClient>();
+
+        public static MiddlewareHandler<RoutingMetaPacket, AERoutingClient> IncomingMiddlewareHandler =
+            new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
+
+        public static MiddlewareHandler<RoutingMetaPacket, AERoutingClient> OutgoingMiddlewareHandler =
+            new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AESharp.Networking.Data.Packets
 {
-    public class Packet : IPacket
+    public class Packet
     {
         private readonly MemoryStream _memoryStream;
         private readonly BinaryReader _reader;
@@ -109,7 +109,8 @@ namespace AESharp.Networking.Data.Packets
 
             if ( remainingBytes < 0 )
             {
-                throw new InvalidOperationException( $"Internal error in {nameof( Packet )}->{nameof( this.ReadRemainingBytes )}: {nameof(remainingBytes)} was {remainingBytes}");
+                throw new InvalidOperationException(
+                    $"Internal error in Packet->{nameof( this.ReadRemainingBytes )}: {nameof( remainingBytes )} was {remainingBytes}" );
             }
 
             if ( remainingBytes == 0 )

@@ -5,7 +5,8 @@ namespace AESharp.Networking.Middleware
 {
     public class MiddlewareHandler<TMetaPacket, TContext> where TMetaPacket : MetaPacket
     {
-        private readonly List<IMiddleware<TMetaPacket, TContext>> _middleware = new List<IMiddleware<TMetaPacket, TContext>>();
+        private readonly List<IMiddleware<TMetaPacket, TContext>> _middleware =
+            new List<IMiddleware<TMetaPacket, TContext>>();
 
         public void RegisterMiddleware( IMiddleware<TMetaPacket, TContext> middleware )
         {

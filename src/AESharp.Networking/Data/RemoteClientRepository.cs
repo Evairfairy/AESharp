@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using AESharp.Networking.Middleware;
 
 namespace AESharp.Networking.Data
 {
-    public class RemoteClientRepository<T> where T : RemoteClient
+    public class RemoteClientRepository<TMetaPacket, T> where T : RemoteClient<TMetaPacket>
+                                                        where TMetaPacket : MetaPacket, new()
     {
         /// <summary>
         ///     Holds the RemoteClient objects. All access to this Dictionary is made thread-safe.

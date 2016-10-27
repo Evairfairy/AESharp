@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AESharp.Core.Crypto;
 using AESharp.Core.Extensions;
 using AESharp.Logon.Accounts;
+using AESharp.Logon.Universal.Networking.Middleware;
 using AESharp.Logon.Universal.Networking.Packets;
 using AESharp.Networking.Data;
 using AESharp.Networking.Data.Packets;
@@ -12,7 +13,7 @@ using AESharp.Networking.Exceptions;
 
 namespace AESharp.Logon
 {
-    public class LogonRemoteClient : RemoteClient
+    public class LogonRemoteClient : RemoteClient<LogonMetaPacket>
     {
         public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
 
@@ -20,29 +21,29 @@ namespace AESharp.Logon
         {
         }
 
-        public override async Task SendDataAsync( byte[] data )
+        public override async Task SendDataAsync( LogonMetaPacket metaPacket )
         {
-            data = await LogonServices.OutgoingLogonMiddleware.RunMiddlewareAsync( data, this );
+            metaPacket = await LogonServices.OutgoingLogonMiddleware.RunMiddlewareAsync( metaPacket, this );
 
-            if ( data == null )
+            if ( metaPacket.Handled )
             {
-                Console.WriteLine( "Outgoing logon middleware handlers nulled outgoing data" );
+                Console.WriteLine( "Outgoing logon middleware handled metaPacket" );
                 return;
             }
 
-            await base.SendDataAsync( data );
+            await base.SendDataAsync( metaPacket );
         }
 
-        public override async Task HandleDataAsync( byte[] data )
+        public override async Task HandleDataAsync( LogonMetaPacket metaPacket )
         {
-            data = await LogonServices.IncomingLogonMiddleware.RunMiddlewareAsync( data, this );
-            if ( data == null )
+            metaPacket = await LogonServices.IncomingLogonMiddleware.RunMiddlewareAsync( metaPacket, this );
+            if ( metaPacket.Handled )
             {
-                Console.WriteLine( "Incoming logon middleware handlers nulled incoming data" );
+                Console.WriteLine( "Incoming logon middleware handled metaPacket" );
                 return;
             }
 
-            LogonPacket logonPacket = new LogonPacket( data );
+            LogonPacket logonPacket = new LogonPacket( metaPacket );
 
             switch ( logonPacket.Opcode )
             {
@@ -71,7 +72,7 @@ namespace AESharp.Logon
                         {
                             Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
                         };
-                        await this.SendDataAsync( response.FinalizePacket() );
+                        await this.SendDataAsync( new LogonMetaPacket( response.FinalizePacket() ) );
                     }
                     else
                     {
@@ -84,7 +85,7 @@ namespace AESharp.Logon
                             {
                                 Error = ChallengeResponsePacket.ChallengeResponseError.AccountClosed
                             };
-                            await this.SendDataAsync( response.FinalizePacket() );
+                            await this.SendDataAsync( new LogonMetaPacket( response.FinalizePacket() ) );
                             this.Disconnect();
                             return;
                         }
@@ -117,7 +118,7 @@ namespace AESharp.Logon
 
                         pack.WriteByte( 0 );
 
-                        await this.SendDataAsync( pack.FinalizePacket() );
+                        await this.SendDataAsync( new LogonMetaPacket( pack.FinalizePacket() ) );
                     }
                     break;
                 }
@@ -135,7 +136,7 @@ namespace AESharp.Logon
                         {
                             Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
                         };
-                        await this.SendDataAsync( response.FinalizePacket() );
+                        await this.SendDataAsync( new LogonMetaPacket( response.FinalizePacket() ) );
                         return;
                     }
 
@@ -147,7 +148,7 @@ namespace AESharp.Logon
                     successPacket.WriteInt32( 0 );
                     successPacket.WriteInt16( 0 );
 
-                    await this.SendDataAsync( successPacket.FinalizePacket() );
+                    await this.SendDataAsync( new LogonMetaPacket( successPacket.FinalizePacket() ) );
 
                     break;
                 }
@@ -162,7 +163,7 @@ namespace AESharp.Logon
                     Packet realmPacket = new Packet();
                     realmPacket.WriteByte( 0x10 );
 
-                    long oldPosition = realmPacket.BufferPosition;
+                    int oldPosition = realmPacket.BufferPosition;
                     realmPacket.WriteInt16( 0 );
                     realmPacket.WriteInt32( 0 );
 
@@ -187,7 +188,7 @@ namespace AESharp.Logon
                     realmPacket.BufferPosition = oldPosition;
                     realmPacket.WriteInt16( (short) ( realmPacket.Length - 3 ) );
 
-                    await this.SendDataAsync( realmPacket.FinalizePacket() );
+                    await this.SendDataAsync( new LogonMetaPacket( realmPacket.FinalizePacket() ) );
 
                     break;
                 }

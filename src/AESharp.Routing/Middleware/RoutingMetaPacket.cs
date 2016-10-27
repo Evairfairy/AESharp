@@ -6,11 +6,16 @@ namespace AESharp.Routing.Middleware
 {
     public class RoutingMetaPacket : MetaPacket
     {
-        public Guid Sender;
-        public Guid Target;
         public AEPacketId PacketId;
+        public Guid Sender;
+        public ushort Size;
+        public Guid Target;
 
         public RoutingMetaPacket( byte[] payload ) : base( payload )
+        {
+        }
+
+        public RoutingMetaPacket()
         {
         }
     }

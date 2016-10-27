@@ -3,7 +3,7 @@ using AESharp.Networking.Middleware;
 
 namespace AESharp.Networking.Data.Packets
 {
-    public abstract class ManagedPacket<TMetaPacket> where TMetaPacket : MetaPacket, IPacket<TMetaPacket>
+    public abstract class ManagedPacket<TMetaPacket> : IPacket<TMetaPacket> where TMetaPacket : MetaPacket
     {
         protected readonly Packet InternalPacket;
 

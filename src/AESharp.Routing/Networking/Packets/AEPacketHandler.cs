@@ -6,8 +6,7 @@ using AESharp.Routing.Networking.Packets.Handshaking;
 
 namespace AESharp.Routing.Networking.Packets
 {
-    public class AEPacketHandler<TMetaPacket, TPacketContext>
-        where TMetaPacket : RoutingMetaPacket
+    public class AEPacketHandler<TPacketContext>
         where TPacketContext : AERoutingClient
     {
         private static readonly Func<AEPacket, TPacketContext, Task> NullHandler =
@@ -16,17 +15,17 @@ namespace AESharp.Routing.Networking.Packets
         public Func<ClientHandshakeBeginPacket, TPacketContext, Task> ClientHandshakeBeginHandler = NullHandler;
         public Func<ServerHandshakeResultPacket, TPacketContext, Task> ServerHandshakeResultHandler = NullHandler;
 
-        public async Task HandlePacket( TMetaPacket metaPacket, TPacketContext context )
+        public async Task HandlePacket( RoutingMetaPacket metaPacket, TPacketContext context )
         {
-            AEPacket packet = new AEPacket( metaPacket.PacketId, metaPacket.Payload );
+            AEPacket packet = new AEPacket( metaPacket );
 
             switch ( packet.PacketId )
             {
                 case AEPacketId.ClientHandshakeBegin:
-                    await this.ClientHandshakeBeginHandler( new ClientHandshakeBeginPacket( metaPacket.Payload ), context );
+                    await this.ClientHandshakeBeginHandler( new ClientHandshakeBeginPacket( metaPacket ), context );
                     break;
                 case AEPacketId.ServerHandshakeResult:
-                    await this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( metaPacket.Payload ), context );
+                    await this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( metaPacket ), context );
                     break;
             }
         }

@@ -19,7 +19,8 @@ namespace AESharp.MasterRouter
         private static async void AcceptAEClientAsync( TcpClient rawClient )
         {
             Console.WriteLine( "Accepting AEClient" );
-            AERoutingClient client = new AERoutingClient( rawClient, MasterRouterServices.PacketHandler );
+            AERoutingClient client = new AERoutingClient( rawClient, MasterRouterServices.PacketHandler,
+                MasterRouterServices.IncomingMiddlewareHandler, MasterRouterServices.OutgoingMiddlewareHandler );
 
             Guid clientGuid = Guid.Empty;
             try

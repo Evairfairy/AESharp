@@ -2,8 +2,14 @@
 {
     public class MetaPacket
     {
-        public byte[] Payload;
         public bool Handled = false;
+        public bool KillSender = false;
+        public byte[] Payload;
+
+        public MetaPacket()
+        {
+            this.Payload = new byte[0];
+        }
 
         public MetaPacket( byte[] payload )
         {

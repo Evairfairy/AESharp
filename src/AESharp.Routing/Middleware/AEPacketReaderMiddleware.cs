@@ -1,21 +1,25 @@
 ﻿using System.Threading.Tasks;
+using AESharp.Networking.Data.Packets;
 using AESharp.Networking.Middleware;
+using AESharp.Routing.Extensions;
 using AESharp.Routing.Networking;
 
 namespace AESharp.Routing.Middleware
 {
     public class AEPacketReaderMiddleware : IMiddleware<RoutingMetaPacket, AERoutingClient>
     {
-        public Task<RoutingMetaPacket> CallMiddlewareAsync( RoutingMetaPacket packet, AERoutingClient context )
+        public Task<RoutingMetaPacket> CallMiddlewareAsync( RoutingMetaPacket metaPacket, AERoutingClient context )
         {
-            AEPacketHeader header = new AEPacketHeader( packet.Payload );
+            Packet packet = new Packet( metaPacket.Payload );
 
-            packet.Sender = header.Sender;
-            packet.Target = header.Target;
-            packet.PacketId = header.Id;
-            packet.Payload = header.Payload;
+            metaPacket.Sender = packet.ReadGuid();
+            metaPacket.Target = packet.ReadGuid();
+            metaPacket.Size = packet.ReadUInt16();
+            metaPacket.PacketId = packet.ReadPacketId();
 
-            return Task.FromResult(packet);
+            metaPacket.Payload = packet.ReadRemainingBytes();
+
+            return Task.FromResult( metaPacket );
         }
     }
 }

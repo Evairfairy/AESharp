@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AESharp.Logon.Universal.Networking.Middleware;
 using AESharp.Networking.Middleware;
 
 namespace AESharp.Logon.Middleware
 {
-    public class TestMiddleware : IMiddleware<LogonRemoteClient>
+    public class TestMiddleware : IMiddleware<LogonMetaPacket, LogonRemoteClient>
     {
-        public async Task<byte[]> CallMiddlewareAsync( byte[] data, LogonRemoteClient context )
+        public async Task<LogonMetaPacket> CallMiddlewareAsync( LogonMetaPacket metaPacket, LogonRemoteClient context )
         {
-            Console.WriteLine( $"[{context.ClientGuid}]: handling {data.Length} bytes" );
+            Console.WriteLine( $"[{context.ClientGuid}]: handling {metaPacket.Payload.Length} bytes" );
 
-            return data;
+            return metaPacket;
         }
     }
 }

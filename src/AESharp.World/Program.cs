@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AESharp.Core.Extensions;
 using AESharp.Networking;
 using AESharp.World.Networking;
+using AESharp.World.Networking.Middleware;
 
 namespace AESharp.World
 {
@@ -48,7 +49,7 @@ namespace AESharp.World
                     {
                         // Give us time to start listening
                         await Task.Delay( 500 );
-                        await client.SendDataAsync( packet.FinalizePacket() );
+                        await client.SendDataAsync( new RealmMetaPacket( packet.FinalizePacket() ) );
                     } ).RunAsync();
 
                 await client.ListenForDataTask();

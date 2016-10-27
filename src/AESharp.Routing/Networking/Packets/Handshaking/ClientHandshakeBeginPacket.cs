@@ -1,5 +1,6 @@
 ﻿using AESharp.Routing.Core;
 using AESharp.Routing.Extensions;
+using AESharp.Routing.Middleware;
 
 namespace AESharp.Routing.Networking.Packets.Handshaking
 {
@@ -13,14 +14,16 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
         {
         }
 
-        public ClientHandshakeBeginPacket( byte[] data ) : base( AEPacketId.ClientHandshakeBegin, data )
+        public ClientHandshakeBeginPacket( RoutingMetaPacket metaPacket ) : base( metaPacket )
         {
+            this.InternalMetaPacket.PacketId = AEPacketId.ClientHandshakeBegin;
+
             this.Protocol = this.InternalPacket.ReadUInt32();
             this.Password = this.InternalPacket.ReadShortString();
             this.ComponentType = this.InternalPacket.ReadComponentType();
         }
 
-        public override byte[] FinalizePacket()
+        public override RoutingMetaPacket FinalizePacket()
         {
             this.InternalPacket.WriteUInt32( this.Protocol );
             this.InternalPacket.WriteShortString( this.Password );

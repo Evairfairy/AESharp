@@ -9,13 +9,15 @@ using AESharp.Routing.Networking.Packets;
 
 namespace AESharp.Routing.Networking
 {
-    public class AERoutingClient : RemoteClient
+    public class AERoutingClient : RemoteClient<RoutingMetaPacket>
     {
-        private readonly AEPacketHandler<RoutingMetaPacket, AERoutingClient> _handler;
+        private readonly AEPacketHandler<AERoutingClient> _handler;
         private readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> _incomingMiddlewareHandler;
         private readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> _outgoingMiddlewareHandler;
 
-        public AERoutingClient( TcpClient rawClient, AEPacketHandler<RoutingMetaPacket, AERoutingClient> handler,
+        public bool Authenticated = false;
+
+        public AERoutingClient( TcpClient rawClient, AEPacketHandler<AERoutingClient> handler,
             MiddlewareHandler<RoutingMetaPacket, AERoutingClient> incomingMiddlewareHandler,
             MiddlewareHandler<RoutingMetaPacket, AERoutingClient> outgoingMiddlewareHandler ) : base( rawClient )
         {
@@ -24,10 +26,8 @@ namespace AESharp.Routing.Networking
             this._outgoingMiddlewareHandler = outgoingMiddlewareHandler;
         }
 
-        public override async Task SendDataAsync( byte[] data )
+        public override async Task SendDataAsync( RoutingMetaPacket metaPacket )
         {
-            RoutingMetaPacket metaPacket = new RoutingMetaPacket( data );
-
             await this._outgoingMiddlewareHandler.RunMiddlewareAsync( metaPacket, this );
 
             if ( metaPacket.Handled )
@@ -36,13 +36,11 @@ namespace AESharp.Routing.Networking
                 return;
             }
 
-            await base.SendDataAsync( data );
+            await base.SendDataAsync( metaPacket );
         }
 
-        public override async Task HandleDataAsync( byte[] data )
+        public override async Task HandleDataAsync( RoutingMetaPacket metaPacket )
         {
-            RoutingMetaPacket metaPacket = new RoutingMetaPacket( data );
-
             await this._incomingMiddlewareHandler.RunMiddlewareAsync( metaPacket, this );
 
             if ( metaPacket.Handled )

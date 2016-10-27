@@ -2,13 +2,14 @@
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using AESharp.Networking.Exceptions;
+using AESharp.Networking.Middleware;
 
 namespace AESharp.Networking.Data
 {
     /// <summary>
     ///     Implements most functionality needed for a remote client, but must be inherited to handle packets
     /// </summary>
-    public abstract class RemoteClient
+    public abstract class RemoteClient<TMetaPacket> where TMetaPacket : MetaPacket, new()
     {
         private const int BufferSize = 4096;
 
@@ -82,7 +83,14 @@ namespace AESharp.Networking.Data
 
                 try
                 {
-                    await this.HandleDataAsync( buffer );
+                    TMetaPacket metaPacket = new TMetaPacket { Payload = buffer };
+                    await this.HandleDataAsync( metaPacket );
+
+                    if ( metaPacket.KillSender )
+                    {
+                        this.Disconnect();
+                        break;
+                    }
                 }
                 catch ( InvalidPacketException ex )
                 {
@@ -95,19 +103,21 @@ namespace AESharp.Networking.Data
         /// <summary>
         ///     Sends data to the RemoteClient
         /// </summary>
-        /// <param name="data">Data to send</param>
+        /// <param name="metaPacket">Packet to send</param>
         /// <returns>Task</returns>
-        public virtual async Task SendDataAsync( byte[] data )
+        public virtual async Task SendDataAsync( TMetaPacket metaPacket )
         {
+            byte[] data = metaPacket.Payload;
+
             await this.RawClient.GetStream().WriteAsync( data, 0, data.Length );
         }
 
         /// <summary>
         ///     Handles data sent by the client
         /// </summary>
-        /// <param name="data">Data that was sent by the client</param>
+        /// <param name="metaPacket">MetaPacket containing data that was sent by the client</param>
         /// <returns>Task</returns>
-        public abstract Task HandleDataAsync( byte[] data );
+        public abstract Task HandleDataAsync( TMetaPacket metaPacket );
 
         /// <summary>
         ///     Closes both receive and send sockets for the underlying TcpClient. After calling this method, the RemoteClient

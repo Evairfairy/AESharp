@@ -1,4 +1,5 @@
 ﻿using System;
+using AESharp.Logon.Universal.Networking.Middleware;
 using AESharp.Networking.Data.Packets;
 
 namespace AESharp.Logon.Universal.Networking.Packets
@@ -6,8 +7,6 @@ namespace AESharp.Logon.Universal.Networking.Packets
     public sealed class LogonPacket : Packet
     {
         public byte Opcode { get; set; }
-
-        public byte Error { get; set; }
 
         /// <summary>
         ///     Automatically calculated when sending
@@ -17,7 +16,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
         public ArraySegment<byte> Payload
             => new ArraySegment<byte>( this.InternalBuffer, 1, this.Length );
 
-        public LogonPacket( byte[] data ) : base( data )
+        public LogonPacket( LogonMetaPacket metaPacket ) : base( metaPacket.Payload )
         {
             this.Opcode = this.ReadByte();
         }

@@ -43,6 +43,20 @@ namespace AESharp.Routing.Networking.Handlers
         public static async Task ServerHandshakeResultHandler( ServerHandshakeResultPacket packet,
             AERoutingClient context )
         {
+            if ( packet.Result == ServerHandshakeResultPacket.SHRPResult.Failure )
+            {
+                Console.WriteLine( $"Failed to authenticate with master router (reason: generic failure)" );
+                context.Disconnect();
+                return;
+            }
+
+            if ( packet.Result == ServerHandshakeResultPacket.SHRPResult.Success )
+            {
+                // Authenticated
+                context.ClientGuid = packet.AssignedGuid;
+                context.Authenticated = true;
+                Console.WriteLine( "Authenticated successfully" );
+            }
         }
     }
 }

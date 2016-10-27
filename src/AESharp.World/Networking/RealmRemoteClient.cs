@@ -3,11 +3,12 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using AESharp.Networking.Data;
 using AESharp.Networking.Exceptions;
+using AESharp.World.Networking.Middleware;
 using AESharp.World.Networking.Packets;
 
 namespace AESharp.World.Networking
 {
-    public class RealmRemoteClient : RemoteClient
+    public class RealmRemoteClient : RemoteClient<RealmMetaPacket>
     {
         private uint _seed;
 
@@ -32,9 +33,9 @@ namespace AESharp.World.Networking
         {
         }
 
-        public override async Task HandleDataAsync( byte[] data )
+        public override async Task HandleDataAsync( RealmMetaPacket metaPacket )
         {
-            RealmPacket realmPacket = new RealmPacket( data, false );
+            RealmPacket realmPacket = new RealmPacket( metaPacket.Payload, false );
 
             switch ( realmPacket.Opcode )
             {
