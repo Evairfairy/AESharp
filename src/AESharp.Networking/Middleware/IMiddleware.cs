@@ -2,8 +2,8 @@
 
 namespace AESharp.Networking.Middleware
 {
-    public interface IMiddleware<TContext>
+    public interface IMiddleware<TMetaPacket, TContext> where TMetaPacket : MetaPacket
     {
-        Task<byte[]> CallMiddlewareAsync( byte[] data, TContext context );
+        Task<TMetaPacket> CallMiddlewareAsync( TMetaPacket packet, TContext context );
     }
 }

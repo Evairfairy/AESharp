@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using AESharp.Logon.Middleware;
 using AESharp.Networking;
 using AESharp.Routing.Networking;
 using SimpleInjector;
@@ -18,6 +19,14 @@ namespace AESharp.Logon
             _container = new Container();
 
             _container.Verify();
+
+            // Setup middleware
+
+            // Register incoming middleware
+            LogonServices.IncomingLogonMiddleware.RegisterMiddleware( new TestMiddleware() );
+
+            // Register outgoing middleware
+            LogonServices.OutgoingLogonMiddleware.RegisterMiddleware( new TestMiddleware() );
         }
 
         // ReSharper disable once UnusedMember.Global

@@ -3,28 +3,28 @@ using System.Threading.Tasks;
 
 namespace AESharp.Networking.Middleware
 {
-    public class MiddlewareHandler<TContext>
+    public class MiddlewareHandler<TMetaPacket, TContext> where TMetaPacket : MetaPacket
     {
-        private readonly List<IMiddleware<TContext>> _middleware = new List<IMiddleware<TContext>>();
+        private readonly List<IMiddleware<TMetaPacket, TContext>> _middleware = new List<IMiddleware<TMetaPacket, TContext>>();
 
-        public void RegisterMiddleware( IMiddleware<TContext> middleware )
+        public void RegisterMiddleware( IMiddleware<TMetaPacket, TContext> middleware )
         {
             this._middleware.Add( middleware );
         }
 
-        public async Task<byte[]> RunMiddlewareAsync( byte[] data, TContext context )
+        public async Task<TMetaPacket> RunMiddlewareAsync( TMetaPacket packet, TContext context )
         {
-            foreach ( IMiddleware<TContext> middleware in this._middleware )
+            foreach ( IMiddleware<TMetaPacket, TContext> middleware in this._middleware )
             {
-                data = await middleware.CallMiddlewareAsync( data, context );
+                packet = await middleware.CallMiddlewareAsync( packet, context );
 
-                if ( data == null )
+                if ( packet.Handled )
                 {
                     break;
                 }
             }
 
-            return data;
+            return packet;
         }
     }
 }

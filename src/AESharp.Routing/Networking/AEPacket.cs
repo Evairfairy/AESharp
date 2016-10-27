@@ -2,10 +2,11 @@
 using AESharp.Networking.Data.Packets;
 using AESharp.Networking.Exceptions;
 using AESharp.Routing.Extensions;
+using AESharp.Routing.Middleware;
 
 namespace AESharp.Routing.Networking
 {
-    public class AEPacket : ManagedPacket
+    public class AEPacket<TMetaPacket> where TMetaPacket : ManagedPacket<TMetaPacket>, RoutingMetaPacket
     {
         // ReSharper disable once RedundantDefaultMemberInitializer
         private bool _finalized = false;
@@ -17,19 +18,12 @@ namespace AESharp.Routing.Networking
             this.PacketId = packetId;
         }
 
-        public AEPacket( byte[] data )
-            : base( data )
+        public AEPacket( AEPacketId packetId, byte[] data ) : base(data)
         {
-            if ( data.Length < sizeof( AEPacketId ) )
-            {
-                throw new InvalidPacketException(
-                    $"Malformed packet header: expected at least {sizeof( AEPacketId )} bytes" );
-            }
-
-            this.PacketId = this.InternalPacket.ReadPacketId();
+            this.PacketId = packetId;
         }
 
-        public override byte[] FinalizePacket()
+        public override TMetaPacket FinalizePacket()
         {
             if ( this._finalized )
             {

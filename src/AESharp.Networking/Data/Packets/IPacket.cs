@@ -1,7 +1,9 @@
-﻿namespace AESharp.Networking.Data.Packets
+﻿using AESharp.Networking.Middleware;
+
+namespace AESharp.Networking.Data.Packets
 {
-    public interface IPacket
+    public interface IPacket<TMetaPacket> where TMetaPacket : MetaPacket
     {
-        byte[] FinalizePacket();
+        TMetaPacket FinalizePacket();
     }
 }

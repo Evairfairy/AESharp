@@ -13,7 +13,7 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
         {
         }
 
-        public ClientHandshakeBeginPacket( byte[] data ) : base( data )
+        public ClientHandshakeBeginPacket( byte[] data ) : base( AEPacketId.ClientHandshakeBegin, data )
         {
             this.Protocol = this.InternalPacket.ReadUInt32();
             this.Password = this.InternalPacket.ReadShortString();

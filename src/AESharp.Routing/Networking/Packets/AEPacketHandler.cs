@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AESharp.Routing.Exceptions;
+using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking.Packets.Handshaking;
 
 namespace AESharp.Routing.Networking.Packets
 {
-    public class AEPacketHandler<TPacketContext> where TPacketContext : AERoutingClient
+    public class AEPacketHandler<TMetaPacket, TPacketContext>
+        where TMetaPacket : RoutingMetaPacket
+        where TPacketContext : AERoutingClient
     {
         private static readonly Func<AEPacket, TPacketContext, Task> NullHandler =
             ( packet, context ) => { throw new UnhandledAEPacketException( (int) packet.PacketId ); };
@@ -13,17 +16,17 @@ namespace AESharp.Routing.Networking.Packets
         public Func<ClientHandshakeBeginPacket, TPacketContext, Task> ClientHandshakeBeginHandler = NullHandler;
         public Func<ServerHandshakeResultPacket, TPacketContext, Task> ServerHandshakeResultHandler = NullHandler;
 
-        public async Task HandlePacket( AEPacket packet, TPacketContext context )
+        public async Task HandlePacket( TMetaPacket metaPacket, TPacketContext context )
         {
-            byte[] data = packet.FinalizePacket();
+            AEPacket packet = new AEPacket( metaPacket.PacketId, metaPacket.Payload );
 
             switch ( packet.PacketId )
             {
                 case AEPacketId.ClientHandshakeBegin:
-                    await this.ClientHandshakeBeginHandler( new ClientHandshakeBeginPacket( data ), context );
+                    await this.ClientHandshakeBeginHandler( new ClientHandshakeBeginPacket( metaPacket.Payload ), context );
                     break;
                 case AEPacketId.ServerHandshakeResult:
-                    await this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( data ), context );
+                    await this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( metaPacket.Payload ), context );
                     break;
             }
         }

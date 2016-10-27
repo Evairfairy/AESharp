@@ -1,8 +1,9 @@
 using System.Text;
+using AESharp.Networking.Middleware;
 
 namespace AESharp.Networking.Data.Packets
 {
-    public abstract class ManagedPacket : IPacket
+    public abstract class ManagedPacket<TMetaPacket> where TMetaPacket : MetaPacket, IPacket<TMetaPacket>
     {
         protected readonly Packet InternalPacket;
 
@@ -16,6 +17,6 @@ namespace AESharp.Networking.Data.Packets
             this.InternalPacket = new Packet( data, encoding );
         }
 
-        public abstract byte[] FinalizePacket();
+        public abstract TMetaPacket FinalizePacket();
     }
 }

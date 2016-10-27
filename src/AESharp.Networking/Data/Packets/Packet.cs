@@ -25,9 +25,9 @@ namespace AESharp.Networking.Data.Packets
             }
         }
 
-        public long BufferPosition
+        public int BufferPosition
         {
-            get { return this._memoryStream.Position; }
+            get { return (int) this._memoryStream.Position; }
             set { this._memoryStream.Position = value; }
         }
 
@@ -102,6 +102,23 @@ namespace AESharp.Networking.Data.Packets
         public char[] ReadChars( int count ) => this._reader.ReadChars( count );
         public int Read( byte[] buffer, int index, int count ) => this._reader.Read( buffer, index, count );
         public byte[] ReadBytes( int count ) => this._reader.ReadBytes( count );
+
+        public byte[] ReadRemainingBytes()
+        {
+            int remainingBytes = (int) ( this._memoryStream.Length - this._memoryStream.Position );
+
+            if ( remainingBytes < 0 )
+            {
+                throw new InvalidOperationException( $"Internal error in {nameof( Packet )}->{nameof( this.ReadRemainingBytes )}: {nameof(remainingBytes)} was {remainingBytes}");
+            }
+
+            if ( remainingBytes == 0 )
+            {
+                return new byte[0];
+            }
+
+            return this.ReadBytes( remainingBytes );
+        }
 
         public string ReadFixedString( int len )
         {
