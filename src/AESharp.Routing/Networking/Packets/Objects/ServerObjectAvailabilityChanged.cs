@@ -30,7 +30,9 @@ namespace AESharp.Routing.Networking.Packets.Objects
             }
         }
 
-        public ServerObjectAvailabilityChanged() : base( AEPacketId.ServerNewObjectAvailable ) { }
+        public ServerObjectAvailabilityChanged() : base( AEPacketId.ServerNewObjectAvailable )
+        {
+        }
 
         public ServerObjectAvailabilityChanged( RoutingMetaPacket internalMetaPacket ) : base( internalMetaPacket )
         {

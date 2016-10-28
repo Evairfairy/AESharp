@@ -19,7 +19,9 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
 
         public SHRPResult Result;
 
-        public ServerHandshakeResultPacket() : base( AEPacketId.ServerHandshakeResult ) { }
+        public ServerHandshakeResultPacket() : base( AEPacketId.ServerHandshakeResult )
+        {
+        }
 
         public ServerHandshakeResultPacket( RoutingMetaPacket metaPacket ) : base( metaPacket )
         {

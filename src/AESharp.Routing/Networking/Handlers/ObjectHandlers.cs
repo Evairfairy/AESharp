@@ -6,7 +6,7 @@ namespace AESharp.Routing.Networking.Handlers
     public static class ObjectHandlers
     {
         public static async Task HandleServerNewObjectAvailable( ServerObjectAvailabilityChanged packet,
-                                                                 AERoutingClient context )
+            AERoutingClient context )
         {
             if ( packet.Available )
             {

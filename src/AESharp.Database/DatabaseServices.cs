@@ -9,13 +9,13 @@ namespace AESharp.Database
     internal static class DatabaseServices
     {
         public static readonly AEPacketHandler<AERoutingClient> InteropPacketHandler =
-                new AEPacketHandler<AERoutingClient>();
+            new AEPacketHandler<AERoutingClient>();
 
         public static readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> IncomingRoutingMiddlewareHandler =
-                new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
+            new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
 
         public static readonly MiddlewareHandler<RoutingMetaPacket, AERoutingClient> OutgoingRoutingMiddlewareHandler =
-                new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
+            new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
 
         public static readonly ComponentRepository ObjectRepository = new ComponentRepository();
     }

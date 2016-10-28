@@ -71,9 +71,9 @@ namespace AESharp.Database
             await client.ConnectAsync( address, port );
 
             AERoutingClient routingClient = new AERoutingClient( client, DatabaseServices.InteropPacketHandler,
-                                                                 DatabaseServices.IncomingRoutingMiddlewareHandler,
-                                                                 DatabaseServices.OutgoingRoutingMiddlewareHandler,
-                                                                 DatabaseServices.ObjectRepository );
+                DatabaseServices.IncomingRoutingMiddlewareHandler,
+                DatabaseServices.OutgoingRoutingMiddlewareHandler,
+                DatabaseServices.ObjectRepository );
 
             ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket
             {

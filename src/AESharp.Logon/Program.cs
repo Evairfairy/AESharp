@@ -40,10 +40,10 @@ namespace AESharp.Logon
             LogonServices.OutgoingRoutingMiddlewareHandler.RegisterMiddleware( new AEPacketBuilderMiddleware() );
 
             LogonServices.InteropPacketHandler.ServerHandshakeResultHandler =
-                    HandshakeHandlers.ServerHandshakeResultHandler;
+                HandshakeHandlers.ServerHandshakeResultHandler;
 
             LogonServices.InteropPacketHandler.ServerNewObjectAvailableHandler =
-                    ObjectHandlers.HandleServerNewObjectAvailable;
+                ObjectHandlers.HandleServerNewObjectAvailable;
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -78,9 +78,9 @@ namespace AESharp.Logon
             await client.ConnectAsync( address, port );
 
             AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler,
-                                                                 LogonServices.IncomingRoutingMiddlewareHandler,
-                                                                 LogonServices.OutgoingRoutingMiddlewareHandler,
-                                                                 LogonServices.ObjectRepository );
+                LogonServices.IncomingRoutingMiddlewareHandler,
+                LogonServices.OutgoingRoutingMiddlewareHandler,
+                LogonServices.ObjectRepository );
 
             ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket();
             chbp.Protocol = Constants.LatestAEProtocolVersion;

@@ -17,7 +17,9 @@ namespace AESharp.Logon
     {
         public LogonAuthenticationData AuthData { get; } = new LogonAuthenticationData();
 
-        public LogonRemoteClient( TcpClient rawClient ) : base( rawClient ) { }
+        public LogonRemoteClient( TcpClient rawClient ) : base( rawClient )
+        {
+        }
 
         public override async Task SendDataAsync( LogonMetaPacket metaPacket )
         {

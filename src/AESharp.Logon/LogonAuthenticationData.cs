@@ -14,7 +14,7 @@ namespace AESharp.Logon
         public void InitSRP6( string username, byte[] passwordHash )
         {
             this.Srp6 = new SecureRemotePassword6( username,
-                                                   SecureRemotePassword6.GenerateCredentialsHash( "TESTGM", "TESTGM" ) );
+                SecureRemotePassword6.GenerateCredentialsHash( "TESTGM", "TESTGM" ) );
         }
     }
 }

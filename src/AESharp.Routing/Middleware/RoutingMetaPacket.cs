@@ -11,8 +11,12 @@ namespace AESharp.Routing.Middleware
         public ushort Size;
         public Guid Target;
 
-        public RoutingMetaPacket( byte[] payload ) : base( payload ) { }
+        public RoutingMetaPacket( byte[] payload ) : base( payload )
+        {
+        }
 
-        public RoutingMetaPacket() { }
+        public RoutingMetaPacket()
+        {
+        }
     }
 }

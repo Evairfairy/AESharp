@@ -89,7 +89,7 @@ namespace AESharp.World.Networking
             if ( data.Length < this.HeaderSize )
             {
                 throw new InvalidPacketException(
-                                                 $"{nameof( data )} must be at least {this.HeaderSize} bytes (packet header)" );
+                    $"{nameof( data )} must be at least {this.HeaderSize} bytes (packet header)" );
             }
 
             byte[] headerBytes = new byte[this.HeaderSize];
