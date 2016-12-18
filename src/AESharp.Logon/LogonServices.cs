@@ -1,4 +1,6 @@
-﻿using AESharp.Logon.Repositories;
+﻿using System.Net;
+using AESharp.Interop;
+using AESharp.Logon.Repositories;
 using AESharp.Logon.Universal.Networking.Middleware;
 using AESharp.Networking.Data;
 using AESharp.Networking.Middleware;
@@ -34,5 +36,7 @@ namespace AESharp.Logon
             new MiddlewareHandler<RoutingMetaPacket, AERoutingClient>();
 
         public static readonly ComponentRepository ObjectRepository = new ComponentRepository();
+
+        public static readonly InteropConnectionManager InteropConnectionManager = new InteropConnectionManager( IPAddress.Loopback, 12000 );
     }
 }

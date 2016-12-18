@@ -71,23 +71,23 @@ namespace AESharp.Logon
 
         private static async Task ConnectToMasterRouterAsync( IPAddress address, int port )
         {
-            // Give router time to start up (debug)
-            await Task.Delay( 2000 );
+            TcpClient routerClient = null;
 
-            TcpClient client = new TcpClient();
-            await client.ConnectAsync( address, port );
+            LogonServices.InteropConnectionManager.Connect( tcpClient => routerClient = tcpClient );
 
-            AERoutingClient routingClient = new AERoutingClient( client, LogonServices.InteropPacketHandler,
+            AERoutingClient routingClient = new AERoutingClient( routerClient, LogonServices.InteropPacketHandler,
                 LogonServices.IncomingRoutingMiddlewareHandler,
                 LogonServices.OutgoingRoutingMiddlewareHandler,
                 LogonServices.ObjectRepository );
 
-            ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket();
-            chbp.Protocol = Constants.LatestAEProtocolVersion;
-            chbp.Password = "aesharp";
-            chbp.Component = new RoutingComponent
+            ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket
             {
-                Type = ComponentType.UniversalAuthServer
+                Protocol = Constants.LatestAEProtocolVersion,
+                Password = "aesharp",
+                Component = new RoutingComponent
+                {
+                    Type = ComponentType.UniversalAuthServer
+                }
             };
 
             await routingClient.SendDataAsync( chbp.FinalizePacket() );
