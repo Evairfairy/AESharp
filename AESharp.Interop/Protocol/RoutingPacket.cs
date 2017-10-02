@@ -7,16 +7,16 @@ namespace AESharp.Interop.Protocol
     {
         public RoutingPacketId PacketId { get; }
 
-        public RoutingPacket( RoutingPacketId packetId )
+        public RoutingPacket(RoutingPacketId packetId)
         {
-            this.PacketId = packetId;
-            this.WritePacketId( packetId );
+            PacketId = packetId;
+            this.WritePacketId(packetId);
         }
 
-        public RoutingPacket( byte[] data )
-            : base( data )
+        public RoutingPacket(byte[] data)
+            : base(data)
         {
-            this.PacketId = this.ReadPacketId();
+            PacketId = this.ReadPacketId();
         }
     }
 }

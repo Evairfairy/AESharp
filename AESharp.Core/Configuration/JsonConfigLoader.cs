@@ -7,25 +7,25 @@ namespace AESharp.Core.Configuration
 {
     public sealed class JsonConfigLoader : ConfigLoader
     {
-        public override T Load<T>( string fileName, Encoding encoding = null )
+        public override T Load<T>(string fileName, Encoding encoding = null)
         {
-            string path = this.GetFilePath( fileName );
-            string json = File.ReadAllText( path, encoding ?? Encoding.UTF8 );
+            string path = GetFilePath(fileName);
+            string json = File.ReadAllText(path, encoding ?? Encoding.UTF8);
 
-            return JsonConvert.DeserializeObject<T>( json );
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
-        public override void CreateDefault<T>( string fileName, T defaultValue, Encoding encoding = null )
+        public override void CreateDefault<T>(string fileName, T defaultValue, Encoding encoding = null)
         {
-            string path = this.GetFilePath( fileName );
-            string json = JsonConvert.SerializeObject( defaultValue, Formatting.Indented );
-            File.WriteAllText( path, json, encoding ?? Encoding.UTF8 );
+            string path = GetFilePath(fileName);
+            string json = JsonConvert.SerializeObject(defaultValue, Formatting.Indented);
+            File.WriteAllText(path, json, encoding ?? Encoding.UTF8);
         }
 
-        private string GetFilePath( string fileName )
+        private string GetFilePath(string fileName)
         {
-            string name = fileName.EndsWith( ".json", StringComparison.OrdinalIgnoreCase ) ? "" : $"{fileName}.json";
-            return Path.Combine( this.RootDirectory, name );
+            string name = fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ? "" : $"{fileName}.json";
+            return Path.Combine(RootDirectory, name);
         }
     }
 }

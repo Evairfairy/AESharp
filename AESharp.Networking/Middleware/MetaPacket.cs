@@ -8,12 +8,12 @@
 
         public MetaPacket()
         {
-            this.Payload = new byte[0];
+            Payload = new byte[0];
         }
 
-        public MetaPacket( byte[] payload )
+        public MetaPacket(byte[] payload)
         {
-            this.Payload = payload;
+            Payload = payload;
         }
     }
 }

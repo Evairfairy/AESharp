@@ -7,22 +7,24 @@ namespace AESharp.Interop.Protocol
         public DateTime TimeSent { get; }
         public Guid Guid { get; }
 
-        public KeepAlivePacket( byte[] data ) : base( data )
+        public KeepAlivePacket(byte[] data) : base(data)
         {
-            this.TimeSent = this.ReadDateTime();
-            this.Guid = this.ReadGuid();
+            TimeSent = ReadDateTime();
+            Guid = ReadGuid();
         }
 
-        public KeepAlivePacket( DateTime timeSent, Guid guid ) : base( RoutingPacketId.KeepAlive )
+        public KeepAlivePacket(DateTime timeSent, Guid guid) : base(RoutingPacketId.KeepAlive)
         {
-            this.TimeSent = timeSent;
-            this.Guid = guid;
+            TimeSent = timeSent;
+            Guid = guid;
 
-            this.WriteDateTime( timeSent );
-            this.WriteGuid( guid );
+            WriteDateTime(timeSent);
+            WriteGuid(guid);
         }
 
-        public KeepAlivePacket WithDateTime( DateTime newDateTime )
-            => new KeepAlivePacket( newDateTime, this.Guid );
+        public KeepAlivePacket WithDateTime(DateTime newDateTime)
+        {
+            return new KeepAlivePacket(newDateTime, Guid);
+        }
     }
 }

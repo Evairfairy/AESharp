@@ -8,11 +8,11 @@ namespace AESharp.Routing.Exceptions
         {
         }
 
-        public UnregisteredAEHandlerException( string message ) : base( message )
+        public UnregisteredAEHandlerException(string message) : base(message)
         {
         }
 
-        public UnregisteredAEHandlerException( string message, Exception inner ) : base( message, inner )
+        public UnregisteredAEHandlerException(string message, Exception inner) : base(message, inner)
         {
         }
     }

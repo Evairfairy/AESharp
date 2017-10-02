@@ -4,15 +4,15 @@
     {
         public string Reason { get; }
 
-        public DisconnectPacket( string reason ) : base( RoutingPacketId.Disconnect )
+        public DisconnectPacket(string reason) : base(RoutingPacketId.Disconnect)
         {
-            this.Reason = reason ?? "<no reason given>";
-            this.WriteShortString( this.Reason );
+            Reason = reason ?? "<no reason given>";
+            WriteShortString(Reason);
         }
 
-        public DisconnectPacket( byte[] data ) : base( data )
+        public DisconnectPacket(byte[] data) : base(data)
         {
-            this.Reason = this.ReadShortString();
+            Reason = ReadShortString();
         }
     }
 }

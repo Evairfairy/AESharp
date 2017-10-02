@@ -16,36 +16,36 @@ namespace AESharp.Routing.Networking.Packets.Objects
         {
             get
             {
-                if ( !this._availableAssigned )
+                if (!_availableAssigned)
                 {
-                    throw new InvalidOperationException( "Available must be assigned to before being used" );
+                    throw new InvalidOperationException("Available must be assigned to before being used");
                 }
 
-                return this._available;
+                return _available;
             }
             set
             {
-                this._availableAssigned = true;
-                this._available = value;
+                _availableAssigned = true;
+                _available = value;
             }
         }
 
-        public ServerObjectAvailabilityChanged() : base( AEPacketId.ServerNewObjectAvailable )
+        public ServerObjectAvailabilityChanged() : base(AEPacketId.ServerNewObjectAvailable)
         {
         }
 
-        public ServerObjectAvailabilityChanged( RoutingMetaPacket internalMetaPacket ) : base( internalMetaPacket )
+        public ServerObjectAvailabilityChanged(RoutingMetaPacket internalMetaPacket) : base(internalMetaPacket)
         {
-            this.InternalMetaPacket.PacketId = AEPacketId.ServerNewObjectAvailable;
+            InternalMetaPacket.PacketId = AEPacketId.ServerNewObjectAvailable;
 
-            this.RoutingObject = this.InternalPacket.ReadRoutingComponent();
-            this.Available = this.InternalPacket.ReadBoolean();
+            RoutingObject = InternalPacket.ReadRoutingComponent();
+            Available = InternalPacket.ReadBoolean();
         }
 
         public override RoutingMetaPacket FinalizePacket()
         {
-            this.InternalPacket.WriteRoutingComponent( this.RoutingObject );
-            this.InternalPacket.WriteBoolean( this.Available );
+            InternalPacket.WriteRoutingComponent(RoutingObject);
+            InternalPacket.WriteBoolean(Available);
 
             return base.FinalizePacket();
         }

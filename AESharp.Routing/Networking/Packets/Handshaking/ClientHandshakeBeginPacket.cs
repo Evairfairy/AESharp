@@ -10,24 +10,24 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
         public string Password;
         public uint Protocol;
 
-        public ClientHandshakeBeginPacket() : base( AEPacketId.ClientHandshakeBegin )
+        public ClientHandshakeBeginPacket() : base(AEPacketId.ClientHandshakeBegin)
         {
         }
 
-        public ClientHandshakeBeginPacket( RoutingMetaPacket metaPacket ) : base( metaPacket )
+        public ClientHandshakeBeginPacket(RoutingMetaPacket metaPacket) : base(metaPacket)
         {
-            this.InternalMetaPacket.PacketId = AEPacketId.ClientHandshakeBegin;
+            InternalMetaPacket.PacketId = AEPacketId.ClientHandshakeBegin;
 
-            this.Protocol = this.InternalPacket.ReadUInt32();
-            this.Password = this.InternalPacket.ReadShortString();
-            this.Component = this.InternalPacket.ReadRoutingComponent();
+            Protocol = InternalPacket.ReadUInt32();
+            Password = InternalPacket.ReadShortString();
+            Component = InternalPacket.ReadRoutingComponent();
         }
 
         public override RoutingMetaPacket FinalizePacket()
         {
-            this.InternalPacket.WriteUInt32( this.Protocol );
-            this.InternalPacket.WriteShortString( this.Password );
-            this.InternalPacket.WriteRoutingComponent( this.Component );
+            InternalPacket.WriteUInt32(Protocol);
+            InternalPacket.WriteShortString(Password);
+            InternalPacket.WriteRoutingComponent(Component);
 
             return base.FinalizePacket();
         }

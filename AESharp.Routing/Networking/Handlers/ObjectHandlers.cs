@@ -5,16 +5,16 @@ namespace AESharp.Routing.Networking.Handlers
 {
     public static class ObjectHandlers
     {
-        public static async Task HandleServerNewObjectAvailable( ServerObjectAvailabilityChanged packet,
-            AERoutingClient context )
+        public static async Task HandleServerNewObjectAvailable(ServerObjectAvailabilityChanged packet,
+            AERoutingClient context)
         {
-            if ( packet.Available )
+            if (packet.Available)
             {
-                context.ObjectRepository.AddObject( packet.RoutingObject );
+                context.ObjectRepository.AddObject(packet.RoutingObject);
             }
             else
             {
-                context.ObjectRepository.RemoveObject( packet.RoutingObject.Guid );
+                context.ObjectRepository.RemoveObject(packet.RoutingObject.Guid);
             }
         }
     }

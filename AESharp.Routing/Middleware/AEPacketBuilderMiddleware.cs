@@ -8,16 +8,17 @@ namespace AESharp.Routing.Middleware
 {
     public class AEPacketBuilderMiddleware : IMiddleware<RoutingMetaPacket, AERoutingClient>
     {
-        public async Task<RoutingMetaPacket> CallMiddlewareAsync( RoutingMetaPacket metaPacket, AERoutingClient context )
+        public async Task<RoutingMetaPacket> CallMiddlewareAsync(RoutingMetaPacket metaPacket,
+            AERoutingClient context)
         {
             Packet packet = new Packet();
 
-            packet.WriteGuid( metaPacket.Sender );
-            packet.WriteGuid( metaPacket.Target );
-            packet.WriteUInt16( (ushort) metaPacket.Payload.Length );
-            packet.WritePacketId( metaPacket.PacketId );
+            packet.WriteGuid(metaPacket.Sender);
+            packet.WriteGuid(metaPacket.Target);
+            packet.WriteUInt16((ushort) metaPacket.Payload.Length);
+            packet.WritePacketId(metaPacket.PacketId);
 
-            packet.WriteBytes( metaPacket.Payload );
+            packet.WriteBytes(metaPacket.Payload);
 
             metaPacket.Payload = packet.FinalizePacket();
 

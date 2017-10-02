@@ -8,13 +8,13 @@
         public byte NumberOfKeys;
         public byte Unk;
 
-        public ProofPacket( LogonPacket packet )
+        public ProofPacket(LogonPacket packet)
         {
-            this.A = packet.ReadBytes( 32 );
-            this.M1 = packet.ReadBytes( 20 );
-            this.CrcHash = packet.ReadBytes( 20 );
-            this.NumberOfKeys = packet.ReadByte();
-            this.Unk = packet.ReadByte();
+            A = packet.ReadBytes(32);
+            M1 = packet.ReadBytes(20);
+            CrcHash = packet.ReadBytes(20);
+            NumberOfKeys = packet.ReadByte();
+            Unk = packet.ReadByte();
         }
     }
 }

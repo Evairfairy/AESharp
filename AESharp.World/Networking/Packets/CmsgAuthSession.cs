@@ -12,17 +12,17 @@
         public uint Unk6;
         public uint Unk7;
 
-        public CmsgAuthSession( RealmPacket packet )
+        public CmsgAuthSession(RealmPacket packet)
         {
-            this.ClientBuild = packet.ReadUInt32();
-            this.Unk2 = packet.ReadUInt32();
-            this.Account = packet.ReadCString();
-            this.Unk3 = packet.ReadUInt32();
-            this.ClientSeed = packet.ReadUInt32();
-            this.Unk4 = packet.ReadUInt64();
-            this.Unk5 = packet.ReadUInt32();
-            this.Unk6 = packet.ReadUInt32();
-            this.Unk7 = packet.ReadUInt32();
+            ClientBuild = packet.ReadUInt32();
+            Unk2 = packet.ReadUInt32();
+            Account = packet.ReadCString();
+            Unk3 = packet.ReadUInt32();
+            ClientSeed = packet.ReadUInt32();
+            Unk4 = packet.ReadUInt64();
+            Unk5 = packet.ReadUInt32();
+            Unk6 = packet.ReadUInt32();
+            Unk7 = packet.ReadUInt32();
         }
     }
 }

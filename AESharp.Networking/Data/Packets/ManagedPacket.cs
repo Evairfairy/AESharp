@@ -7,14 +7,14 @@ namespace AESharp.Networking.Data.Packets
     {
         protected readonly Packet InternalPacket;
 
-        public ManagedPacket( Encoding encoding = null )
+        public ManagedPacket(Encoding encoding = null)
         {
-            this.InternalPacket = new Packet( encoding );
+            InternalPacket = new Packet(encoding);
         }
 
-        public ManagedPacket( byte[] data, Encoding encoding = null )
+        public ManagedPacket(byte[] data, Encoding encoding = null)
         {
-            this.InternalPacket = new Packet( data, encoding );
+            InternalPacket = new Packet(data, encoding);
         }
 
         public abstract TMetaPacket FinalizePacket();

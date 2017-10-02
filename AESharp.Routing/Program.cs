@@ -2,7 +2,7 @@
 {
     public class Program
     {
-        public static void Main( string[] args )
+        public static void Main(string[] args)
         {
             // Construct the router in server mode.
             //MasterRouter router = new MasterRouter( IPAddress.Any );

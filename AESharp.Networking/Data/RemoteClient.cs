@@ -22,32 +22,32 @@ namespace AESharp.Networking.Data
         /// </summary>
         public Guid ClientGuid
         {
-            get { return this._clientGuid; }
+            get => _clientGuid;
             set
             {
-                if ( this._clientGuid != Guid.Empty )
+                if (_clientGuid != Guid.Empty)
                 {
-                    throw new InvalidOperationException( $"{nameof( this.ClientGuid )} can only be allocated once." );
+                    throw new InvalidOperationException($"{nameof(ClientGuid)} can only be allocated once.");
                 }
 
-                if ( value == Guid.Empty )
+                if (value == Guid.Empty)
                 {
                     throw new InvalidOperationException(
-                        $"Guid.Empty is not a valid value for property {nameof( this.ClientGuid )}" );
+                        $"Guid.Empty is not a valid value for property {nameof(ClientGuid)}");
                 }
 
-                this._clientGuid = value;
+                _clientGuid = value;
             }
         }
 
         /// <summary>
         ///     True if the underlying TcpClient is connected - if false the RemoteClient is invalid and should no longer be used.
         /// </summary>
-        public bool Connected => this.RawClient.Connected;
+        public bool Connected => RawClient.Connected;
 
-        protected RemoteClient( TcpClient rawClient )
+        protected RemoteClient(TcpClient rawClient)
         {
-            this.RawClient = rawClient;
+            RawClient = rawClient;
         }
 
         /// <summary>
@@ -56,46 +56,46 @@ namespace AESharp.Networking.Data
         /// <returns>Task</returns>
         public async Task ListenForDataTask()
         {
-            if ( this.RawClient == null )
+            if (RawClient == null)
             {
-                throw new NullReferenceException( $"{nameof( this.RawClient )} cannot be null" );
+                throw new NullReferenceException($"{nameof(RawClient)} cannot be null");
             }
 
-            if ( !this.Connected )
+            if (!Connected)
             {
-                throw new InvalidOperationException( "Must be connected to listen for data" );
+                throw new InvalidOperationException("Must be connected to listen for data");
             }
 
-            NetworkStream ns = this.RawClient.GetStream();
+            NetworkStream ns = RawClient.GetStream();
 
-            while ( this.Connected )
+            while (Connected)
             {
                 byte[] buffer = new byte[BufferSize];
-                int bytesRead = await ns.ReadAsync( buffer, 0, buffer.Length );
+                int bytesRead = await ns.ReadAsync(buffer, 0, buffer.Length);
 
-                if ( bytesRead == 0 )
+                if (bytesRead == 0)
                 {
-                    this.Disconnect();
+                    Disconnect();
                     break;
                 }
 
-                Array.Resize( ref buffer, bytesRead );
+                Array.Resize(ref buffer, bytesRead);
 
                 try
                 {
                     TMetaPacket metaPacket = new TMetaPacket { Payload = buffer };
-                    await this.HandleDataAsync( metaPacket );
+                    await HandleDataAsync(metaPacket);
 
-                    if ( metaPacket.KillSender )
+                    if (metaPacket.KillSender)
                     {
-                        this.Disconnect();
+                        Disconnect();
                         break;
                     }
                 }
-                catch ( InvalidPacketException ex )
+                catch (InvalidPacketException ex)
                 {
-                    Console.WriteLine( ex.Message );
-                    this.Disconnect();
+                    Console.WriteLine(ex.Message);
+                    Disconnect();
                 }
             }
         }
@@ -105,11 +105,11 @@ namespace AESharp.Networking.Data
         /// </summary>
         /// <param name="metaPacket">Packet to send</param>
         /// <returns>Task</returns>
-        public virtual async Task SendDataAsync( TMetaPacket metaPacket )
+        public virtual async Task SendDataAsync(TMetaPacket metaPacket)
         {
             byte[] data = metaPacket.Payload;
 
-            await this.RawClient.GetStream().WriteAsync( data, 0, data.Length );
+            await RawClient.GetStream().WriteAsync(data, 0, data.Length);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace AESharp.Networking.Data
         /// </summary>
         /// <param name="metaPacket">MetaPacket containing data that was sent by the client</param>
         /// <returns>Task</returns>
-        public abstract Task HandleDataAsync( TMetaPacket metaPacket );
+        public abstract Task HandleDataAsync(TMetaPacket metaPacket);
 
         /// <summary>
         ///     Closes both receive and send sockets for the underlying TcpClient. After calling this method, the RemoteClient
@@ -127,10 +127,10 @@ namespace AESharp.Networking.Data
         {
             try
             {
-                this.RawClient?.Client?.Shutdown( SocketShutdown.Both );
+                RawClient?.Client?.Shutdown(SocketShutdown.Both);
             }
             // Socket has already been closed
-            catch ( ObjectDisposedException )
+            catch (ObjectDisposedException)
             {
             }
         }
@@ -138,7 +138,7 @@ namespace AESharp.Networking.Data
         ~RemoteClient()
         {
             // Disconnect sockets before destroying object
-            this.Disconnect();
+            Disconnect();
         }
     }
 }

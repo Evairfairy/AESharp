@@ -8,7 +8,7 @@ namespace AESharp.Logon.Universal.Networking.Middleware
         {
         }
 
-        public LogonMetaPacket( byte[] payload ) : base( payload )
+        public LogonMetaPacket(byte[] payload) : base(payload)
         {
         }
     }

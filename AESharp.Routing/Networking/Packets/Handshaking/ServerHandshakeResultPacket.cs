@@ -19,31 +19,31 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
 
         public SHRPResult Result;
 
-        public ServerHandshakeResultPacket() : base( AEPacketId.ServerHandshakeResult )
+        public ServerHandshakeResultPacket() : base(AEPacketId.ServerHandshakeResult)
         {
         }
 
-        public ServerHandshakeResultPacket( RoutingMetaPacket metaPacket ) : base( metaPacket )
+        public ServerHandshakeResultPacket(RoutingMetaPacket metaPacket) : base(metaPacket)
         {
-            this.InternalMetaPacket.PacketId = AEPacketId.ServerHandshakeResult;
+            InternalMetaPacket.PacketId = AEPacketId.ServerHandshakeResult;
 
-            this.Result = this.ReadSHRPResult();
+            Result = ReadSHRPResult();
 
-            if ( this.Result == SHRPResult.Success )
+            if (Result == SHRPResult.Success)
             {
-                this.OurComponent = this.InternalPacket.ReadRoutingComponent();
-                this.OtherAvailableComponents = this.InternalPacket.ReadList( PacketExtensions.ReadRoutingComponent );
+                OurComponent = InternalPacket.ReadRoutingComponent();
+                OtherAvailableComponents = InternalPacket.ReadList(PacketExtensions.ReadRoutingComponent);
             }
         }
 
         public override RoutingMetaPacket FinalizePacket()
         {
-            this.WriteSHRPResult( this.Result );
+            WriteSHRPResult(Result);
 
-            if ( this.Result == SHRPResult.Success )
+            if (Result == SHRPResult.Success)
             {
-                this.InternalPacket.WriteRoutingComponent( this.OurComponent );
-                this.InternalPacket.WriteList( this.OtherAvailableComponents, PacketExtensions.WriteRoutingComponent );
+                InternalPacket.WriteRoutingComponent(OurComponent);
+                InternalPacket.WriteList(OtherAvailableComponents, PacketExtensions.WriteRoutingComponent);
             }
 
             return base.FinalizePacket();
@@ -51,14 +51,14 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
 
         private SHRPResult ReadSHRPResult()
         {
-            byte b = this.InternalPacket.ReadByte();
-            EnumHelpers.ThrowIfUndefined( typeof( SHRPResult ), b );
+            byte b = InternalPacket.ReadByte();
+            EnumHelpers.ThrowIfUndefined(typeof(SHRPResult), b);
             return (SHRPResult) b;
         }
 
-        private void WriteSHRPResult( SHRPResult value )
+        private void WriteSHRPResult(SHRPResult value)
         {
-            this.InternalPacket.WriteByte( (byte) value );
+            InternalPacket.WriteByte((byte) value);
         }
     }
 }

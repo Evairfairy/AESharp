@@ -29,7 +29,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
         public byte[] unk3 = new byte[16];
         public byte unk4;
 
-        public void SetAuthData( byte[] B, byte[] g, byte[] n, byte[] s, byte[] unk3, byte unk4 )
+        public void SetAuthData(byte[] B, byte[] g, byte[] n, byte[] s, byte[] unk3, byte unk4)
         {
             this.B = B;
             this.g = g;
@@ -41,53 +41,53 @@ namespace AESharp.Logon.Universal.Networking.Packets
 
         public override byte[] FinalizePacket()
         {
-            if ( this.Error == ChallengeResponseError.Invalid )
+            if (Error == ChallengeResponseError.Invalid)
             {
-                throw new InvalidPacketException( $"{nameof( this.Error )} has not been set" );
+                throw new InvalidPacketException($"{nameof(Error)} has not been set");
             }
 
-            this.WriteByte( 0x0 );
-            this.WriteByte( 0x0 );
-            this.WriteByte( (byte) this.Error );
+            WriteByte(0x0);
+            WriteByte(0x0);
+            WriteByte((byte) Error);
 
-            if ( this.Error != ChallengeResponseError.Success )
+            if (Error != ChallengeResponseError.Success)
             {
                 return base.FinalizePacket();
             }
 
-            if ( this.B.Length != 32 )
+            if (B.Length != 32)
             {
-                throw new InvalidPacketException( $"Expected B to be 32 bytes but it was {this.B.Length} bytes" );
+                throw new InvalidPacketException($"Expected B to be 32 bytes but it was {B.Length} bytes");
             }
 
-            if ( this.g.Length != 1 )
+            if (g.Length != 1)
             {
-                throw new InvalidPacketException( $"Expected g to be 1 byte but it was {this.g.Length} bytes" );
+                throw new InvalidPacketException($"Expected g to be 1 byte but it was {g.Length} bytes");
             }
 
-            if ( this.n.Length != 32 )
+            if (n.Length != 32)
             {
-                throw new InvalidPacketException( $"Expected n to be 32 bytes but it was {this.n.Length} bytes" );
+                throw new InvalidPacketException($"Expected n to be 32 bytes but it was {n.Length} bytes");
             }
 
-            if ( this.s.Length != 32 )
+            if (s.Length != 32)
             {
-                throw new InvalidPacketException( $"Expected s to be 32 bytes but it was {this.s.Length} bytes" );
+                throw new InvalidPacketException($"Expected s to be 32 bytes but it was {s.Length} bytes");
             }
 
-            if ( this.unk3.Length != 16 )
+            if (unk3.Length != 16)
             {
-                throw new InvalidPacketException( $"Expected unk3 to be 16 bytes but it was {this.unk3.Length} bytes" );
+                throw new InvalidPacketException($"Expected unk3 to be 16 bytes but it was {unk3.Length} bytes");
             }
 
-            this.WriteBytes( this.B );
-            this.WriteByte( (byte) this.g.Length );
-            this.WriteBytes( this.g );
-            this.WriteByte( (byte) this.n.Length );
-            this.WriteBytes( this.n );
-            this.WriteBytes( this.s );
-            this.WriteBytes( this.unk3 );
-            this.WriteByte( this.unk4 );
+            WriteBytes(B);
+            WriteByte((byte) g.Length);
+            WriteBytes(g);
+            WriteByte((byte) n.Length);
+            WriteBytes(n);
+            WriteBytes(s);
+            WriteBytes(unk3);
+            WriteByte(unk4);
 
             return base.FinalizePacket();
         }

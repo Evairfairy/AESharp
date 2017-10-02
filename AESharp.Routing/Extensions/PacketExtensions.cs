@@ -10,80 +10,82 @@ namespace AESharp.Routing.Extensions
 {
     internal static class PacketExtensions
     {
-        public static List<T> ReadList<T>( this Packet packet, Func<Packet, T> readObjectFunc )
+        public static List<T> ReadList<T>(this Packet packet, Func<Packet, T> readObjectFunc)
         {
             List<T> returnList = new List<T>();
 
             ushort listSize = packet.ReadUInt16();
 
-            for ( ushort i = 0; i < listSize; ++i )
+            for (ushort i = 0; i < listSize; ++i)
             {
-                returnList.Add( readObjectFunc( packet ) );
+                returnList.Add(readObjectFunc(packet));
             }
 
             return returnList;
         }
 
-        public static void WriteList<T>( this Packet packet, List<T> list, Action<Packet, T> writeObjectFunc )
+        public static void WriteList<T>(this Packet packet, List<T> list, Action<Packet, T> writeObjectFunc)
         {
-            if ( list.Count > ushort.MaxValue )
+            if (list.Count > ushort.MaxValue)
             {
                 throw new InvalidOperationException(
-                    $"You may only write lists containing a maximum of {ushort.MaxValue} elements" );
+                    $"You may only write lists containing a maximum of {ushort.MaxValue} elements");
             }
 
-            packet.WriteUInt16( (ushort) list.Count );
-            foreach ( T value in list )
+            packet.WriteUInt16((ushort) list.Count);
+            foreach (T value in list)
             {
-                writeObjectFunc( packet, value );
+                writeObjectFunc(packet, value);
             }
         }
 
-        public static RoutingComponent ReadRoutingComponent( this Packet packet )
+        public static RoutingComponent ReadRoutingComponent(this Packet packet)
         {
             return new RoutingComponent
             {
                 Guid = packet.ReadGuid(),
                 Type = packet.ReadComponentType(),
-                OwnedObjects = packet.ReadList( ReadRoutingComponent )
+                OwnedObjects = packet.ReadList(ReadRoutingComponent)
             };
         }
 
-        public static void WriteRoutingComponent( this Packet packet, RoutingComponent component )
+        public static void WriteRoutingComponent(this Packet packet, RoutingComponent component)
         {
-            packet.WriteGuid( component.Guid );
-            packet.WriteComponentType( component.Type );
-            packet.WriteList( component.OwnedObjects, WriteRoutingComponent );
+            packet.WriteGuid(component.Guid);
+            packet.WriteComponentType(component.Type);
+            packet.WriteList(component.OwnedObjects, WriteRoutingComponent);
         }
 
-        public static AEPacketId ReadPacketId( this Packet packet )
+        public static AEPacketId ReadPacketId(this Packet packet)
         {
             int id = packet.ReadInt32();
-            if ( !Enum.IsDefined( typeof( AEPacketId ), id ) )
+            if (!Enum.IsDefined(typeof(AEPacketId), id))
             {
-                throw new UnhandledAEPacketException( id );
+                throw new UnhandledAEPacketException(id);
             }
 
             return (AEPacketId) id;
         }
 
-        public static void WritePacketId( this Packet packet, AEPacketId packetId )
-            => packet.WriteInt32( (int) packetId );
+        public static void WritePacketId(this Packet packet, AEPacketId packetId)
+        {
+            packet.WriteInt32((int) packetId);
+        }
 
-        public static ComponentType ReadComponentType( this Packet packet )
+        public static ComponentType ReadComponentType(this Packet packet)
         {
             ushort type = packet.ReadUInt16();
-            if ( !Enum.IsDefined( typeof( ComponentType ), type ) )
+            if (!Enum.IsDefined(typeof(ComponentType), type))
             {
-                throw new InvalidPacketException( $"Tried to read unregistered component type {type} from packet" );
+                throw new InvalidPacketException($"Tried to read unregistered component type {type} from packet");
             }
 
             return (ComponentType) type;
         }
 
-        public static void WriteComponentType( this Packet packet, ComponentType type )
+        public static void WriteComponentType(this Packet packet, ComponentType type)
         {
-            packet.WriteUInt16( (ushort) type );
+            packet.WriteUInt16((ushort) type);
         }
     }
 }

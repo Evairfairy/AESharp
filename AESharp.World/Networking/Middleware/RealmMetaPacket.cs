@@ -8,7 +8,7 @@ namespace AESharp.World.Networking.Middleware
         {
         }
 
-        public RealmMetaPacket( byte[] payload ) : base( payload )
+        public RealmMetaPacket(byte[] payload) : base(payload)
         {
         }
     }

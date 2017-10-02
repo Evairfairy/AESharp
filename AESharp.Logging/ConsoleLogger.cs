@@ -5,9 +5,9 @@ namespace AESharp.Logging
 {
     public class ConsoleLogger : ILogger
     {
-        public void WriteLine( string line )
+        public void WriteLine(string line)
         {
-            Console.WriteLine( line );
+            Console.WriteLine(line);
         }
     }
 }

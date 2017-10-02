@@ -2,16 +2,16 @@
 
 namespace AESharp.Database.Configuration
 {
-    [JsonObject( MemberSerialization.OptIn )]
+    [JsonObject(MemberSerialization.OptIn)]
     internal sealed class DatabasesSection
     {
-        [JsonProperty( "logon", Required = Required.Always )]
+        [JsonProperty("logon", Required = Required.Always)]
         public string LogonDatabase { get; set; }
 
-        [JsonProperty( "chars", Required = Required.Always )]
+        [JsonProperty("chars", Required = Required.Always)]
         public string CharactersDatabase { get; set; }
 
-        [JsonProperty( "world", Required = Required.Always )]
+        [JsonProperty("world", Required = Required.Always)]
         public string WorldDatabase { get; set; }
     }
 }

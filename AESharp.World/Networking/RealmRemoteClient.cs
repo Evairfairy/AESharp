@@ -16,51 +16,51 @@ namespace AESharp.World.Networking
         {
             get
             {
-                if ( this._seed == 0 )
+                if (_seed == 0)
                 {
                     byte[] seedBytes = new byte[4];
 
-                    Random rand = new Random( Environment.TickCount );
-                    rand.NextBytes( seedBytes );
-                    this._seed = BitConverter.ToUInt32( seedBytes, 0 );
+                    Random rand = new Random(Environment.TickCount);
+                    rand.NextBytes(seedBytes);
+                    _seed = BitConverter.ToUInt32(seedBytes, 0);
                 }
 
-                return this._seed;
+                return _seed;
             }
         }
 
-        public RealmRemoteClient( TcpClient rawClient ) : base( rawClient )
+        public RealmRemoteClient(TcpClient rawClient) : base(rawClient)
         {
         }
 
-        public override async Task HandleDataAsync( RealmMetaPacket metaPacket )
+        public override async Task HandleDataAsync(RealmMetaPacket metaPacket)
         {
-            RealmPacket realmPacket = new RealmPacket( metaPacket.Payload, false );
+            RealmPacket realmPacket = new RealmPacket(metaPacket.Payload, false);
 
-            switch ( realmPacket.Opcode )
+            switch (realmPacket.Opcode)
             {
                 // CmsgAuthSession
                 case 0x1ed:
                 {
-                    CmsgAuthSession packet = new CmsgAuthSession( realmPacket );
-                    Console.WriteLine( $"\tClient Build:\t{packet.ClientBuild}" );
-                    Console.WriteLine( $"\tUnk2:\t\t{packet.Unk2}" );
-                    Console.WriteLine( $"\tAccount Name:\t{packet.Account}" );
-                    Console.WriteLine( $"\tUnk3:\t\t{packet.Unk3}" );
-                    Console.WriteLine( $"\tClient Seed:\t{packet.ClientSeed}" );
-                    Console.WriteLine( $"\tUnk4:\t\t{packet.Unk4}" );
-                    Console.WriteLine( $"\tUnk5:\t\t{packet.Unk5}" );
-                    Console.WriteLine( $"\tUnk6:\t\t{packet.Unk6}" );
-                    Console.WriteLine( $"\tUnk7:\t\t{packet.Unk7}" );
+                    CmsgAuthSession packet = new CmsgAuthSession(realmPacket);
+                    Console.WriteLine($"\tClient Build:\t{packet.ClientBuild}");
+                    Console.WriteLine($"\tUnk2:\t\t{packet.Unk2}");
+                    Console.WriteLine($"\tAccount Name:\t{packet.Account}");
+                    Console.WriteLine($"\tUnk3:\t\t{packet.Unk3}");
+                    Console.WriteLine($"\tClient Seed:\t{packet.ClientSeed}");
+                    Console.WriteLine($"\tUnk4:\t\t{packet.Unk4}");
+                    Console.WriteLine($"\tUnk5:\t\t{packet.Unk5}");
+                    Console.WriteLine($"\tUnk6:\t\t{packet.Unk6}");
+                    Console.WriteLine($"\tUnk7:\t\t{packet.Unk7}");
 
                     // Currently unhandled
-                    this.Disconnect();
+                    Disconnect();
 
                     break;
                 }
                 default:
                 {
-                    throw new InvalidPacketException( $"Received unsupported opcode: 0x{realmPacket.Opcode:x2}" );
+                    throw new InvalidPacketException($"Received unsupported opcode: 0x{realmPacket.Opcode:x2}");
                 }
             }
         }

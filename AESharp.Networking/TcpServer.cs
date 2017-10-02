@@ -13,32 +13,32 @@ namespace AESharp.Networking
         public bool IsListening { get; private set; }
         public IPEndPoint LocalEndPoint { get; }
 
-        public TcpServer( IPEndPoint localEndPoint )
+        public TcpServer(IPEndPoint localEndPoint)
         {
-            this.LocalEndPoint = localEndPoint;
+            LocalEndPoint = localEndPoint;
         }
 
-        public void Start( Action<TcpClient> acceptClientAction )
+        public void Start(Action<TcpClient> acceptClientAction)
         {
-            this._listener = new TcpListener( this.LocalEndPoint );
-            this._listener.Start();
+            _listener = new TcpListener(LocalEndPoint);
+            _listener.Start();
 
-            this.IsListening = true;
-            this.ListenForConnections( acceptClientAction ).RunAsync();
+            IsListening = true;
+            ListenForConnections(acceptClientAction).RunAsync();
         }
 
         public void Stop()
         {
-            this._listener.Stop();
-            this.IsListening = false;
+            _listener.Stop();
+            IsListening = false;
         }
 
-        private async Task ListenForConnections( Action<TcpClient> acceptClientAction )
+        private async Task ListenForConnections(Action<TcpClient> acceptClientAction)
         {
-            while ( this.IsListening )
+            while (IsListening)
             {
-                TcpClient client = await this._listener.AcceptTcpClientAsync();
-                Task.Run( () => acceptClientAction( client ) ).RunAsync();
+                TcpClient client = await _listener.AcceptTcpClientAsync();
+                Task.Run(() => acceptClientAction(client)).RunAsync();
             }
         }
     }

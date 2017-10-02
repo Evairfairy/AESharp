@@ -21,7 +21,7 @@ namespace AESharp.World.Networking
         /// <summary>
         ///     4 bytes if we are sending the packet, 6 if we are receiving it
         /// </summary>
-        protected int HeaderSize => this.SendingToRemoteClient ? 4 : 6;
+        protected int HeaderSize => SendingToRemoteClient ? 4 : 6;
 
         /// <summary>
         ///     Returns the byte[] representation of the packet header
@@ -30,18 +30,18 @@ namespace AESharp.World.Networking
         {
             get
             {
-                if ( this.SendingToRemoteClient )
+                if (SendingToRemoteClient)
                 {
                     byte[] header = new byte[4];
 
-                    byte[] sizeBytes = BitConverter.GetBytes( (ushort) this.InternalBuffer.Length );
-                    Array.Reverse( sizeBytes );
+                    byte[] sizeBytes = BitConverter.GetBytes((ushort) InternalBuffer.Length);
+                    Array.Reverse(sizeBytes);
 
 
-                    byte[] opcodeBytes = BitConverter.GetBytes( (ushort) this.Opcode );
+                    byte[] opcodeBytes = BitConverter.GetBytes((ushort) Opcode);
 
-                    Array.Copy( sizeBytes, 0, header, 0, 2 );
-                    Array.Copy( opcodeBytes, 0, header, 2, 2 );
+                    Array.Copy(sizeBytes, 0, header, 0, 2);
+                    Array.Copy(opcodeBytes, 0, header, 2, 2);
 
                     return header;
                 }
@@ -49,22 +49,22 @@ namespace AESharp.World.Networking
                 {
                     byte[] header = new byte[6];
 
-                    byte[] sizeBytes = BitConverter.GetBytes( (ushort) this.InternalBuffer.Length );
-                    Array.Reverse( sizeBytes );
+                    byte[] sizeBytes = BitConverter.GetBytes((ushort) InternalBuffer.Length);
+                    Array.Reverse(sizeBytes);
 
-                    byte[] opcodeBytes = BitConverter.GetBytes( (uint) this.Opcode );
+                    byte[] opcodeBytes = BitConverter.GetBytes((uint) Opcode);
 
-                    Array.Copy( sizeBytes, 0, header, 0, 2 );
-                    Array.Copy( opcodeBytes, 0, header, 2, 4 );
+                    Array.Copy(sizeBytes, 0, header, 0, 2);
+                    Array.Copy(opcodeBytes, 0, header, 2, 4);
 
                     return header;
                 }
             }
         }
 
-        public RealmPacket( bool sendingToRemoteClient )
+        public RealmPacket(bool sendingToRemoteClient)
         {
-            this.SendingToRemoteClient = sendingToRemoteClient;
+            SendingToRemoteClient = sendingToRemoteClient;
         }
 
         // We deliberately avoid passing in the data param to separate header and payload
@@ -82,35 +82,35 @@ namespace AESharp.World.Networking
         ///     True if we are sending the packet to a remote client, false if we received the
         ///     packet
         /// </param>
-        public RealmPacket( byte[] data, bool sendingToRemoteClient ) : base()
+        public RealmPacket(byte[] data, bool sendingToRemoteClient) : base()
         {
-            this.SendingToRemoteClient = sendingToRemoteClient;
+            SendingToRemoteClient = sendingToRemoteClient;
 
-            if ( data.Length < this.HeaderSize )
+            if (data.Length < HeaderSize)
             {
                 throw new InvalidPacketException(
-                    $"{nameof( data )} must be at least {this.HeaderSize} bytes (packet header)" );
+                    $"{nameof(data)} must be at least {HeaderSize} bytes (packet header)");
             }
 
-            byte[] headerBytes = new byte[this.HeaderSize];
-            Array.Copy( data, headerBytes, this.HeaderSize );
+            byte[] headerBytes = new byte[HeaderSize];
+            Array.Copy(data, headerBytes, HeaderSize);
 
-            if ( data.Length != this.HeaderSize )
+            if (data.Length != HeaderSize)
             {
                 // We also have a payload
-                this.WriteBytes( data, this.HeaderSize, data.Length - this.HeaderSize );
-                this.SeekToBegin();
+                WriteBytes(data, HeaderSize, data.Length - HeaderSize);
+                SeekToBegin();
             }
 
-            this.Size = BitConverter.ToUInt16( headerBytes, 0 );
+            Size = BitConverter.ToUInt16(headerBytes, 0);
 
-            if ( this.SendingToRemoteClient )
+            if (SendingToRemoteClient)
             {
-                this.Opcode = BitConverter.ToUInt16( headerBytes, 2 );
+                Opcode = BitConverter.ToUInt16(headerBytes, 2);
             }
             else
             {
-                this.Opcode = BitConverter.ToInt32( headerBytes, 2 );
+                Opcode = BitConverter.ToInt32(headerBytes, 2);
             }
         }
 
@@ -120,10 +120,10 @@ namespace AESharp.World.Networking
         /// <returns>The byte[] representation of the packet before crypto operations</returns>
         public override byte[] FinalizePacket()
         {
-            byte[] buffer = new byte[this.HeaderSize + this.InternalBuffer.Length];
+            byte[] buffer = new byte[HeaderSize + InternalBuffer.Length];
 
-            Array.Copy( this.Header, 0, buffer, 0, this.HeaderSize );
-            Array.Copy( this.InternalBuffer, 0, buffer, this.HeaderSize, this.InternalBuffer.Length );
+            Array.Copy(Header, 0, buffer, 0, HeaderSize);
+            Array.Copy(InternalBuffer, 0, buffer, HeaderSize, InternalBuffer.Length);
 
             return buffer;
         }

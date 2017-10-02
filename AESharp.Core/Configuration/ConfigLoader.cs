@@ -7,13 +7,13 @@ namespace AESharp.Core.Configuration
     {
         public string RootDirectory { get; }
 
-        protected ConfigLoader( string rootDirectory = "configs" )
+        protected ConfigLoader(string rootDirectory = "configs")
         {
             string current = Directory.GetCurrentDirectory();
-            this.RootDirectory = Path.Combine( current, rootDirectory );
+            RootDirectory = Path.Combine(current, rootDirectory);
         }
 
-        public abstract T Load<T>( string fileName, Encoding encoding = null );
-        public abstract void CreateDefault<T>( string fileName, T defaultValue, Encoding encoding = null );
+        public abstract T Load<T>(string fileName, Encoding encoding = null);
+        public abstract void CreateDefault<T>(string fileName, T defaultValue, Encoding encoding = null);
     }
 }

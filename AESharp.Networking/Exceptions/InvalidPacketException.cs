@@ -8,11 +8,11 @@ namespace AESharp.Networking.Exceptions
         {
         }
 
-        public InvalidPacketException( string message ) : base( message )
+        public InvalidPacketException(string message) : base(message)
         {
         }
 
-        public InvalidPacketException( string message, Exception inner ) : base( message, inner )
+        public InvalidPacketException(string message, Exception inner) : base(message, inner)
         {
         }
     }

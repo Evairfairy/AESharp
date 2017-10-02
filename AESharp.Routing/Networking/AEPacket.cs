@@ -7,36 +7,37 @@ namespace AESharp.Routing.Networking
     public class AEPacket : ManagedPacket<RoutingMetaPacket>
     {
         protected readonly RoutingMetaPacket InternalMetaPacket;
+
         // ReSharper disable once RedundantDefaultMemberInitializer
         private bool _finalized = false;
 
-        public AEPacketId PacketId => this.InternalMetaPacket.PacketId;
+        public AEPacketId PacketId => InternalMetaPacket.PacketId;
 
-        public AEPacket( AEPacketId packetId )
+        public AEPacket(AEPacketId packetId)
         {
-            this.InternalMetaPacket = new RoutingMetaPacket
+            InternalMetaPacket = new RoutingMetaPacket
             {
                 PacketId = packetId
             };
         }
 
-        public AEPacket( RoutingMetaPacket internalMetaPacket ) : base( internalMetaPacket.Payload )
+        public AEPacket(RoutingMetaPacket internalMetaPacket) : base(internalMetaPacket.Payload)
         {
-            this.InternalMetaPacket = internalMetaPacket;
+            InternalMetaPacket = internalMetaPacket;
         }
 
         public override RoutingMetaPacket FinalizePacket()
         {
-            if ( this._finalized )
+            if (_finalized)
             {
-                throw new InvalidOperationException( "A packet may only be finalized once." );
+                throw new InvalidOperationException("A packet may only be finalized once.");
             }
 
-            this._finalized = true;
+            _finalized = true;
 
-            this.InternalMetaPacket.Payload = this.InternalPacket.FinalizePacket();
+            InternalMetaPacket.Payload = InternalPacket.FinalizePacket();
 
-            return this.InternalMetaPacket;
+            return InternalMetaPacket;
         }
     }
 }

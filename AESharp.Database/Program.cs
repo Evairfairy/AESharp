@@ -18,13 +18,13 @@ namespace AESharp.Database
         static Program()
         {
             // This must be second (after decryption)
-            DatabaseServices.IncomingRoutingMiddlewareHandler.RegisterMiddleware( new AEPacketReaderMiddleware() );
+            DatabaseServices.IncomingRoutingMiddlewareHandler.RegisterMiddleware(new AEPacketReaderMiddleware());
 
             // This must be second-to-last (before encryption)
-            DatabaseServices.OutgoingRoutingMiddlewareHandler.RegisterMiddleware( new AEPacketBuilderMiddleware() );
+            DatabaseServices.OutgoingRoutingMiddlewareHandler.RegisterMiddleware(new AEPacketBuilderMiddleware());
         }
 
-        private static void Main( string[] args )
+        private static void Main(string[] args)
         {
             JsonConfigLoader loader = new JsonConfigLoader();
             DatabaseSettings config = new DatabaseSettings
@@ -44,36 +44,36 @@ namespace AESharp.Database
 
             try
             {
-                config = loader.Load<DatabaseSettings>( "database" );
-                ConnectToMasterRouterAsync( IPAddress.Loopback, 12000 ).RunAsync();
+                config = loader.Load<DatabaseSettings>("database");
+                ConnectToMasterRouterAsync(IPAddress.Loopback, 12000).RunAsync();
                 Console.ReadLine();
             }
-            catch ( DirectoryNotFoundException ex )
+            catch (DirectoryNotFoundException ex)
             {
-                Console.Error.WriteLine( "Config directory not found, attempting to create default file..." );
-                Directory.CreateDirectory( loader.RootDirectory );
-                loader.CreateDefault( "database", config );
+                Console.Error.WriteLine("Config directory not found, attempting to create default file...");
+                Directory.CreateDirectory(loader.RootDirectory);
+                loader.CreateDefault("database", config);
             }
-            catch ( FileNotFoundException ex )
+            catch (FileNotFoundException ex)
             {
-                Console.Error.WriteLine( "Config file not found, attempting to create default file..." );
-                loader.CreateDefault( "database", config );
+                Console.Error.WriteLine("Config file not found, attempting to create default file...");
+                loader.CreateDefault("database", config);
             }
-            catch ( Exception )
+            catch (Exception)
             {
                 throw;
             }
         }
 
-        private static async Task ConnectToMasterRouterAsync( IPAddress address, int port )
+        private static async Task ConnectToMasterRouterAsync(IPAddress address, int port)
         {
             TcpClient client = new TcpClient();
-            await client.ConnectAsync( address, port );
+            await client.ConnectAsync(address, port);
 
-            AERoutingClient routingClient = new AERoutingClient( client, DatabaseServices.InteropPacketHandler,
+            AERoutingClient routingClient = new AERoutingClient(client, DatabaseServices.InteropPacketHandler,
                 DatabaseServices.IncomingRoutingMiddlewareHandler,
                 DatabaseServices.OutgoingRoutingMiddlewareHandler,
-                DatabaseServices.ObjectRepository );
+                DatabaseServices.ObjectRepository);
 
             ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket
             {
@@ -85,10 +85,10 @@ namespace AESharp.Database
                 }
             };
 
-            await routingClient.SendDataAsync( chbp.FinalizePacket() );
+            await routingClient.SendDataAsync(chbp.FinalizePacket());
             await routingClient.ListenForDataTask();
 
-            DatabaseServices.ObjectRepository.RemoveObject( routingClient.ClientGuid );
+            DatabaseServices.ObjectRepository.RemoveObject(routingClient.ClientGuid);
         }
     }
 }

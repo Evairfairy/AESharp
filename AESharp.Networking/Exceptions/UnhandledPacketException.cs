@@ -8,15 +8,15 @@ namespace AESharp.Networking.Exceptions
         {
         }
 
-        public UnhandledPacketException( string message ) : base( message )
+        public UnhandledPacketException(string message) : base(message)
         {
         }
 
-        public UnhandledPacketException( string message, Exception inner ) : base( message, inner )
+        public UnhandledPacketException(string message, Exception inner) : base(message, inner)
         {
         }
 
-        public UnhandledPacketException( int opcode ) : this( $"Unhandled packet: 0x{opcode:x}" )
+        public UnhandledPacketException(int opcode) : this($"Unhandled packet: 0x{opcode:x}")
         {
         }
     }

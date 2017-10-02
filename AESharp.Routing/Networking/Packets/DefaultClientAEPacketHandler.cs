@@ -7,8 +7,8 @@ namespace AESharp.Routing.Networking.Packets
     {
         public void RegisterDefaultClientHandlers()
         {
-            this.ClientHandshakeBeginHandler = HandshakeHandlers.ClientHandshakeBeginHandler;
-            this.ServerHandshakeResultHandler = HandshakeHandlers.ServerHandshakeResultHandler;
+            ClientHandshakeBeginHandler = HandshakeHandlers.ClientHandshakeBeginHandler;
+            ServerHandshakeResultHandler = HandshakeHandlers.ServerHandshakeResultHandler;
         }
     }
 }

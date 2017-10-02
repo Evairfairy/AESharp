@@ -7,26 +7,26 @@ namespace AESharp.Routing.Core
     {
         private readonly List<RoutingComponent> _components = new List<RoutingComponent>();
 
-        public void AddObject( RoutingComponent obj )
+        public void AddObject(RoutingComponent obj)
         {
-            if ( obj.Guid == Guid.Empty )
+            if (obj.Guid == Guid.Empty)
             {
-                throw new ArgumentException( "Tried to add an object to the repository whose guid was empty" );
+                throw new ArgumentException("Tried to add an object to the repository whose guid was empty");
             }
 
-            lock ( this._components )
+            lock (_components)
             {
-                Console.WriteLine( $"Adding new AEObject: {obj.Type}/{obj.Guid}" );
-                this._components.Add( obj );
+                Console.WriteLine($"Adding new AEObject: {obj.Type}/{obj.Guid}");
+                _components.Add(obj);
             }
         }
 
-        public void RemoveObject( Guid objGuid )
+        public void RemoveObject(Guid objGuid)
         {
-            lock ( this._components )
+            lock (_components)
             {
-                Console.WriteLine( $"Removing AEObjects with guid: {objGuid}" );
-                this._components.RemoveAll( x => x.Guid == objGuid );
+                Console.WriteLine($"Removing AEObjects with guid: {objGuid}");
+                _components.RemoveAll(x => x.Guid == objGuid);
             }
         }
 
@@ -34,10 +34,8 @@ namespace AESharp.Routing.Core
         {
             List<RoutingComponent> ret = new List<RoutingComponent>();
 
-            lock ( this._components )
-            {
-                ret.AddRange( this._components );
-            }
+            lock (_components)
+                ret.AddRange(_components);
 
             return ret;
         }

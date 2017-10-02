@@ -11,66 +11,66 @@
 
         public RC4Engine()
         {
-            this.Reset();
+            Reset();
         }
 
         private void Reset()
         {
-            this._permutation = new byte[256];
-            for ( int i = 0; i < this._permutation.Length; ++i )
+            _permutation = new byte[256];
+            for (int i = 0; i < _permutation.Length; ++i)
             {
-                this._permutation[i] = (byte) i;
+                _permutation[i] = (byte) i;
             }
 
-            this._indexOne = 0;
-            this._indexTwo = 0;
-            this.Initialized = false;
+            _indexOne = 0;
+            _indexTwo = 0;
+            Initialized = false;
         }
 
-        public void Setup( byte[] key )
+        public void Setup(byte[] key)
         {
-            this.Key = key;
+            Key = key;
 
-            this.Reset();
+            Reset();
 
             uint i = 0;
             byte j = 0;
 
-            while ( i < 256 )
+            while (i < 256)
             {
                 unchecked
                 {
-                    j += (byte) ( this._permutation[i] + key[i % key.Length] );
-                    byte k = this._permutation[i];
-                    this._permutation[i] = this._permutation[j];
-                    this._permutation[j] = k;
+                    j += (byte) (_permutation[i] + key[i % key.Length]);
+                    byte k = _permutation[i];
+                    _permutation[i] = _permutation[j];
+                    _permutation[j] = k;
                 }
 
                 ++i;
             }
 
-            this.Initialized = true;
+            Initialized = true;
         }
 
-        public byte[] Process( byte[] input )
+        public byte[] Process(byte[] input)
         {
             byte[] buffer = new byte[input.Length];
 
             uint i = 0;
 
-            while ( i < input.Length )
+            while (i < input.Length)
             {
                 unchecked
                 {
-                    ++this._indexOne;
-                    this._indexTwo += this._permutation[this._indexOne];
+                    ++_indexOne;
+                    _indexTwo += _permutation[_indexOne];
 
-                    byte k = this._permutation[this._indexOne];
-                    this._permutation[this._indexOne] = this._permutation[this._indexTwo];
-                    this._permutation[this._indexTwo] = k;
+                    byte k = _permutation[_indexOne];
+                    _permutation[_indexOne] = _permutation[_indexTwo];
+                    _permutation[_indexTwo] = k;
 
-                    byte j = (byte) ( this._permutation[this._indexOne] + this._permutation[this._indexTwo] );
-                    buffer[i] = (byte) ( input[i] ^ this._permutation[j] );
+                    byte j = (byte) (_permutation[_indexOne] + _permutation[_indexTwo]);
+                    buffer[i] = (byte) (input[i] ^ _permutation[j]);
                 }
 
                 ++i;

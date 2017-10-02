@@ -8,9 +8,9 @@ namespace AESharp.Routing.Middleware
 {
     public class AEPacketReaderMiddleware : IMiddleware<RoutingMetaPacket, AERoutingClient>
     {
-        public Task<RoutingMetaPacket> CallMiddlewareAsync( RoutingMetaPacket metaPacket, AERoutingClient context )
+        public Task<RoutingMetaPacket> CallMiddlewareAsync(RoutingMetaPacket metaPacket, AERoutingClient context)
         {
-            Packet packet = new Packet( metaPacket.Payload );
+            Packet packet = new Packet(metaPacket.Payload);
 
             metaPacket.Sender = packet.ReadGuid();
             metaPacket.Target = packet.ReadGuid();
@@ -19,7 +19,7 @@ namespace AESharp.Routing.Middleware
 
             metaPacket.Payload = packet.ReadRemainingBytes();
 
-            return Task.FromResult( metaPacket );
+            return Task.FromResult(metaPacket);
         }
     }
 }

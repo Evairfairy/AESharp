@@ -11,28 +11,29 @@ namespace AESharp.MasterRouter.PacketHandlers
 {
     public static class ClientHandshakeBeginHandler
     {
-        private static bool SendToOtherComponentsPredicate( AERoutingClient context, AERoutingClient item )
+        private static bool SendToOtherComponentsPredicate(AERoutingClient context, AERoutingClient item)
         {
             // Only send if it's a real component (i.e. not a player etc)
             return item.ComponentData.IsRealComponent;
         }
 
-        public static async Task HandleClientHandshakeBegin( ClientHandshakeBeginPacket packet, AERoutingClient context )
+        public static async Task HandleClientHandshakeBegin(ClientHandshakeBeginPacket packet,
+            AERoutingClient context)
         {
             //await HandshakeHandlers.ClientHandshakeBeginHandler( packet, context );
 
-            if ( !HandshakeHandlers.ValidateHandshakeProtocol( packet ) )
+            if (!HandshakeHandlers.ValidateHandshakeProtocol(packet))
             {
                 Console.WriteLine(
-                    $"Invalid protocol (got: {packet.Protocol}) (exp: {Constants.LatestAEProtocolVersion})" );
+                    $"Invalid protocol (got: {packet.Protocol}) (exp: {Constants.LatestAEProtocolVersion})");
                 context.Disconnect();
                 return;
             }
 
-            if ( !HandshakeHandlers.ValidateHandshakeAuthentication( packet ) )
+            if (!HandshakeHandlers.ValidateHandshakeAuthentication(packet))
             {
                 Console.WriteLine(
-                    $"Authentication failure (got: {packet.Password}) (exp: {Constants._TEMP_RouterAuthPassword})" );
+                    $"Authentication failure (got: {packet.Password}) (exp: {Constants._TEMP_RouterAuthPassword})");
                 context.Disconnect();
                 return;
             }
@@ -41,13 +42,13 @@ namespace AESharp.MasterRouter.PacketHandlers
             context.ComponentData = packet.Component;
             context.ComponentData.Guid = Guid.NewGuid();
 
-            Console.WriteLine( $"Successfully authenticated {context.ComponentData.Guid}" );
+            Console.WriteLine($"Successfully authenticated {context.ComponentData.Guid}");
 
             List<AERoutingClient> clients =
                 MasterRouterServices.RemoteClients.GetClients(
-                                        item =>
-                                            SendToOtherComponentsPredicate( context,
-                                                item ) );
+                    item =>
+                        SendToOtherComponentsPredicate(context,
+                            item));
 
             ServerObjectAvailabilityChanged snoap = new ServerObjectAvailabilityChanged
             {
@@ -55,7 +56,7 @@ namespace AESharp.MasterRouter.PacketHandlers
                 Available = true
             };
 
-            await context.SendPayloadToComponents( clients, snoap.PacketId, snoap.FinalizePacket().Payload );
+            await context.SendPayloadToComponents(clients, snoap.PacketId, snoap.FinalizePacket().Payload);
         }
     }
 }

@@ -6,29 +6,29 @@ namespace AESharp.Logon.Universal.Networking.Packets
 {
     public class ChallengePacket
     {
-        public byte Error { get; private set; }
-        public ushort Size { get; private set; }
-        public string Game { get; private set; }
-        public Version Build { get; private set; }
-        public string Platform { get; private set; }
-        public string OS { get; private set; }
-        public string Country { get; private set; }
-        public uint TimezoneBias { get; private set; }
-        public IPAddress IP { get; private set; }
-        public string AccountName { get; private set; }
+        public byte Error { get; }
+        public ushort Size { get; }
+        public string Game { get; }
+        public Version Build { get; }
+        public string Platform { get; }
+        public string OS { get; }
+        public string Country { get; }
+        public uint TimezoneBias { get; }
+        public IPAddress IP { get; }
+        public string AccountName { get; }
 
-        public ChallengePacket( LogonPacket packet )
+        public ChallengePacket(LogonPacket packet)
         {
-            this.Error = packet.ReadByte();
-            this.Size = packet.ReadUInt16();
-            this.Game = packet.ReadFixedString( 4 ).Reverse();
-            this.Build = packet.ReadVersion();
-            this.Platform = packet.ReadFixedString( 4 ).Reverse();
-            this.OS = packet.ReadFixedString( 4 ).Reverse();
-            this.Country = packet.ReadFixedString( 4 ).Reverse();
-            this.TimezoneBias = packet.ReadUInt32();
-            this.IP = packet.ReadIPAddress4();
-            this.AccountName = packet.ReadFixedString( packet.ReadByte() );
+            Error = packet.ReadByte();
+            Size = packet.ReadUInt16();
+            Game = packet.ReadFixedString(4).Reverse();
+            Build = packet.ReadVersion();
+            Platform = packet.ReadFixedString(4).Reverse();
+            OS = packet.ReadFixedString(4).Reverse();
+            Country = packet.ReadFixedString(4).Reverse();
+            TimezoneBias = packet.ReadUInt32();
+            IP = packet.ReadIPAddress4();
+            AccountName = packet.ReadFixedString(packet.ReadByte());
         }
     }
 }

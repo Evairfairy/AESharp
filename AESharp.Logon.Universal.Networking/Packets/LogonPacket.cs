@@ -11,14 +11,14 @@ namespace AESharp.Logon.Universal.Networking.Packets
         /// <summary>
         ///     Automatically calculated when sending
         /// </summary>
-        public new ushort Length => (ushort) ( base.Length - 1 );
+        public new ushort Length => (ushort) (base.Length - 1);
 
         public ArraySegment<byte> Payload
-            => new ArraySegment<byte>( this.InternalBuffer, 1, this.Length );
+            => new ArraySegment<byte>(InternalBuffer, 1, Length);
 
-        public LogonPacket( LogonMetaPacket metaPacket ) : base( metaPacket.Payload )
+        public LogonPacket(LogonMetaPacket metaPacket) : base(metaPacket.Payload)
         {
-            this.Opcode = this.ReadByte();
+            Opcode = ReadByte();
         }
     }
 }

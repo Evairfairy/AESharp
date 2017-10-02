@@ -8,15 +8,15 @@ namespace AESharp.Routing.Exceptions
         {
         }
 
-        public UnhandledAEPacketException( string message ) : base( message )
+        public UnhandledAEPacketException(string message) : base(message)
         {
         }
 
-        public UnhandledAEPacketException( string message, Exception inner ) : base( message, inner )
+        public UnhandledAEPacketException(string message, Exception inner) : base(message, inner)
         {
         }
 
-        public UnhandledAEPacketException( int opcode ) : base( $"Unhandled AEPacketId: {opcode:x}" )
+        public UnhandledAEPacketException(int opcode) : base($"Unhandled AEPacketId: {opcode:x}")
         {
         }
     }

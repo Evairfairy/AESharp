@@ -37,6 +37,7 @@ namespace AESharp.Logon
 
         public static readonly ComponentRepository ObjectRepository = new ComponentRepository();
 
-        public static readonly InteropConnectionManager InteropConnectionManager = new InteropConnectionManager( IPAddress.Loopback, 12000 );
+        public static readonly InteropConnectionManager InteropConnectionManager =
+            new InteropConnectionManager(IPAddress.Loopback, 12000);
     }
 }

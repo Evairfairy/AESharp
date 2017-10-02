@@ -13,7 +13,7 @@ namespace AESharp.Routing.Core
         {
             get
             {
-                switch ( this.Type )
+                switch (Type)
                 {
                     case ComponentType.MasterRouter:
                     case ComponentType.UniversalAuthServer:

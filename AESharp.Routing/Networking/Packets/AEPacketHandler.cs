@@ -12,49 +12,51 @@ namespace AESharp.Routing.Networking.Packets
         where TPacketContext : AERoutingClient
     {
         private static readonly Func<AEPacket, TPacketContext, Task> NullHandler =
-            ( packet, context ) => { throw new UnhandledAEPacketException( (int) packet.PacketId ); };
+            (packet, context) => { throw new UnhandledAEPacketException((int) packet.PacketId); };
 
         public Func<ClientHandshakeBeginPacket, TPacketContext, Task> ClientHandshakeBeginHandler = NullHandler;
         public Func<ServerHandshakeResultPacket, TPacketContext, Task> ServerHandshakeResultHandler = NullHandler;
-        public Func<ServerObjectAvailabilityChanged, TPacketContext, Task> ServerNewObjectAvailableHandler = NullHandler;
 
-        public async Task HandlePacket( RoutingMetaPacket metaPacket, TPacketContext context )
+        public Func<ServerObjectAvailabilityChanged, TPacketContext, Task> ServerNewObjectAvailableHandler = NullHandler
+            ;
+
+        public async Task HandlePacket(RoutingMetaPacket metaPacket, TPacketContext context)
         {
-            AEPacket packet = new AEPacket( metaPacket );
+            AEPacket packet = new AEPacket(metaPacket);
 
             // If authentication doesn't matter, handle packet here and return
 
-            if ( !context.Authenticated )
+            if (!context.Authenticated)
             {
                 // We must be unauthenticated
-                switch ( packet.PacketId )
+                switch (packet.PacketId)
                 {
                     case AEPacketId.ClientHandshakeBegin:
-                        await this.ClientHandshakeBeginHandler( new ClientHandshakeBeginPacket( metaPacket ), context );
+                        await ClientHandshakeBeginHandler(new ClientHandshakeBeginPacket(metaPacket), context);
                         break;
                     case AEPacketId.ServerHandshakeResult:
                         await
-                            this.ServerHandshakeResultHandler( new ServerHandshakeResultPacket( metaPacket ),
-                                context );
+                            ServerHandshakeResultHandler(new ServerHandshakeResultPacket(metaPacket),
+                                context);
                         break;
                     default:
                         throw new InvalidPacketException(
-                            $"Received ({packet.PacketId}) requiring context to be unauthenticated but we are authenticated" );
+                            $"Received ({packet.PacketId}) requiring context to be unauthenticated but we are authenticated");
                 }
             }
             else
             {
                 // We must be authenticated
-                switch ( packet.PacketId )
+                switch (packet.PacketId)
                 {
                     case AEPacketId.ServerNewObjectAvailable:
                         await
-                            this.ServerNewObjectAvailableHandler( new ServerObjectAvailabilityChanged( metaPacket ),
-                                context );
+                            ServerNewObjectAvailableHandler(new ServerObjectAvailabilityChanged(metaPacket),
+                                context);
                         break;
                     default:
                         throw new InvalidPacketException(
-                            $"Received ({packet.PacketId}) requiring context to be authenticated but we are unauthenticated" );
+                            $"Received ({packet.PacketId}) requiring context to be authenticated but we are unauthenticated");
                 }
             }
         }
