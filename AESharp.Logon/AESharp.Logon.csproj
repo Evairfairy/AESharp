@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector" Version="4.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AESharp.Core\AESharp.Core.csproj" />
+    <ProjectReference Include="..\AESharp.Interop\AESharp.Interop.csproj" />
+    <ProjectReference Include="..\AESharp.Logon.Universal.Networking\AESharp.Logon.Universal.Networking.csproj" />
+    <ProjectReference Include="..\AESharp.Networking\AESharp.Networking.csproj" />
+    <ProjectReference Include="..\AESharp.Routing\AESharp.Routing.csproj" />
+  </ItemGroup>
+
+</Project>
