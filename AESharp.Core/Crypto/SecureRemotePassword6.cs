@@ -55,9 +55,7 @@ namespace AESharp.Core.Crypto
             get
             {
                 if (_credentialsHash == null)
-                {
                     _credentialsHash = Hash(Salt, Credentials);
-                }
 
                 return _credentialsHash;
             }
@@ -72,14 +70,10 @@ namespace AESharp.Core.Crypto
                 _publicEphemeralValueA %= Modulus;
 
                 if (_publicEphemeralValueA < 0)
-                {
                     _publicEphemeralValueA += Modulus;
-                }
 
                 if (_publicEphemeralValueA == 0)
-                {
                     throw new InvalidDataException($"{nameof(PublicEphemeralValueA)} cannot be 0 Mod N");
-                }
             }
         }
 
@@ -95,9 +89,7 @@ namespace AESharp.Core.Crypto
                     _publicEphemeralValueB %= Modulus;
 
                     if (_publicEphemeralValueB < 0)
-                    {
                         _publicEphemeralValueB += Modulus;
-                    }
                 }
 
                 return _publicEphemeralValueB;
@@ -113,11 +105,9 @@ namespace AESharp.Core.Crypto
                 if (_sessionKey == null)
                 {
                     if (_publicEphemeralValueA == null)
-                    {
                         return null;
-                    }
 
-                    BigNumber S = Verifier.ModPow(ScramblingParameter, Modulus);
+                    var S = Verifier.ModPow(ScramblingParameter, Modulus);
                     S = S * PublicEphemeralValueA % Modulus;
                     S = S.ModPow(_secretEphemeralValueB, Modulus);
 
@@ -133,14 +123,10 @@ namespace AESharp.Core.Crypto
             get
             {
                 if (_verifier == null)
-                {
                     _verifier = Generator.ModPow(CredentialsHash, Modulus);
-                }
 
                 if (_verifier < 0)
-                {
                     _verifier += Modulus;
-                }
 
                 return _verifier;
             }
@@ -151,26 +137,26 @@ namespace AESharp.Core.Crypto
         {
             get
             {
-                byte[] data = SessionKeyRaw.GetBytes(32);
+                var data = SessionKeyRaw.GetBytes(32);
 
-                byte[] temp = new byte[16];
-                for (int i = 0; i < temp.Length; ++i)
+                var temp = new byte[16];
+                for (var i = 0; i < temp.Length; ++i)
                 {
                     temp[i] = data[2 * i];
                 }
 
-                byte[] hash1 = Hash(temp).GetBytes(20);
+                var hash1 = Hash(temp).GetBytes(20);
 
-                for (int i = 0; i < temp.Length; ++i)
+                for (var i = 0; i < temp.Length; ++i)
                 {
                     temp[i] = data[2 * i + 1];
                 }
 
-                byte[] hash2 = Hash(temp).GetBytes(20);
+                var hash2 = Hash(temp).GetBytes(20);
 
                 data = new byte[40];
 
-                for (int i = 0; i < data.Length; ++i)
+                for (var i = 0; i < data.Length; ++i)
                 {
                     data[i] = i % 2 == 0 ? hash1[i / 2] : hash2[i / 2];
                 }
@@ -197,30 +183,28 @@ namespace AESharp.Core.Crypto
 
         private static BigNumber RandomNumber(uint size)
         {
-            byte[] buffer = new byte[size];
+            var buffer = new byte[size];
 
             RandomGenerator.GetBytes(buffer);
 
             if (buffer[0] == 0)
-            {
                 buffer[0] = 1;
-            }
 
             return new BigNumber(buffer);
         }
 
         public bool IsClientProofValid(BigNumber clientProof)
         {
-            BigNumber myProof = ClientSessionKeyProof;
+            var myProof = ClientSessionKeyProof;
 
             Console.Write("Client M: ");
-            foreach (byte b in clientProof.GetBytes())
+            foreach (var b in clientProof.GetBytes())
             {
                 Console.Write($"{b:x}");
             }
             Console.WriteLine();
             Console.Write("Our M: ");
-            foreach (byte b in myProof.GetBytes())
+            foreach (var b in myProof.GetBytes())
             {
                 Console.Write($"{b:x}");
             }
@@ -236,7 +220,7 @@ namespace AESharp.Core.Crypto
 
         public static byte[] GenerateCredentialsHash(string username, string password)
         {
-            byte[] buffer =
+            var buffer =
                 Sha1Algorithm.ComputeHash(Encoding.UTF8.GetBytes($"{username.ToUpper()}:{password.ToUpper()}"));
 
             return buffer;

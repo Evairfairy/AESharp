@@ -9,13 +9,9 @@ namespace AESharp.Routing.Networking.Handlers
             AERoutingClient context)
         {
             if (packet.Available)
-            {
                 context.ObjectRepository.AddObject(packet.RoutingObject);
-            }
             else
-            {
                 context.ObjectRepository.RemoveObject(packet.RoutingObject.Guid);
-            }
         }
     }
 }

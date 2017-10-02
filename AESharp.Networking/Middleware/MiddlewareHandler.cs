@@ -15,14 +15,12 @@ namespace AESharp.Networking.Middleware
 
         public async Task<TMetaPacket> RunMiddlewareAsync(TMetaPacket packet, TContext context)
         {
-            foreach (IMiddleware<TMetaPacket, TContext> middleware in _middleware)
+            foreach (var middleware in _middleware)
             {
                 packet = await middleware.CallMiddlewareAsync(packet, context);
 
                 if (packet.Handled)
-                {
                     break;
-                }
             }
 
             return packet;

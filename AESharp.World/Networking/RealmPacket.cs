@@ -32,13 +32,13 @@ namespace AESharp.World.Networking
             {
                 if (SendingToRemoteClient)
                 {
-                    byte[] header = new byte[4];
+                    var header = new byte[4];
 
-                    byte[] sizeBytes = BitConverter.GetBytes((ushort) InternalBuffer.Length);
+                    var sizeBytes = BitConverter.GetBytes((ushort) InternalBuffer.Length);
                     Array.Reverse(sizeBytes);
 
 
-                    byte[] opcodeBytes = BitConverter.GetBytes((ushort) Opcode);
+                    var opcodeBytes = BitConverter.GetBytes((ushort) Opcode);
 
                     Array.Copy(sizeBytes, 0, header, 0, 2);
                     Array.Copy(opcodeBytes, 0, header, 2, 2);
@@ -47,12 +47,12 @@ namespace AESharp.World.Networking
                 }
                 else
                 {
-                    byte[] header = new byte[6];
+                    var header = new byte[6];
 
-                    byte[] sizeBytes = BitConverter.GetBytes((ushort) InternalBuffer.Length);
+                    var sizeBytes = BitConverter.GetBytes((ushort) InternalBuffer.Length);
                     Array.Reverse(sizeBytes);
 
-                    byte[] opcodeBytes = BitConverter.GetBytes((uint) Opcode);
+                    var opcodeBytes = BitConverter.GetBytes((uint) Opcode);
 
                     Array.Copy(sizeBytes, 0, header, 0, 2);
                     Array.Copy(opcodeBytes, 0, header, 2, 4);
@@ -87,12 +87,10 @@ namespace AESharp.World.Networking
             SendingToRemoteClient = sendingToRemoteClient;
 
             if (data.Length < HeaderSize)
-            {
                 throw new InvalidPacketException(
                     $"{nameof(data)} must be at least {HeaderSize} bytes (packet header)");
-            }
 
-            byte[] headerBytes = new byte[HeaderSize];
+            var headerBytes = new byte[HeaderSize];
             Array.Copy(data, headerBytes, HeaderSize);
 
             if (data.Length != HeaderSize)
@@ -105,13 +103,9 @@ namespace AESharp.World.Networking
             Size = BitConverter.ToUInt16(headerBytes, 0);
 
             if (SendingToRemoteClient)
-            {
                 Opcode = BitConverter.ToUInt16(headerBytes, 2);
-            }
             else
-            {
                 Opcode = BitConverter.ToInt32(headerBytes, 2);
-            }
         }
 
         /// <summary>
@@ -120,7 +114,7 @@ namespace AESharp.World.Networking
         /// <returns>The byte[] representation of the packet before crypto operations</returns>
         public override byte[] FinalizePacket()
         {
-            byte[] buffer = new byte[HeaderSize + InternalBuffer.Length];
+            var buffer = new byte[HeaderSize + InternalBuffer.Length];
 
             Array.Copy(Header, 0, buffer, 0, HeaderSize);
             Array.Copy(InternalBuffer, 0, buffer, HeaderSize, InternalBuffer.Length);

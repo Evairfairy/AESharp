@@ -22,13 +22,11 @@ namespace AESharp.Routing.Networking.Packets
 
         public async Task HandlePacket(RoutingMetaPacket metaPacket, TPacketContext context)
         {
-            AEPacket packet = new AEPacket(metaPacket);
+            var packet = new AEPacket(metaPacket);
 
             // If authentication doesn't matter, handle packet here and return
 
             if (!context.Authenticated)
-            {
-                // We must be unauthenticated
                 switch (packet.PacketId)
                 {
                     case AEPacketId.ClientHandshakeBegin:
@@ -43,10 +41,7 @@ namespace AESharp.Routing.Networking.Packets
                         throw new InvalidPacketException(
                             $"Received ({packet.PacketId}) requiring context to be unauthenticated but we are authenticated");
                 }
-            }
             else
-            {
-                // We must be authenticated
                 switch (packet.PacketId)
                 {
                     case AEPacketId.ServerNewObjectAvailable:
@@ -58,7 +53,6 @@ namespace AESharp.Routing.Networking.Packets
                         throw new InvalidPacketException(
                             $"Received ({packet.PacketId}) requiring context to be authenticated but we are unauthenticated");
                 }
-            }
         }
     }
 }

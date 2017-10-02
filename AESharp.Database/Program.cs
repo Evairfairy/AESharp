@@ -26,8 +26,8 @@ namespace AESharp.Database
 
         private static void Main(string[] args)
         {
-            JsonConfigLoader loader = new JsonConfigLoader();
-            DatabaseSettings config = new DatabaseSettings
+            var loader = new JsonConfigLoader();
+            var config = new DatabaseSettings
             {
                 Driver = DatabaseDriver.MySql,
                 Hostname = IPAddress.Loopback.ToString(),
@@ -67,15 +67,15 @@ namespace AESharp.Database
 
         private static async Task ConnectToMasterRouterAsync(IPAddress address, int port)
         {
-            TcpClient client = new TcpClient();
+            var client = new TcpClient();
             await client.ConnectAsync(address, port);
 
-            AERoutingClient routingClient = new AERoutingClient(client, DatabaseServices.InteropPacketHandler,
+            var routingClient = new AERoutingClient(client, DatabaseServices.InteropPacketHandler,
                 DatabaseServices.IncomingRoutingMiddlewareHandler,
                 DatabaseServices.OutgoingRoutingMiddlewareHandler,
                 DatabaseServices.ObjectRepository);
 
-            ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket
+            var chbp = new ClientHandshakeBeginPacket
             {
                 Protocol = Constants.LatestAEProtocolVersion,
                 Password = "aesharp",

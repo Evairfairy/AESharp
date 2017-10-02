@@ -41,19 +41,17 @@ namespace AESharp.Routing.Networking
 
         public async Task SendPayloadToComponents(IEnumerable<AERoutingClient> clients, AEPacketId id, byte[] payload)
         {
-            foreach (AERoutingClient client in clients)
+            foreach (var client in clients)
             {
                 // Sending packets to ourself is not valid
                 if (client.ComponentData.Guid == ComponentData.Guid)
-                {
                     continue;
-                }
 
                 // Copy this in case middleware modifies the payload (todo: change model to preserve payload)
-                byte[] payloadCopy = new byte[payload.Length];
+                var payloadCopy = new byte[payload.Length];
                 Array.Copy(payload, payloadCopy, payloadCopy.Length);
 
-                RoutingMetaPacket metaPacket = new RoutingMetaPacket
+                var metaPacket = new RoutingMetaPacket
                 {
                     PacketId = id,
                     Payload = payloadCopy,

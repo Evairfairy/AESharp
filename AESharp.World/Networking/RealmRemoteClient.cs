@@ -18,9 +18,9 @@ namespace AESharp.World.Networking
             {
                 if (_seed == 0)
                 {
-                    byte[] seedBytes = new byte[4];
+                    var seedBytes = new byte[4];
 
-                    Random rand = new Random(Environment.TickCount);
+                    var rand = new Random(Environment.TickCount);
                     rand.NextBytes(seedBytes);
                     _seed = BitConverter.ToUInt32(seedBytes, 0);
                 }
@@ -35,14 +35,14 @@ namespace AESharp.World.Networking
 
         public override async Task HandleDataAsync(RealmMetaPacket metaPacket)
         {
-            RealmPacket realmPacket = new RealmPacket(metaPacket.Payload, false);
+            var realmPacket = new RealmPacket(metaPacket.Payload, false);
 
             switch (realmPacket.Opcode)
             {
                 // CmsgAuthSession
                 case 0x1ed:
                 {
-                    CmsgAuthSession packet = new CmsgAuthSession(realmPacket);
+                    var packet = new CmsgAuthSession(realmPacket);
                     Console.WriteLine($"\tClient Build:\t{packet.ClientBuild}");
                     Console.WriteLine($"\tUnk2:\t\t{packet.Unk2}");
                     Console.WriteLine($"\tAccount Name:\t{packet.Account}");

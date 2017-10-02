@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AESharp.Routing.Core;
 using AESharp.Routing.Networking;
@@ -44,13 +43,13 @@ namespace AESharp.MasterRouter.PacketHandlers
 
             Console.WriteLine($"Successfully authenticated {context.ComponentData.Guid}");
 
-            List<AERoutingClient> clients =
+            var clients =
                 MasterRouterServices.RemoteClients.GetClients(
                     item =>
                         SendToOtherComponentsPredicate(context,
                             item));
 
-            ServerObjectAvailabilityChanged snoap = new ServerObjectAvailabilityChanged
+            var snoap = new ServerObjectAvailabilityChanged
             {
                 RoutingObject = context.ComponentData,
                 Available = true

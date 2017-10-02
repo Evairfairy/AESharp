@@ -46,9 +46,9 @@ namespace AESharp.Logon.Repositories
 
         public List<Realm> GetRealms()
         {
-            List<Realm> realms = new List<Realm>();
+            var realms = new List<Realm>();
 
-            foreach (Realm realm in _realms)
+            foreach (var realm in _realms)
             {
                 realms.Add(realm);
             }

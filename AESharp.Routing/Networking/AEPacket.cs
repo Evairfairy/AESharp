@@ -29,9 +29,7 @@ namespace AESharp.Routing.Networking
         public override RoutingMetaPacket FinalizePacket()
         {
             if (_finalized)
-            {
                 throw new InvalidOperationException("A packet may only be finalized once.");
-            }
 
             _finalized = true;
 

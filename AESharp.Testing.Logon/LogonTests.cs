@@ -10,7 +10,7 @@ namespace AESharp.Testing.Logon
         [Fact]
         public void AESharpTempMiscProtocolTest()
         {
-            TcpClient client = new TcpClient();
+            var client = new TcpClient();
             client.Connect("127.0.0.1", 16000);
             Assert.True(client.Connected);
 
@@ -19,7 +19,7 @@ namespace AESharp.Testing.Logon
             long sender = 16000;
             long target = 32000;
 
-            byte[] buffer = new byte[24];
+            var buffer = new byte[24];
 
             Array.Copy(BitConverter.GetBytes(opcode), buffer, 4);
             Array.Copy(BitConverter.GetBytes(length), 0, buffer, 4, 4);

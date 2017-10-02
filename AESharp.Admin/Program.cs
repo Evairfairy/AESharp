@@ -9,7 +9,7 @@ namespace AESharp.Admin
     {
         public static void Main(string[] args)
         {
-            Container container = new Container();
+            var container = new Container();
 
             container.Register<ILogger, ConsoleLogger>(Lifestyle.Singleton);
 

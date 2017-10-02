@@ -17,7 +17,7 @@
         private void Reset()
         {
             _permutation = new byte[256];
-            for (int i = 0; i < _permutation.Length; ++i)
+            for (var i = 0; i < _permutation.Length; ++i)
             {
                 _permutation[i] = (byte) i;
             }
@@ -41,7 +41,7 @@
                 unchecked
                 {
                     j += (byte) (_permutation[i] + key[i % key.Length]);
-                    byte k = _permutation[i];
+                    var k = _permutation[i];
                     _permutation[i] = _permutation[j];
                     _permutation[j] = k;
                 }
@@ -54,7 +54,7 @@
 
         public byte[] Process(byte[] input)
         {
-            byte[] buffer = new byte[input.Length];
+            var buffer = new byte[input.Length];
 
             uint i = 0;
 
@@ -65,11 +65,11 @@
                     ++_indexOne;
                     _indexTwo += _permutation[_indexOne];
 
-                    byte k = _permutation[_indexOne];
+                    var k = _permutation[_indexOne];
                     _permutation[_indexOne] = _permutation[_indexTwo];
                     _permutation[_indexTwo] = k;
 
-                    byte j = (byte) (_permutation[_indexOne] + _permutation[_indexTwo]);
+                    var j = (byte) (_permutation[_indexOne] + _permutation[_indexTwo]);
                     buffer[i] = (byte) (input[i] ^ _permutation[j]);
                 }
 

@@ -12,9 +12,9 @@ namespace AESharp.Routing.Extensions
     {
         public static List<T> ReadList<T>(this Packet packet, Func<Packet, T> readObjectFunc)
         {
-            List<T> returnList = new List<T>();
+            var returnList = new List<T>();
 
-            ushort listSize = packet.ReadUInt16();
+            var listSize = packet.ReadUInt16();
 
             for (ushort i = 0; i < listSize; ++i)
             {
@@ -27,13 +27,11 @@ namespace AESharp.Routing.Extensions
         public static void WriteList<T>(this Packet packet, List<T> list, Action<Packet, T> writeObjectFunc)
         {
             if (list.Count > ushort.MaxValue)
-            {
                 throw new InvalidOperationException(
                     $"You may only write lists containing a maximum of {ushort.MaxValue} elements");
-            }
 
             packet.WriteUInt16((ushort) list.Count);
-            foreach (T value in list)
+            foreach (var value in list)
             {
                 writeObjectFunc(packet, value);
             }
@@ -58,11 +56,9 @@ namespace AESharp.Routing.Extensions
 
         public static AEPacketId ReadPacketId(this Packet packet)
         {
-            int id = packet.ReadInt32();
+            var id = packet.ReadInt32();
             if (!Enum.IsDefined(typeof(AEPacketId), id))
-            {
                 throw new UnhandledAEPacketException(id);
-            }
 
             return (AEPacketId) id;
         }
@@ -74,11 +70,9 @@ namespace AESharp.Routing.Extensions
 
         public static ComponentType ReadComponentType(this Packet packet)
         {
-            ushort type = packet.ReadUInt16();
+            var type = packet.ReadUInt16();
             if (!Enum.IsDefined(typeof(ComponentType), type))
-            {
                 throw new InvalidPacketException($"Tried to read unregistered component type {type} from packet");
-            }
 
             return (ComponentType) type;
         }

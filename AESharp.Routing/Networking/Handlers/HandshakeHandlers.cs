@@ -29,12 +29,10 @@ namespace AESharp.Routing.Networking.Handlers
         {
             Console.WriteLine("Received AE# handshake");
             if (!ValidateHandshakeProtocol(packet))
-            {
                 throw new InvalidPacketException(
                     $"Received handshake with protocol version {packet.Protocol} but version {Constants.LatestAEProtocolVersion} is required");
-            }
 
-            ServerHandshakeResultPacket response = new ServerHandshakeResultPacket();
+            var response = new ServerHandshakeResultPacket();
             if (!ValidateHandshakeAuthentication(packet))
             {
                 Console.WriteLine(
@@ -81,7 +79,7 @@ namespace AESharp.Routing.Networking.Handlers
                 // Authenticated
                 context.ComponentData = packet.OurComponent;
 
-                foreach (RoutingComponent component in packet.OtherAvailableComponents)
+                foreach (var component in packet.OtherAvailableComponents)
                 {
                     context.ObjectRepository.AddObject(component);
                 }

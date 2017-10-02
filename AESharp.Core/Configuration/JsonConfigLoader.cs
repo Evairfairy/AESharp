@@ -9,22 +9,22 @@ namespace AESharp.Core.Configuration
     {
         public override T Load<T>(string fileName, Encoding encoding = null)
         {
-            string path = GetFilePath(fileName);
-            string json = File.ReadAllText(path, encoding ?? Encoding.UTF8);
+            var path = GetFilePath(fileName);
+            var json = File.ReadAllText(path, encoding ?? Encoding.UTF8);
 
             return JsonConvert.DeserializeObject<T>(json);
         }
 
         public override void CreateDefault<T>(string fileName, T defaultValue, Encoding encoding = null)
         {
-            string path = GetFilePath(fileName);
-            string json = JsonConvert.SerializeObject(defaultValue, Formatting.Indented);
+            var path = GetFilePath(fileName);
+            var json = JsonConvert.SerializeObject(defaultValue, Formatting.Indented);
             File.WriteAllText(path, json, encoding ?? Encoding.UTF8);
         }
 
         private string GetFilePath(string fileName)
         {
-            string name = fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ? "" : $"{fileName}.json";
+            var name = fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ? "" : $"{fileName}.json";
             return Path.Combine(RootDirectory, name);
         }
     }

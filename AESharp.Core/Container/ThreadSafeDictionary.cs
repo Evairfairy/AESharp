@@ -35,9 +35,7 @@ namespace AESharp.Core.Container
             lock (InternalDictionary)
             {
                 if (InternalDictionary.ContainsKey(key))
-                {
                     InternalDictionary.Remove(key);
-                }
 
                 InternalDictionary.Add(key, value);
             }

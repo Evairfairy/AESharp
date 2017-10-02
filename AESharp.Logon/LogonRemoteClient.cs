@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using AESharp.Core.Crypto;
 using AESharp.Core.Extensions;
-using AESharp.Logon.Accounts;
 using AESharp.Logon.Universal.Networking.Middleware;
 using AESharp.Logon.Universal.Networking.Packets;
 using AESharp.Networking.Data;
@@ -43,13 +40,13 @@ namespace AESharp.Logon
                 return;
             }
 
-            LogonPacket logonPacket = new LogonPacket(metaPacket);
+            var logonPacket = new LogonPacket(metaPacket);
 
             switch (logonPacket.Opcode)
             {
                 case (byte) LogonOpcodes.Challenge:
                 {
-                    ChallengePacket packet = new ChallengePacket(logonPacket);
+                    var packet = new ChallengePacket(logonPacket);
                     Console.WriteLine("Received logon packet:");
                     Console.WriteLine($"\tError:\t\t\t{packet.Error}");
                     Console.WriteLine($"\tSize:\t\t\t{packet.Size}");
@@ -63,12 +60,12 @@ namespace AESharp.Logon
                     Console.WriteLine($"\tAccount Name:\t\t{packet.AccountName}");
 
                     Console.Write($"Validating username... ");
-                    Account account = LogonServices.Accounts.GetAccount(packet.AccountName);
+                    var account = LogonServices.Accounts.GetAccount(packet.AccountName);
                     if (account == null)
                     {
                         Console.WriteLine($"failed. Account {packet.AccountName} does not exist.");
 
-                        ChallengeResponsePacket response = new ChallengeResponsePacket
+                        var response = new ChallengeResponsePacket
                         {
                             Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
                         };
@@ -81,7 +78,7 @@ namespace AESharp.Logon
                         if (account.Banned)
                         {
                             Console.WriteLine($"Account {account.Username} is currently banned.");
-                            ChallengeResponsePacket response = new ChallengeResponsePacket
+                            var response = new ChallengeResponsePacket
                             {
                                 Error = ChallengeResponsePacket.ChallengeResponseError.AccountClosed
                             };
@@ -97,11 +94,11 @@ namespace AESharp.Logon
                         AuthData.InitSRP6(account.Username,
                             account.PasswordHash.ByteRepresentationToByteArray());
 
-                        Packet pack = new Packet();
+                        var pack = new Packet();
                         pack.WriteByte(0);
                         pack.WriteByte(0);
                         pack.WriteByte(0);
-                        BigNumber b = AuthData.Srp6.PublicEphemeralValueB;
+                        var b = AuthData.Srp6.PublicEphemeralValueB;
                         pack.WriteBytes(b.GetBytes(32));
 
                         pack.WriteByte(1);
@@ -112,8 +109,8 @@ namespace AESharp.Logon
 
                         pack.WriteBytes(AuthData.Srp6.Salt.GetBytes(32));
 
-                        Random rand = new Random(Environment.TickCount);
-                        byte[] randBytes = new byte[16];
+                        var rand = new Random(Environment.TickCount);
+                        var randBytes = new byte[16];
                         rand.NextBytes(randBytes);
                         pack.WriteBytes(randBytes);
 
@@ -125,15 +122,15 @@ namespace AESharp.Logon
                 }
                 case (byte) LogonOpcodes.Proof:
                 {
-                    ProofPacket proofPacket = new ProofPacket(logonPacket);
+                    var proofPacket = new ProofPacket(logonPacket);
 
-                    bool proofValid = AuthData.Srp6.IsClientProofValid(proofPacket.A, proofPacket.M1);
+                    var proofValid = AuthData.Srp6.IsClientProofValid(proofPacket.A, proofPacket.M1);
 
                     Console.WriteLine($"Authentication {(proofValid ? "successful" : "failed")}");
 
                     if (!proofValid)
                     {
-                        ChallengeResponsePacket response = new ChallengeResponsePacket
+                        var response = new ChallengeResponsePacket
                         {
                             Error = ChallengeResponsePacket.ChallengeResponseError.NoSuchAccount
                         };
@@ -141,7 +138,7 @@ namespace AESharp.Logon
                         return;
                     }
 
-                    Packet successPacket = new Packet();
+                    var successPacket = new Packet();
                     successPacket.WriteByte(0x1);
                     successPacket.WriteByte(0x0);
                     successPacket.WriteBytes(AuthData.Srp6.ServerSessionKeyProof.GetBytes(20));
@@ -155,22 +152,22 @@ namespace AESharp.Logon
                 }
                 case (byte) LogonOpcodes.RealmList:
                 {
-                    List<Realm> realms = LogonServices.Realms.GetRealms();
+                    var realms = LogonServices.Realms.GetRealms();
 
-                    short realmCount = (short) realms.Count;
+                    var realmCount = (short) realms.Count;
 
                     Console.WriteLine($"Sending {realmCount} realms");
 
-                    Packet realmPacket = new Packet();
+                    var realmPacket = new Packet();
                     realmPacket.WriteByte(0x10);
 
-                    int oldPosition = realmPacket.BufferPosition;
+                    var oldPosition = realmPacket.BufferPosition;
                     realmPacket.WriteInt16(0);
                     realmPacket.WriteInt32(0);
 
                     realmPacket.WriteInt16(realmCount);
 
-                    foreach (Realm realm in realms)
+                    foreach (var realm in realms)
                     {
                         realmPacket.WriteByte((byte) realm.Type);
                         realmPacket.WriteBoolean(realm.IsLocked);

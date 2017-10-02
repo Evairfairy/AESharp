@@ -37,7 +37,7 @@ namespace AESharp.Networking
         {
             while (IsListening)
             {
-                TcpClient client = await _listener.AcceptTcpClientAsync();
+                var client = await _listener.AcceptTcpClientAsync();
                 Task.Run(() => acceptClientAction(client)).RunAsync();
             }
         }

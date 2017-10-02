@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AESharp.Logon.Accounts;
 
 namespace AESharp.Logon.Repositories
@@ -25,12 +26,10 @@ namespace AESharp.Logon.Repositories
         {
             lock (_accounts)
             {
-                foreach (Account account in _accounts)
+                foreach (var account in _accounts)
                 {
-                    if (account.Username.ToUpperInvariant() == username.ToUpperInvariant())
-                    {
+                    if (account.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
                         return account;
-                    }
                 }
             }
 

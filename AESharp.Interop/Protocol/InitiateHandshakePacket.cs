@@ -21,11 +21,9 @@ namespace AESharp.Interop.Protocol
             : base(data)
         {
             if (Length < ExpectedSize)
-            {
                 throw new InvalidPacketException(
                     $"Received packet with incorrect size. Expecting {ExpectedSize} bytes, " +
                     $"but received {Length} bytes instead");
-            }
 
             ProtocolVersion = ReadUInt16();
         }

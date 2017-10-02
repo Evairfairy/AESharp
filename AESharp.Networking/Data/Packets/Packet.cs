@@ -183,25 +183,21 @@ namespace AESharp.Networking.Data.Packets
 
         public byte[] ReadRemainingBytes()
         {
-            int remainingBytes = (int) (_memoryStream.Length - _memoryStream.Position);
+            var remainingBytes = (int) (_memoryStream.Length - _memoryStream.Position);
 
             if (remainingBytes < 0)
-            {
                 throw new InvalidOperationException(
                     $"Internal error in Packet->{nameof(ReadRemainingBytes)}: {nameof(remainingBytes)} was {remainingBytes}");
-            }
 
             if (remainingBytes == 0)
-            {
                 return new byte[0];
-            }
 
             return ReadBytes(remainingBytes);
         }
 
         public string ReadFixedString(int len)
         {
-            char[] chars = ReadChars(len);
+            var chars = ReadChars(len);
             return new string(chars).TrimEnd('\0');
         }
 
@@ -238,13 +234,13 @@ namespace AESharp.Networking.Data.Packets
 
         public DateTime ReadDateTime()
         {
-            long timestamp = ReadInt64();
+            var timestamp = ReadInt64();
             return DateTimeOffset.FromUnixTimeSeconds(timestamp).DateTime;
         }
 
         public Guid ReadGuid()
         {
-            byte[] buffer = ReadBytes(16);
+            var buffer = ReadBytes(16);
             return new Guid(buffer);
         }
 
@@ -257,21 +253,21 @@ namespace AESharp.Networking.Data.Packets
 
                 case StringType.ByteString:
                 {
-                    byte length = ReadByte();
-                    char[] chars = ReadChars(length);
+                    var length = ReadByte();
+                    var chars = ReadChars(length);
                     return new string(chars);
                 }
 
                 case StringType.ShortString:
                 {
-                    ushort length = ReadUInt16();
-                    char[] chars = ReadChars(length);
+                    var length = ReadUInt16();
+                    var chars = ReadChars(length);
                     return new string(chars);
                 }
 
                 case StringType.NullTerminatedString:
                 {
-                    StringBuilder builder = new StringBuilder();
+                    var builder = new StringBuilder();
                     char c;
                     while ((c = ReadChar()) != '\0')
                     {
@@ -379,7 +375,7 @@ namespace AESharp.Networking.Data.Packets
 
         public void WriteGuid(Guid guid)
         {
-            byte[] bytes = guid.ToByteArray();
+            var bytes = guid.ToByteArray();
             WriteBytes(bytes);
         }
 
@@ -437,7 +433,7 @@ namespace AESharp.Networking.Data.Packets
 
         private void WriteString(string value, StringPrefix prefix, StringTerminator terminator)
         {
-            int maxLength = 0;
+            var maxLength = 0;
             switch (terminator)
             {
                 case StringTerminator.None:
@@ -457,10 +453,8 @@ namespace AESharp.Networking.Data.Packets
             {
                 case StringPrefix.None:
                     if (terminator == StringTerminator.None)
-                    {
                         throw new InvalidOperationException(
                             "String terminator cannot be none when there is no prefix");
-                    }
                     break;
 
                 case StringPrefix.Byte:
@@ -491,18 +485,14 @@ namespace AESharp.Networking.Data.Packets
         private void ValidateStringLengthOrThrow(int actualLength, int maxAllowedLength)
         {
             if (actualLength > maxAllowedLength)
-            {
                 throw new InvalidOperationException(
                     $"String length ({actualLength:#,#0}) exceeds maximum length of {maxAllowedLength:#,#0}");
-            }
         }
 
         protected virtual void Dispose(bool disposeManagedResources)
         {
             if (Disposed)
-            {
                 return;
-            }
 
             if (disposeManagedResources)
             {

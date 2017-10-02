@@ -51,7 +51,7 @@ namespace AESharp.Routing.Networking.Packets.Handshaking
 
         private SHRPResult ReadSHRPResult()
         {
-            byte b = InternalPacket.ReadByte();
+            var b = InternalPacket.ReadByte();
             EnumHelpers.ThrowIfUndefined(typeof(SHRPResult), b);
             return (SHRPResult) b;
         }

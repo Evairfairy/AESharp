@@ -30,11 +30,9 @@ namespace AESharp.Interop
         public bool Connect(Action<TcpClient> callback = null, int attempts = 0)
         {
             if (Connected)
-            {
                 return Connected;
-            }
 
-            for (int i = 0; i < attempts || attempts == 0; ++i)
+            for (var i = 0; i < attempts || attempts == 0; ++i)
             {
                 _client = new TcpClient();
 

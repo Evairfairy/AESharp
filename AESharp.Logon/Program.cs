@@ -62,7 +62,7 @@ namespace AESharp.Logon
 
             ConnectToMasterRouterAsync(IPAddress.Loopback, 12000).RunAsync();
 
-            TcpServer server = new TcpServer(new IPEndPoint(IPAddress.Loopback, 3724));
+            var server = new TcpServer(new IPEndPoint(IPAddress.Loopback, 3724));
             server.Start(AcceptClientActionAsync);
 
             Console.WriteLine("Listening...");
@@ -75,12 +75,12 @@ namespace AESharp.Logon
 
             LogonServices.InteropConnectionManager.Connect(tcpClient => routerClient = tcpClient);
 
-            AERoutingClient routingClient = new AERoutingClient(routerClient, LogonServices.InteropPacketHandler,
+            var routingClient = new AERoutingClient(routerClient, LogonServices.InteropPacketHandler,
                 LogonServices.IncomingRoutingMiddlewareHandler,
                 LogonServices.OutgoingRoutingMiddlewareHandler,
                 LogonServices.ObjectRepository);
 
-            ClientHandshakeBeginPacket chbp = new ClientHandshakeBeginPacket
+            var chbp = new ClientHandshakeBeginPacket
             {
                 Protocol = Constants.LatestAEProtocolVersion,
                 Password = "aesharp",
@@ -100,9 +100,9 @@ namespace AESharp.Logon
         private static async void AcceptClientActionAsync(TcpClient rawClient)
         {
             Console.WriteLine("Accepting client");
-            LogonRemoteClient client = new LogonRemoteClient(rawClient);
+            var client = new LogonRemoteClient(rawClient);
 
-            Guid clientGuid = Guid.Empty;
+            var clientGuid = Guid.Empty;
             try
             {
                 clientGuid = LogonServices.LogonClients.AddClient(client);
@@ -115,9 +115,7 @@ namespace AESharp.Logon
             finally
             {
                 if (clientGuid != Guid.Empty)
-                {
                     LogonServices.LogonClients.RemoveClient(clientGuid);
-                }
             }
         }
     }

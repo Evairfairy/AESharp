@@ -10,9 +10,7 @@ namespace AESharp.Routing.Core
         public void AddObject(RoutingComponent obj)
         {
             if (obj.Guid == Guid.Empty)
-            {
                 throw new ArgumentException("Tried to add an object to the repository whose guid was empty");
-            }
 
             lock (_components)
             {
@@ -32,7 +30,7 @@ namespace AESharp.Routing.Core
 
         public List<RoutingComponent> GetAllObjects()
         {
-            List<RoutingComponent> ret = new List<RoutingComponent>();
+            var ret = new List<RoutingComponent>();
 
             lock (_components)
                 ret.AddRange(_components);

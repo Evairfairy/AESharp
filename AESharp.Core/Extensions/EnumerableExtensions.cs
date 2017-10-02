@@ -6,7 +6,7 @@ namespace AESharp.Core.Extensions
     {
         public static IEnumerable<IEnumerable<T>> InChunksOf<T>(this IEnumerable<T> enumerable, int chunkSize)
         {
-            using (IEnumerator<T> enumerator = enumerable.GetEnumerator())
+            using (var enumerator = enumerable.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -24,7 +24,7 @@ namespace AESharp.Core.Extensions
         {
             yield return enumerator.Current;
 
-            int i = -1;
+            var i = -1;
             while (++i < chunkSize && enumerator.MoveNext())
             {
                 yield return enumerator.Current;

@@ -40,9 +40,9 @@ namespace AESharp.Core.Crypto
 
         public static byte[] FinalizeHash(HashAlgorithm algorithm, params HashDataBroker[] brokers)
         {
-            MemoryStream buffer = new MemoryStream();
+            var buffer = new MemoryStream();
 
-            foreach (HashDataBroker broker in brokers)
+            foreach (var broker in brokers)
             {
                 buffer.Write(broker.RawData, 0, broker.Length);
             }

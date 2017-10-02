@@ -42,43 +42,29 @@ namespace AESharp.Logon.Universal.Networking.Packets
         public override byte[] FinalizePacket()
         {
             if (Error == ChallengeResponseError.Invalid)
-            {
                 throw new InvalidPacketException($"{nameof(Error)} has not been set");
-            }
 
             WriteByte(0x0);
             WriteByte(0x0);
             WriteByte((byte) Error);
 
             if (Error != ChallengeResponseError.Success)
-            {
                 return base.FinalizePacket();
-            }
 
             if (B.Length != 32)
-            {
                 throw new InvalidPacketException($"Expected B to be 32 bytes but it was {B.Length} bytes");
-            }
 
             if (g.Length != 1)
-            {
                 throw new InvalidPacketException($"Expected g to be 1 byte but it was {g.Length} bytes");
-            }
 
             if (n.Length != 32)
-            {
                 throw new InvalidPacketException($"Expected n to be 32 bytes but it was {n.Length} bytes");
-            }
 
             if (s.Length != 32)
-            {
                 throw new InvalidPacketException($"Expected s to be 32 bytes but it was {s.Length} bytes");
-            }
 
             if (unk3.Length != 16)
-            {
                 throw new InvalidPacketException($"Expected unk3 to be 16 bytes but it was {unk3.Length} bytes");
-            }
 
             WriteBytes(B);
             WriteByte((byte) g.Length);

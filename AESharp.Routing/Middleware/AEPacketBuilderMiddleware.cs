@@ -11,7 +11,7 @@ namespace AESharp.Routing.Middleware
         public async Task<RoutingMetaPacket> CallMiddlewareAsync(RoutingMetaPacket metaPacket,
             AERoutingClient context)
         {
-            Packet packet = new Packet();
+            var packet = new Packet();
 
             packet.WriteGuid(metaPacket.Sender);
             packet.WriteGuid(metaPacket.Target);

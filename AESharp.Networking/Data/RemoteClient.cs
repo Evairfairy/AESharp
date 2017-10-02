@@ -26,15 +26,11 @@ namespace AESharp.Networking.Data
             set
             {
                 if (_clientGuid != Guid.Empty)
-                {
                     throw new InvalidOperationException($"{nameof(ClientGuid)} can only be allocated once.");
-                }
 
                 if (value == Guid.Empty)
-                {
                     throw new InvalidOperationException(
                         $"Guid.Empty is not a valid value for property {nameof(ClientGuid)}");
-                }
 
                 _clientGuid = value;
             }
@@ -57,21 +53,17 @@ namespace AESharp.Networking.Data
         public async Task ListenForDataTask()
         {
             if (RawClient == null)
-            {
                 throw new NullReferenceException($"{nameof(RawClient)} cannot be null");
-            }
 
             if (!Connected)
-            {
                 throw new InvalidOperationException("Must be connected to listen for data");
-            }
 
-            NetworkStream ns = RawClient.GetStream();
+            var ns = RawClient.GetStream();
 
             while (Connected)
             {
-                byte[] buffer = new byte[BufferSize];
-                int bytesRead = await ns.ReadAsync(buffer, 0, buffer.Length);
+                var buffer = new byte[BufferSize];
+                var bytesRead = await ns.ReadAsync(buffer, 0, buffer.Length);
 
                 if (bytesRead == 0)
                 {
@@ -83,7 +75,7 @@ namespace AESharp.Networking.Data
 
                 try
                 {
-                    TMetaPacket metaPacket = new TMetaPacket { Payload = buffer };
+                    var metaPacket = new TMetaPacket { Payload = buffer };
                     await HandleDataAsync(metaPacket);
 
                     if (metaPacket.KillSender)
@@ -107,7 +99,7 @@ namespace AESharp.Networking.Data
         /// <returns>Task</returns>
         public virtual async Task SendDataAsync(TMetaPacket metaPacket)
         {
-            byte[] data = metaPacket.Payload;
+            var data = metaPacket.Payload;
 
             await RawClient.GetStream().WriteAsync(data, 0, data.Length);
         }

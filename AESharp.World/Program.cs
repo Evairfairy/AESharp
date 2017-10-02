@@ -13,7 +13,7 @@ namespace AESharp.World
     {
         public static void Main(string[] args)
         {
-            TcpServer server = new TcpServer(new IPEndPoint(IPAddress.Loopback, 8095));
+            var server = new TcpServer(new IPEndPoint(IPAddress.Loopback, 8095));
             server.Start(AcceptClientActionAsync);
 
             Console.WriteLine("Realm router now listening");
@@ -23,9 +23,9 @@ namespace AESharp.World
         private static async void AcceptClientActionAsync(TcpClient rawClient)
         {
             Console.WriteLine("Accepting Realm Client");
-            RealmRemoteClient client = new RealmRemoteClient(rawClient);
+            var client = new RealmRemoteClient(rawClient);
 
-            Guid clientGuid = Guid.Empty;
+            var clientGuid = Guid.Empty;
 
             Console.WriteLine($"Using realm seed: 0x{client.Seed:x}");
 
@@ -33,7 +33,7 @@ namespace AESharp.World
             {
                 clientGuid = RealmServices.RemoteClients.AddClient(client);
 
-                RealmPacket packet = new RealmPacket(true)
+                var packet = new RealmPacket(true)
                 {
                     Opcode = 0x1ec
                 };
@@ -61,9 +61,7 @@ namespace AESharp.World
             finally
             {
                 if (clientGuid != Guid.Empty)
-                {
                     RealmServices.RemoteClients.RemoveClient(clientGuid);
-                }
                 Console.WriteLine($"Client disconnected");
             }
         }

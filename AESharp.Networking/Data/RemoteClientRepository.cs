@@ -21,9 +21,7 @@ namespace AESharp.Networking.Data
         public Guid AddClient(T client)
         {
             if (client == null)
-            {
                 throw new NullReferenceException($"Parameter {nameof(client)} cannot be null");
-            }
 
             lock (_remoteClients)
                 _remoteClients.Add(client.ClientGuid, client);
@@ -37,16 +35,12 @@ namespace AESharp.Networking.Data
         public void RemoveClient(Guid clientGuid)
         {
             if (clientGuid == Guid.Empty)
-            {
                 throw new NullReferenceException($"Parameter {nameof(clientGuid)} cannot be empty");
-            }
 
             lock (_remoteClients)
             {
                 if (_remoteClients.ContainsKey(clientGuid))
-                {
                     _remoteClients.Remove(clientGuid);
-                }
             }
         }
 
@@ -64,9 +58,7 @@ namespace AESharp.Networking.Data
         public T GetClient(Guid clientGuid)
         {
             if (clientGuid == Guid.Empty)
-            {
                 throw new NullReferenceException($"Parameter {nameof(clientGuid)} cannot be empty");
-            }
 
             lock (_remoteClients)
                 return _remoteClients[clientGuid];
@@ -79,11 +71,9 @@ namespace AESharp.Networking.Data
         public List<T> GetClients(Func<T, bool> predicate = null)
         {
             if (predicate == null)
-            {
                 predicate = item => true;
-            }
 
-            List<T> clients = new List<T>();
+            var clients = new List<T>();
 
             lock (_remoteClients)
                 clients.AddRange(_remoteClients.Values.Where(predicate));

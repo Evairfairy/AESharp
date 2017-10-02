@@ -25,7 +25,7 @@ namespace AESharp.MasterRouter
 
         public static void Main(string[] args)
         {
-            TcpServer server = new TcpServer(new IPEndPoint(IPAddress.Loopback, 12000));
+            var server = new TcpServer(new IPEndPoint(IPAddress.Loopback, 12000));
             server.Start(AcceptAEClientAsync);
 
             Console.ReadLine();
@@ -34,7 +34,7 @@ namespace AESharp.MasterRouter
         private static async void AcceptAEClientAsync(TcpClient rawClient)
         {
             Console.WriteLine("Accepting AEClient");
-            AERoutingClient client = new AERoutingClient(rawClient, MasterRouterServices.PacketHandler,
+            var client = new AERoutingClient(rawClient, MasterRouterServices.PacketHandler,
                 MasterRouterServices.IncomingMiddlewareHandler,
                 MasterRouterServices.OutgoingMiddlewareHandler,
                 MasterRouterServices.ObjectRepository);

@@ -17,9 +17,7 @@ namespace AESharp.Routing.Networking.Packets.Objects
             get
             {
                 if (!_availableAssigned)
-                {
                     throw new InvalidOperationException("Available must be assigned to before being used");
-                }
 
                 return _available;
             }
