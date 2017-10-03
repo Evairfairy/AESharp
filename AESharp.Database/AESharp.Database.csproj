@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.9-dmr" />
+    <PackageReference Include="LiteDB" Version="4.0.0-beta2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
@@ -15,6 +15,11 @@
     <ProjectReference Include="..\AESharp.Interop\AESharp.Interop.csproj" />
     <ProjectReference Include="..\AESharp.Networking\AESharp.Networking.csproj" />
     <ProjectReference Include="..\AESharp.Routing\AESharp.Routing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\Accounts\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

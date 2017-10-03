@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AESharp.Core.Configuration;
 using AESharp.Core.Extensions;
 using AESharp.Database.Configuration;
+using AESharp.Database.Entities;
 using AESharp.Routing.Core;
 using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking;
@@ -27,41 +28,44 @@ namespace AESharp.Database
         private static void Main(string[] args)
         {
             var loader = new JsonConfigLoader();
-            var config = new DatabaseSettings
+            var config = new DatabasesConfig
             {
-                Driver = DatabaseDriver.MySql,
-                Hostname = IPAddress.Loopback.ToString(),
-                Port = 3306,
-                Username = "ascemu",
-                Password = string.Empty,
-                Databases = new DatabasesSection
+                Accounts = new DatabaseSettings
                 {
-                    LogonDatabase = "logon",
-                    CharactersDatabase = "chars",
-                    WorldDatabase = "world"
+                    FileName = "accounts.db",
+                    Password = null
+                },
+
+                World = new DatabaseSettings
+                {
+                    FileName = "world.db",
+                    Password = null
                 }
             };
 
+            // NOTE: this has to be disposed before the program terminates or changes will not be flushed to disk
+            var accounts = new AccountsDatabase( config.Accounts );
+
             try
             {
-                config = loader.Load<DatabaseSettings>("database");
-                ConnectToMasterRouterAsync(IPAddress.Loopback, 12000).RunAsync();
+                config = loader.Load<DatabasesConfig>( "database" );
+                ConnectToMasterRouterAsync( IPAddress.Loopback, 12000 ).RunAsync();
                 Console.ReadLine();
             }
-            catch (DirectoryNotFoundException ex)
+            catch( DirectoryNotFoundException ex )
             {
-                Console.Error.WriteLine("Config directory not found, attempting to create default file...");
-                Directory.CreateDirectory(loader.RootDirectory);
-                loader.CreateDefault("database", config);
+                Console.Error.WriteLine( "Config directory not found, attempting to create default file..." );
+                Directory.CreateDirectory( loader.RootDirectory );
+                loader.CreateDefault( "database", config );
             }
-            catch (FileNotFoundException ex)
+            catch( FileNotFoundException ex )
             {
-                Console.Error.WriteLine("Config file not found, attempting to create default file...");
-                loader.CreateDefault("database", config);
+                Console.Error.WriteLine( "Config file not found, attempting to create default file..." );
+                loader.CreateDefault( "database", config );
             }
-            catch (Exception)
+            finally
             {
-                throw;
+                accounts.Dispose();
             }
         }
 
