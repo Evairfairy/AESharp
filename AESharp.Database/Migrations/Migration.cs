@@ -1,6 +1,8 @@
-﻿namespace AESharp.Database.Migrations
+﻿using AESharp.Database.Entities;
+
+namespace AESharp.Database.Migrations
 {
-    internal abstract class Migration<T>
+    internal abstract class Migration<T> where T : IDatabase
     {
         public long Id { get; }
         public string Description { get; protected set; }
@@ -11,7 +13,7 @@
             this.Database = db;
             this.Id = id;
             this.Description = description;
-        }    
+        }
 
         public abstract void Upgrade();
         public abstract void Downgrade();

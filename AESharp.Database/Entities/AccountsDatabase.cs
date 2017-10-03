@@ -8,8 +8,10 @@ using LiteDB;
 
 namespace AESharp.Database.Entities
 {
-    internal sealed class AccountsDatabase : IDisposable
+    internal sealed class AccountsDatabase : IDisposable, IDatabase
     {
+        private readonly IDiskService _diskService;
+
         public LiteDatabase Database { get; }
 
         public LiteCollection<Accounts> Accounts
@@ -17,12 +19,6 @@ namespace AESharp.Database.Entities
 
         public AccountsDatabase( DatabaseSettings config )
         {
-            var builder = new LiteDbConnectionStringBuilder
-            {
-                FileName = config.FileName,
-                Password = config.Password
-            };
-
             var mapper = new BsonMapper( Activator.CreateInstance ) { SerializeNullValues = true };
             mapper.UseCamelCase();
 
@@ -32,22 +28,20 @@ namespace AESharp.Database.Entities
                 deserialize: bson => IPAddress.Parse( bson.AsString )
             );
 
-            this.Database = new LiteDatabase( builder.ToString(), mapper );
+            this._diskService = new FileDiskService( config.FileName );
+            this.Database = new LiteDatabase( this._diskService, mapper, config.Password );
 
             // setup
             this.Accounts.EnsureIndex( _ => _.Username, unique: true );
 
             // automatically run migrations
-            var migrator = Migrator<AccountsDatabase>.GetMigrationsFrom(
-                Assembly.GetExecutingAssembly(),
-                this,
-                this.Database
-            );
-            
-            migrator.DowngradeAll();
+            Migrator<AccountsDatabase>.GetMigrationsFrom( Assembly.GetExecutingAssembly(), this )
+                                      .UpgradeAll();
         }
 
         /// <inheritdoc />
         public void Dispose() => this.Database.Dispose();
+
+        public void Flush() => this._diskService.Flush();
     }
 }

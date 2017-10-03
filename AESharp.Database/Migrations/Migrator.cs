@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AESharp.Database.Entities;
 using LiteDB;
 using DbMigration = AESharp.Database.Entities.Models.Migration;
 
 namespace AESharp.Database.Migrations
 {
-    internal sealed class Migrator<T>
+    internal sealed class Migrator<T> where T : IDatabase
     {
         private readonly LiteCollection<DbMigration> _migrationCollection;
         public IReadOnlyList<Migration<T>> Migrations { get; }
@@ -22,7 +23,7 @@ namespace AESharp.Database.Migrations
             this._migrationCollection?.EnsureIndex( x => x.Id, unique: true );
         }
 
-        public static Migrator<T> GetMigrationsFrom( Assembly asm, T instance, LiteDatabase db )
+        public static Migrator<T> GetMigrationsFrom( Assembly asm, T instance )
         {
             var migrationType = typeof( Migration<T> );
             var migrations = asm.GetTypes()
@@ -32,7 +33,7 @@ namespace AESharp.Database.Migrations
                                 .OrderBy( m => m.Id )
                                 .ToArray();
             
-            return new Migrator<T>( migrations, migrations.Length == 0 ? null : db );
+            return new Migrator<T>( migrations, migrations.Length == 0 ? null : instance.Database );
         }
 
         /// <summary>
