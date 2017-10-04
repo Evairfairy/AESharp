@@ -6,7 +6,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
 {
     public sealed class LogonPacket : Packet
     {
-        public byte Opcode { get; set; }
+        public LogonOpcodes Opcode { get; set; }
 
         /// <summary>
         ///     Automatically calculated when sending
@@ -18,7 +18,7 @@ namespace AESharp.Logon.Universal.Networking.Packets
 
         public LogonPacket(LogonMetaPacket metaPacket) : base(metaPacket.Payload)
         {
-            Opcode = ReadByte();
+            Opcode = (LogonOpcodes) ReadByte();
         }
     }
 }
