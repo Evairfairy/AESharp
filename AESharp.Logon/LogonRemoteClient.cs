@@ -43,13 +43,13 @@ namespace AESharp.Logon
             switch (logonPacket.Opcode)
             {
                 case LogonOpcodes.Challenge:
-                    await PacketHandlers.HandleChallengeAsync(this, logonPacket);
+                    await LogonPacketHandlers.HandleChallengeAsync(this, logonPacket);
                     break;
                 case LogonOpcodes.Proof:
-                    await PacketHandlers.HandleProofAsync(this, logonPacket);
+                    await LogonPacketHandlers.HandleProofAsync(this, logonPacket);
                     break;
                 case LogonOpcodes.RealmList:
-                    await PacketHandlers.HandleRealmListAsync(this, logonPacket);
+                    await LogonPacketHandlers.HandleRealmListAsync(this, logonPacket);
                     break;
                 case LogonOpcodes.ReconnectChallenge:
                 case LogonOpcodes.Invalid:
