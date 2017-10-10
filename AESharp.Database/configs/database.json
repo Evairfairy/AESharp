@@ -1,6 +1,11 @@
 ﻿{
     "accounts": {
         "filename": "accounts.db",
+        "password": "change_me"
+    },
+
+    "characters": {
+        "filename": "characters.db",
         "password": null
     },
 

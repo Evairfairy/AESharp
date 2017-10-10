@@ -2,7 +2,7 @@
 
 namespace AESharp.Database.Migrations
 {
-    internal abstract class Migration<T> where T : IDatabase
+    internal abstract class Migration<T> where T : Entities.Database
     {
         public long Id { get; }
         public string Description { get; protected set; }

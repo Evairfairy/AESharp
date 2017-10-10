@@ -1,0 +1,24 @@
+﻿{
+    "default": {
+        "server": "localhost",
+        "port": 3306,
+        "username": "root",
+        "mysql_password": "change_me"
+    },
+
+    "logon": {
+        "mysql_database": "logon",
+        "lite_database": "accounts.db",
+        "lite_password": "change_me"
+    },
+
+    "chars": {
+        "mysql_database": "chars",
+        "lite_database": "characters.db"
+    },
+
+    "world": {
+        "mysql_database": "world",
+        "lite_database": "world.db" 
+    }
+}

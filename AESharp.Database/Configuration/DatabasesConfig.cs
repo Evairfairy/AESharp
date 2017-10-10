@@ -8,6 +8,9 @@ namespace AESharp.Database.Configuration
         [JsonProperty("accounts", Required = Required.Always)]
         public DatabaseSettings Accounts { get; set; }
 
+        [JsonProperty("characters", Required = Required.Always)]
+        public DatabaseSettings Characters { get; set; }
+
         [JsonProperty("world", Required = Required.Always)]
         public DatabaseSettings World { get; set; }
     }

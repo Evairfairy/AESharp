@@ -11,13 +11,20 @@ using AESharp.Routing.Core;
 using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking;
 using AESharp.Routing.Networking.Packets.Handshaking;
+using AutoMapper;
+using CommandLine;
+using MySql.Data.MySqlClient;
 
 namespace AESharp.Database
 {
     internal static class Program
     {
+        private static ConfigLoader ConfigLoader { get; }
+
         static Program()
         {
+            Program.ConfigLoader = new JsonConfigLoader();
+
             // This must be second (after decryption)
             DatabaseServices.IncomingRoutingMiddlewareHandler.RegisterMiddleware(new AEPacketReaderMiddleware());
 
@@ -25,7 +32,48 @@ namespace AESharp.Database
             DatabaseServices.OutgoingRoutingMiddlewareHandler.RegisterMiddleware(new AEPacketBuilderMiddleware());
         }
 
-        private static void Main(string[] args)
+        private static void Main( string[] args )
+            => Parser.Default
+                     .ParseArguments<MigrateOptions>( args )
+                     .WithParsed( Program.MigrateMain );
+
+        private static void MigrateMain( MigrateOptions opt )
+        {
+            try
+            {
+                var (logon, chars, world) = Program.ConfigLoader.Load<MigrationConfig>( "migrate" ).MergeAll();
+
+                // TODO: only logon db migration implemented right now
+                if( logon != null )
+                {
+                    if( File.Exists( logon.LiteDatabase ) )
+                        File.Delete( logon.LiteDatabase );
+
+                    Console.WriteLine( "Migrating {0} database to {1}", logon.MySqlDatabase, logon.LiteDatabase );
+
+                    var mysql = new LogonDatabase( logon );
+                    var accounts = new AccountsDatabase( logon );
+
+                    Mapper.Initialize( mysql.CreateMapping );
+                    mysql.MigrateTo( accounts );
+
+                    accounts.Flush();
+                }
+            }
+            catch( ArgumentException ex )
+            {
+                Console.Error.WriteLine( ex.Message );
+                return;
+            }
+            catch (MySqlException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return;
+            }
+        }
+
+        // TODO
+        private static void DefaultMain()
         {
             var loader = new JsonConfigLoader();
             var config = new DatabasesConfig
@@ -33,6 +81,12 @@ namespace AESharp.Database
                 Accounts = new DatabaseSettings
                 {
                     FileName = "accounts.db",
+                    Password = "change_me"
+                },
+
+                Characters = new DatabaseSettings
+                {
+                    FileName = "characters.db",
                     Password = null
                 },
 
@@ -43,25 +97,24 @@ namespace AESharp.Database
                 }
             };
 
-            // NOTE: this has to be disposed before the program terminates or changes will not be flushed to disk
-            var accounts = new AccountsDatabase( config.Accounts );
+            var accounts = new AccountsDatabase(config.Accounts);
 
             try
             {
-                config = loader.Load<DatabasesConfig>( "database" );
-                ConnectToMasterRouterAsync( IPAddress.Loopback, 12000 ).RunAsync();
+                config = loader.Load<DatabasesConfig>("database");
+                ConnectToMasterRouterAsync(IPAddress.Loopback, 12000).RunAsync();
                 Console.ReadLine();
             }
-            catch( DirectoryNotFoundException ex )
+            catch (DirectoryNotFoundException ex)
             {
-                Console.Error.WriteLine( "Config directory not found, attempting to create default file..." );
-                Directory.CreateDirectory( loader.RootDirectory );
-                loader.CreateDefault( "database", config );
+                Console.Error.WriteLine("Config directory not found, attempting to create default file...");
+                Directory.CreateDirectory(loader.RootDirectory);
+                loader.CreateDefault("database", config);
             }
-            catch( FileNotFoundException ex )
+            catch (FileNotFoundException ex)
             {
-                Console.Error.WriteLine( "Config file not found, attempting to create default file..." );
-                loader.CreateDefault( "database", config );
+                Console.Error.WriteLine("Config file not found, attempting to create default file...");
+                loader.CreateDefault("database", config);
             }
             finally
             {

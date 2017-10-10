@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AESharp.Database": {
+      "commandName": "Project",
+      "commandLineArgs": "migrate"
+    }
+  }
+}

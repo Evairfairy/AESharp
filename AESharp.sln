@@ -3,29 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.World", "AESharp.World\AESharp.World.csproj", "{6E1BBADA-7AEC-4005-B0E9-BC6B3A14EE1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.World", "AESharp.World\AESharp.World.csproj", "{6E1BBADA-7AEC-4005-B0E9-BC6B3A14EE1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Core", "AESharp.Core\AESharp.Core.csproj", "{2FFEB815-B9D7-43F1-B1A3-304F1F21902F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Core", "AESharp.Core\AESharp.Core.csproj", "{2FFEB815-B9D7-43F1-B1A3-304F1F21902F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Interop", "AESharp.Interop\AESharp.Interop.csproj", "{6142D693-B06F-4D19-92E6-D02EFC429035}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Interop", "AESharp.Interop\AESharp.Interop.csproj", "{6142D693-B06F-4D19-92E6-D02EFC429035}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Logging", "AESharp.Logging\AESharp.Logging.csproj", "{41D4C407-9AAD-4FF5-94FA-A833CBF3CA8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Logging", "AESharp.Logging\AESharp.Logging.csproj", "{41D4C407-9AAD-4FF5-94FA-A833CBF3CA8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Admin", "AESharp.Admin\AESharp.Admin.csproj", "{55BAE2D5-3EBB-4ED6-84B5-26BF26BA14D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Admin", "AESharp.Admin\AESharp.Admin.csproj", "{55BAE2D5-3EBB-4ED6-84B5-26BF26BA14D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Database", "AESharp.Database\AESharp.Database.csproj", "{1639C875-7E03-4C38-BF25-63990079D72F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Database", "AESharp.Database\AESharp.Database.csproj", "{1639C875-7E03-4C38-BF25-63990079D72F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Logon", "AESharp.Logon\AESharp.Logon.csproj", "{9C793F1E-C1BB-40B8-B28E-3F88D0DECEE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Logon", "AESharp.Logon\AESharp.Logon.csproj", "{9C793F1E-C1BB-40B8-B28E-3F88D0DECEE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Logon.Universal.Networking", "AESharp.Logon.Universal.Networking\AESharp.Logon.Universal.Networking.csproj", "{2EB8D00E-E6AD-43FA-8E5D-FB49F685FDEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Logon.Universal.Networking", "AESharp.Logon.Universal.Networking\AESharp.Logon.Universal.Networking.csproj", "{2EB8D00E-E6AD-43FA-8E5D-FB49F685FDEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.MasterRouter", "AESharp.MasterRouter\AESharp.MasterRouter.csproj", "{831AA217-6903-4E53-BCB3-9CB537798AA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.MasterRouter", "AESharp.MasterRouter\AESharp.MasterRouter.csproj", "{831AA217-6903-4E53-BCB3-9CB537798AA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Networking", "AESharp.Networking\AESharp.Networking.csproj", "{9EC0F2DA-750A-4646-ABF5-0F2916BCE711}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Networking", "AESharp.Networking\AESharp.Networking.csproj", "{9EC0F2DA-750A-4646-ABF5-0F2916BCE711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Routing", "AESharp.Routing\AESharp.Routing.csproj", "{27D2608E-ADC6-43F6-8F2F-EA9B7DAAE34E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Routing", "AESharp.Routing\AESharp.Routing.csproj", "{27D2608E-ADC6-43F6-8F2F-EA9B7DAAE34E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESharp.Testing.Logon", "AESharp.Testing.Logon\AESharp.Testing.Logon.csproj", "{73411A22-31F4-4498-B0F7-64EEAC3A05A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AESharp.Testing.Logon", "AESharp.Testing.Logon\AESharp.Testing.Logon.csproj", "{73411A22-31F4-4498-B0F7-64EEAC3A05A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Executables", "Executables", "{6680A083-DAE6-41B0-BEDD-4500CF0BF44A}"
 EndProject

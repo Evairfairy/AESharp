@@ -8,7 +8,7 @@ using DbMigration = AESharp.Database.Entities.Models.Migration;
 
 namespace AESharp.Database.Migrations
 {
-    internal sealed class Migrator<T> where T : IDatabase
+    internal sealed class Migrator<T> where T : Entities.Database
     {
         private readonly LiteCollection<DbMigration> _migrationCollection;
         public IReadOnlyList<Migration<T>> Migrations { get; }
@@ -33,7 +33,7 @@ namespace AESharp.Database.Migrations
                                 .OrderBy( m => m.Id )
                                 .ToArray();
             
-            return new Migrator<T>( migrations, migrations.Length == 0 ? null : instance.Database );
+            return new Migrator<T>( migrations, migrations.Length == 0 ? null : instance.LiteDatabase );
         }
 
         /// <summary>

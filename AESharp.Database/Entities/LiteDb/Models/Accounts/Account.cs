@@ -4,22 +4,23 @@ using LiteDB;
 
 namespace AESharp.Database.Entities.Models.Accounts
 {
-    internal sealed class Accounts
+    internal sealed class Account
     {
+        [BsonId( false )]
         public string Username { get; set; }
 
         public string Email { get; set; }
 
         public string Password { get; set; }
 
-        public AccountFlags ExpansionLevel { get; set; }
+        public ExpansionLevel ExpansionLevel { get; set; }
 
         // TODO: actually implement perms
         public uint Persmissions { get; set; }
 
         public string ForceLanguage { get; set; }
 
-        public DateTime CreatedAt { get; private set; }
+        public DateTime CreatedAt { get; set; }
 
         public DateTime? BannedUntil { get; set; }
 
