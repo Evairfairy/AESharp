@@ -11,20 +11,28 @@ namespace AESharp.Database.Entities
         public LiteDatabase LiteDatabase { get; }
 
         protected Database( DatabaseSettings settings, BsonMapper mapper = null )
+            : this( new FileDiskService( settings.FileName ), settings.Password, mapper ) { }
+
+        protected Database( IDiskService service, string password = null, BsonMapper mapper = null )
         {
             if( mapper == null )
             {
                 mapper = new BsonMapper { SerializeNullValues = true };
                 mapper.UseCamelCase();
             }
-            
-            this.DiskService = new FileDiskService( settings.FileName );
-            this.LiteDatabase = new LiteDatabase( this.DiskService, mapper, settings.Password );
+
+            this.DiskService = service;
+            this.LiteDatabase = new LiteDatabase( this.DiskService, mapper, password );
+
+            // ReSharper disable once VirtualMemberCallInConstructor
+            this.Initialize();
         }
 
         /// <inheritdoc />
         public void Dispose() => this.LiteDatabase.Dispose();
 
         public void Flush() => this.DiskService.Flush();
+
+        protected abstract void Initialize();
     }
 }

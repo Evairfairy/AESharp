@@ -20,20 +20,26 @@ namespace AESharp.Database.Entities
             : this( new DatabaseSettings { FileName = config.LiteDatabase, Password = config.LitePassword } ) { }
 
         public AccountsDatabase( DatabaseSettings config )
-            : base( config )
+            : base( config ) { }
+
+        public AccountsDatabase( IDiskService service, string password = null, BsonMapper mapper = null )
+            : base( service, password, mapper ) { }
+
+        /// <inheritdoc />
+        protected override void Initialize()
         {
             // IPAddress
             this.Mapper.RegisterType(
                 serialize: ip => ip.ToString(),
-                deserialize: bson => IPAddress.Parse( bson.AsString )
+                deserialize: bson => IPAddress.Parse(bson.AsString)
             );
 
             // setup
-            this.Accounts.EnsureIndex( x => x.Username, unique: true );
-            this.IpBans.EnsureIndex( x => x.Ip, unique: true );
+            this.Accounts.EnsureIndex(x => x.Username, unique: true);
+            this.IpBans.EnsureIndex(x => x.Ip, unique: true);
 
             // automatically run migrations
-            Migrator<AccountsDatabase>.GetMigrationsFrom( Assembly.GetExecutingAssembly(), this )
+            Migrator<AccountsDatabase>.GetMigrationsFrom(Assembly.GetExecutingAssembly(), this)
                                       .UpgradeAll();
         }
     }

@@ -13,7 +13,10 @@ using AESharp.Routing.Networking;
 using AESharp.Routing.Networking.Packets.Handshaking;
 using AutoMapper;
 using CommandLine;
+using LiteDB;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
+using FileMode = System.IO.FileMode;
 
 namespace AESharp.Database
 {
@@ -44,21 +47,7 @@ namespace AESharp.Database
                 var (logon, chars, world) = Program.ConfigLoader.Load<MigrationConfig>( "migrate" ).MergeAll();
 
                 // TODO: only logon db migration implemented right now
-                if( logon != null )
-                {
-                    if( File.Exists( logon.LiteDatabase ) )
-                        File.Delete( logon.LiteDatabase );
-
-                    Console.WriteLine( "Migrating {0} database to {1}", logon.MySqlDatabase, logon.LiteDatabase );
-
-                    var mysql = new LogonDatabase( logon );
-                    var accounts = new AccountsDatabase( logon );
-
-                    Mapper.Initialize( mysql.CreateMapping );
-                    mysql.MigrateTo( accounts );
-
-                    accounts.Flush();
-                }
+                if( logon != null ) Migrate<LogonDatabase, AccountsDatabase>( logon );
             }
             catch( ArgumentException ex )
             {
@@ -69,6 +58,36 @@ namespace AESharp.Database
             {
                 Console.Error.WriteLine(ex.Message);
                 return;
+            }
+
+            void Migrate<TSource, TDestination>( MigrationSettings settings )
+                where TDestination : Entities.Database
+                where TSource : DbContext, IDatabaseMapper<TDestination>
+            {
+                Console.WriteLine( "Migrating {0} database to {1}", settings.MySqlDatabase, settings.LiteDatabase );
+
+                using( var memory = new MemoryStream() )
+                using( var service = new StreamDiskService( memory ) )
+                using( var accounts = (TDestination)Activator.CreateInstance( typeof( TDestination ), service, settings.LitePassword, null as BsonMapper ) )
+                using( var mysql = (TSource)Activator.CreateInstance( typeof( TSource ), settings ) )
+                {
+                    Mapper.Initialize( mysql.CreateMapping );
+                    mysql.MigrateTo( accounts );
+
+                    Console.WriteLine( "  - Flushing {0} to disk...", settings.LiteDatabase );
+
+                    service.Flush();
+                    memory.Flush();
+
+                    var file = File.Open( settings.LiteDatabase, FileMode.Create, FileAccess.Write, FileShare.None );
+                    using( file )
+                    {
+                        memory.Position = 0;
+                        memory.CopyTo( file );
+                        file.Flush();
+                        accounts.Flush();
+                    }
+                }
             }
         }
 

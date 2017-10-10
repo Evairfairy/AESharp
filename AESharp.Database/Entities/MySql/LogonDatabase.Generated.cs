@@ -11,7 +11,7 @@ using AESharp.Database.Entities.Models.Accounts;
 
 namespace AESharp.Database.Entities
 {
-    internal sealed class LogonDatabase : DbContext
+    internal sealed class LogonDatabase : DbContext, IDatabaseMapper<AccountsDatabase>
     {
         private readonly MigrationSettings Settings;
 
@@ -84,12 +84,15 @@ namespace AESharp.Database.Entities
                 db.IpBans.Insert( mapped );
             }
 
+            Console.WriteLine();
+
+            
             void WriteProgress( string what, int current, int total )
             {
                 Console.Write(
-                    "\r  - Migrating {0} {1:0}% ({2}/{3})",
+                    "\r  - Migrating {0} {1:0}% ({2:#,##}/{3:#,##})",
                     what,
-                    ( (double)current / (double)total ) * 100d,
+                    ((double)current / (double)total) * 100d,
                     current,
                     total
                 );
