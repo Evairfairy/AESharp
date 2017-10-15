@@ -2,11 +2,11 @@
 
 using System;
 using AESharp.Database.Configuration;
-using AESharp.Database.Entities.Models.Characters;
+using AESharp.Database.Entities.MySql.Models.Characters;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 
-namespace AESharp.Database.Entities
+namespace AESharp.Database.Entities.MySql
 {
     internal sealed class CharactersDatabase : DbContext
     {

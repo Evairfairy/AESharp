@@ -2,7 +2,7 @@
 using System.Net;
 using LiteDB;
 
-namespace AESharp.Database.Entities.Models.Accounts
+namespace AESharp.Database.Entities.LiteDb.Models.Accounts
 {
     internal sealed class Account
     {

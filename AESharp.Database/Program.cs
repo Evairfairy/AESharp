@@ -2,11 +2,14 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AESharp.Core.Configuration;
 using AESharp.Core.Extensions;
 using AESharp.Database.Configuration;
 using AESharp.Database.Entities;
+using AESharp.Database.Entities.LiteDb;
+using AESharp.Database.Mapping;
 using AESharp.Routing.Core;
 using AESharp.Routing.Middleware;
 using AESharp.Routing.Networking;
@@ -47,7 +50,11 @@ namespace AESharp.Database
                 var (logon, chars, world) = Program.ConfigLoader.Load<MigrationConfig>( "migrate" ).MergeAll();
 
                 // TODO: only logon db migration implemented right now
-                if( logon != null ) Migrate<LogonDatabase, AccountsDatabase>( logon );
+                if( logon != null )
+                {
+                    var mapper = new LogonDatabaseMapper();
+                    Migrate( logon, mapper );
+                }
             }
             catch( ArgumentException ex )
             {
@@ -60,19 +67,35 @@ namespace AESharp.Database
                 return;
             }
 
-            void Migrate<TSource, TDestination>( MigrationSettings settings )
-                where TDestination : Entities.Database
-                where TSource : DbContext, IDatabaseMapper<TDestination>
+            void Migrate<TSource, TDestination>( MigrationSettings settings, DatabaseMapper<TSource, TDestination> mapper )
+                where TDestination : Entities.LiteDb.Database
+                where TSource : DbContext
             {
+                if (File.Exists(settings.LiteDatabase))
+                {
+                    Console.Write("Destination {0} already exists. Overwrite it? [y/N] ", settings.LiteDatabase);
+                    var answer = Regex.IsMatch(
+                        Console.ReadLine(),
+                        "^(y(es?)?)$",
+                        RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
+                    );
+
+                    if (!answer)
+                    {
+                        Console.WriteLine("Skipping {0} ({1}) migration", settings.MySqlDatabase, settings.LiteDatabase);
+                        return;
+                    }
+                }
+
                 Console.WriteLine( "Migrating {0} database to {1}", settings.MySqlDatabase, settings.LiteDatabase );
 
                 using( var memory = new MemoryStream() )
                 using( var service = new StreamDiskService( memory ) )
-                using( var accounts = (TDestination)Activator.CreateInstance( typeof( TDestination ), service, settings.LitePassword, null as BsonMapper ) )
+                using( var litedb = (TDestination)Activator.CreateInstance( typeof( TDestination ), service, settings.LitePassword, null as BsonMapper ) )
                 using( var mysql = (TSource)Activator.CreateInstance( typeof( TSource ), settings ) )
                 {
-                    Mapper.Initialize( mysql.CreateMapping );
-                    mysql.MigrateTo( accounts );
+                    Mapper.Initialize( mapper.ConfigurMapping );
+                    mapper.MigrateDatabase( mysql, litedb );
 
                     Console.WriteLine( "  - Flushing {0} to disk...", settings.LiteDatabase );
 
@@ -85,7 +108,7 @@ namespace AESharp.Database
                         memory.Position = 0;
                         memory.CopyTo( file );
                         file.Flush();
-                        accounts.Flush();
+                        litedb.Flush();
                     }
                 }
             }

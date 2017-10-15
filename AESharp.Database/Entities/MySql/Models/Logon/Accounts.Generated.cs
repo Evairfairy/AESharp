@@ -2,8 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AESharp.Database.Entities.Models.Logon
+namespace AESharp.Database.Entities.MySql.Models.Logon
 {
+    [Table( "accounts" )]
     public sealed class Accounts
     {
         [Key, Column( "id" )]

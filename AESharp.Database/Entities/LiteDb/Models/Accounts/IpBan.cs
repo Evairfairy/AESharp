@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using LiteDB;
 
-namespace AESharp.Database.Entities.Models.Accounts
+namespace AESharp.Database.Entities.LiteDb.Models.Accounts
 {
     internal sealed class IpBan
     {

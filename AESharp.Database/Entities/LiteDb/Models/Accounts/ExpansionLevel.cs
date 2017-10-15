@@ -1,4 +1,4 @@
-﻿namespace AESharp.Database.Entities.Models.Accounts
+﻿namespace AESharp.Database.Entities.LiteDb.Models.Accounts
 {
     internal enum ExpansionLevel
     {

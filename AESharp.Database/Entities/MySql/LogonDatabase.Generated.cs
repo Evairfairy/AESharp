@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
 using AESharp.Database.Configuration;
-using AESharp.Database.Entities.Models.Logon;
-using AutoMapper;
+using AESharp.Database.Entities.MySql.Models.Logon;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MySql.Data.MySqlClient;
-using AESharp.Database.Entities.Models.Accounts;
 
-namespace AESharp.Database.Entities
+namespace AESharp.Database.Entities.MySql
 {
-    internal sealed class LogonDatabase : DbContext, IDatabaseMapper<AccountsDatabase>
+    internal sealed class LogonDatabase : DbContext
     {
         private readonly MigrationSettings Settings;
 
@@ -24,79 +20,6 @@ namespace AESharp.Database.Entities
                 throw new ArgumentNullException( nameof( settings ) );
 
             this.Settings = settings;
-        }
-
-        public void CreateMapping( IMapperConfigurationExpression config )
-        {
-            config.CreateMap<Accounts, Account>()
-                  .ForMember( dest => dest.Username, obj => obj.MapFrom( src => src.Login ) )
-                  .ForMember(
-                      dest => dest.ExpansionLevel,
-                      obj => obj.ResolveUsing<ExpansionLevel>(
-                          src =>
-                          {
-                              switch( src.Flags )
-                              {
-                                  case AccountFlags.Classic: return ExpansionLevel.Classic;
-                                  case AccountFlags.TheBurningCrusade: return ExpansionLevel.TheBurningCrusade;
-                                  case AccountFlags.WrathOfTheLichKing:
-                                  case AccountFlags.WrathAndBurningCrusade: return ExpansionLevel.WrathOfTheLichKing;
-                                  default: throw new NotImplementedException();
-                              }
-                          } )
-                  )
-                  .ForMember( dest => dest.Persmissions, obj => obj.Ignore() )
-                  .ForMember( dest => dest.ForceLanguage, obj => obj.MapFrom( src => src.Language ) )
-                  .ForMember( dest => dest.CreatedAt, obj => obj.MapFrom( src => src.JoinDate ) )
-                  .ForMember( dest => dest.BannedUntil, obj => obj.MapFrom( src => src.BanTime ) )
-                  .ForMember( dest => dest.MutedUntil, obj => obj.MapFrom( src => src.MutedTime ) )
-                  .ForMember(
-                      dest => dest.LastKnownIp,
-                      obj => obj.ResolveUsing( src => IPAddress.Parse( src.LastIPAddress ) )
-                  );
-
-            config.CreateMap<IpBans, IpBan>()
-                  .ForMember( dest => dest.Ip, obj => obj.ResolveUsing( src => IPAddress.Parse( src.IPAddress ) ) )
-                  .ForMember( dest => dest.BannedUntil, obj => obj.MapFrom( src => src.ExpiresAt ) )
-                  .ForMember( dest => dest.Reason, obj => obj.MapFrom( src => src.BanReason ) );
-        }
-
-        public void MigrateTo( AccountsDatabase db )
-        {
-            var c = 0;
-            var numAccounts = this.Accounts.Count();
-            foreach( var account in this.Accounts )
-            {
-                //break;
-                WriteProgress( "accounts", ++c, numAccounts );
-                var mapped = Mapper.Map<Account>( account );
-                db.Accounts.Insert( mapped );
-            }
-
-            Console.WriteLine();
-
-            c = 0;
-            var numBans = this.IPBans.Count();
-            foreach( var ban in this.IPBans )
-            {
-                WriteProgress( "IP bans", ++c, numBans );
-                var mapped = Mapper.Map<IpBan>( ban );
-                db.IpBans.Insert( mapped );
-            }
-
-            Console.WriteLine();
-
-            
-            void WriteProgress( string what, int current, int total )
-            {
-                Console.Write(
-                    "\r  - Migrating {0} {1:0}% ({2:#,##}/{3:#,##})",
-                    what,
-                    ((double)current / (double)total) * 100d,
-                    current,
-                    total
-                );
-            }
         }
 
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )

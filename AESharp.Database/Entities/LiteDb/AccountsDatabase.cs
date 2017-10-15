@@ -1,12 +1,11 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
 using AESharp.Database.Configuration;
-using AESharp.Database.Entities.Models.Accounts;
+using AESharp.Database.Entities.LiteDb.Models.Accounts;
 using AESharp.Database.Migrations;
 using LiteDB;
 
-namespace AESharp.Database.Entities
+namespace AESharp.Database.Entities.LiteDb
 {
     internal sealed class AccountsDatabase : Database
     {

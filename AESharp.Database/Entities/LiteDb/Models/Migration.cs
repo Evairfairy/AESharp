@@ -1,7 +1,7 @@
 ﻿using System;
 using LiteDB;
 
-namespace AESharp.Database.Entities.Models
+namespace AESharp.Database.Entities.LiteDb.Models
 {
     internal sealed class Migration
     {

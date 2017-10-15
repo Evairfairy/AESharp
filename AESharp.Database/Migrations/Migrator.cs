@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using AESharp.Database.Entities;
 using LiteDB;
-using DbMigration = AESharp.Database.Entities.Models.Migration;
+using DbMigration = AESharp.Database.Entities.LiteDb.Models.Migration;
 
 namespace AESharp.Database.Migrations
 {
-    internal sealed class Migrator<T> where T : Entities.Database
+    internal sealed class Migrator<T> where T : Entities.LiteDb.Database
     {
         private readonly LiteCollection<DbMigration> _migrationCollection;
         public IReadOnlyList<Migration<T>> Migrations { get; }

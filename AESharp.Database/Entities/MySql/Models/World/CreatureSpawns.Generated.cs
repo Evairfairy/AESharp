@@ -2,7 +2,7 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AESharp.Database.Entities.Models.World
+namespace AESharp.Database.Entities.MySql.Models.World
 {
     public sealed class CreatureSpawns
     {

@@ -2,7 +2,7 @@
 using AESharp.Database.Configuration;
 using LiteDB;
 
-namespace AESharp.Database.Entities
+namespace AESharp.Database.Entities.LiteDb
 {
     internal abstract class Database : IDisposable
     {

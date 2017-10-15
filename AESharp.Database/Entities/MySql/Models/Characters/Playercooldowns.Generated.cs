@@ -2,7 +2,7 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AESharp.Database.Entities.Models.Characters
+namespace AESharp.Database.Entities.MySql.Models.Characters
 {
     public sealed class PlayerCooldowns
     {

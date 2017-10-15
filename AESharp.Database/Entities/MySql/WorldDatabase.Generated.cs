@@ -2,11 +2,11 @@
 
 using System;
 using AESharp.Database.Configuration;
-using AESharp.Database.Entities.Models.World;
+using AESharp.Database.Entities.MySql.Models.World;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 
-namespace AESharp.Database.Entities
+namespace AESharp.Database.Entities.MySql
 {
     internal sealed class WorldDatabase : DbContext
     {
